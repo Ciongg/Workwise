@@ -1,4 +1,5 @@
 <x-layout>
+    
     <div class="overflow-x-auto">
         <table class="min-w-full table-auto">
             <thead>
@@ -24,15 +25,29 @@
                         <td class="py-3 px-6">{{ $employee->workInfo->position }}</td>
                         <td class="py-3 px-6">{{ $employee->role }}</td>
                         <td class="py-3 px-6">
-                            <button class="cursor-pointer" onclick="Livewire.dispatch('openModal', { component: 'hello-world', arguments: {employee: {{$employee->id}}} })">View</button>
 
-                            {{-- <button class="cursor-pointer" onclick="Livewire.dispatch('openModal', { component: 'hello-world' })">View</button> --}}
+
+                            
+                                <x-modal :employee="$employee" name="view-employee-{{ $employee->id }}" title="Employee View">
+                                    <x-slot:body>
+                                        <span>Body</span>
+
+                                    </x-slot>
+                                
+                                </x-modal>
+
+                                <button x-data x-on:click="$dispatch('open-modal', {name: 'view-employee-{{ $employee->id }}'})" class=" p-4 cursor-pointer px-3 py- 1 bg-teal-500 text-white rounded">Toggle Modal</button>
+                            {{-- <button wire:click="$emit('openModal', {{ $employee->id }})" class="cursor-pointer">View</button> --}}
+
+                           
+                            {{-- <button class="cursor-pointer" onclick="Livewire.dispatch('openModal', { component: 'hello-world', arguments: {employee: {{$employee->id}}} })">View</button> --}}
+
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
-    
+   
    
 </x-layout>

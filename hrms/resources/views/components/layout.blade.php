@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    {{-- <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"> --}}
     @livewireStyles
     
     
@@ -50,7 +50,7 @@
 
     </div>
 
-    @livewire('wire-elements-modal')
+    {{-- @livewire('wire-elements-modal') --}}
     
     
     @livewireScripts
