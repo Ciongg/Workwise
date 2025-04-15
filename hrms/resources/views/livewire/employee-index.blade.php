@@ -1,18 +1,55 @@
 
     <div class="overflow-x-auto">
+
+        <div class="flex justify-between items-center mb-4">
+
+            <div class="mb-4 flex items-center gap-4">
+                <label class="text-gray-600">Filter by Role:</label>
+                <select wire:model.live="searchRole" class="border rounded p-2">
+                    <option value="">All</option>
+                    <option value="hr">HR</option>
+                    <option value="manager">Manager</option>
+                    <option value="employee">Employee</option>
+                </select>
+            </div>
+            <div class="mb-4 flex items-center gap-4">
+                <label class="text-gray-600">Filter by Role:</label>
+                <input type="text" wire:model.live="searchName" placeholder="Search by name" class="border rounded p-2">
+            </div>
+            
+        </div>
+        
+       
+        
         <table class="min-w-full table-auto">
             <thead>
                 <tr class="bg-gray-200 text-gray-700">
-                    <th class="py-3 px-6 text-left">Employee ID</th>
-                    <th class="py-3 px-6 text-left">Name</th>
-                    <th class="py-3 px-6 text-left">Email</th>
+                    <th class="py-3 px-6 text-left cursor-pointer" wire:click="sortBy('id')">
+                        Employee ID
+                        @if ($sortField === 'id')
+                            @if ($sortDirection === 'asc') ▲ @else ▼ @endif
+                        @endif
+                    </th>
+                    <th class="py-3 px-6 text-left cursor-pointer" wire:click="sortBy('first_name')">
+                        Name
+                        @if ($sortField === 'first_name')
+                            @if ($sortDirection === 'asc') ▲ @else ▼ @endif
+                        @endif
+                    </th>
+                    <th class="py-3 px-6 text-left cursor-pointer" wire:click="sortBy('email')">Email</th>
                     <th class="py-3 px-6 text-left">Phone</th>
                     <th class="py-3 px-6 text-left">Department</th>
                     <th class="py-3 px-6 text-left">Position</th>
-                    <th class="py-3 px-6 text-left">Role</th>
+                    <th class="py-3 px-6 text-left cursor-pointer" wire:click="sortBy('role')">
+                        Role
+                        @if ($sortField === 'role')
+                            @if ($sortDirection === 'asc') ▲ @else ▼ @endif
+                        @endif
+                    </th>
                     <th class="py-3 px-6 text-left">Actions</th>
                 </tr>
             </thead>
+            
             <tbody>
                 @foreach ($employees as $employee)
                     <tr class="border-b">
