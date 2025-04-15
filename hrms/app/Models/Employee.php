@@ -50,4 +50,6 @@ class Employee extends Authenticatable
     }
 
 
+
+
 }

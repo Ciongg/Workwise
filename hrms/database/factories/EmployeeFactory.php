@@ -10,12 +10,16 @@ use App\Models\EmployeeWorkInfo;
 use App\Models\EmployeeIdentificationInfo;
 use App\Models\EmployeeBankInfo;
 use App\Models\Employee;
+use App\Models\EmployeePositionInfo;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employee>
  */
 class EmployeeFactory extends Factory
 {
     protected $model = Employee::class;
+
+    
    
     public function definition(): array
     {
@@ -48,27 +52,18 @@ class EmployeeFactory extends Factory
             // Create related models after the employee is created
             EmployeeWorkInfo::factory()->create([
                 'employee_id' => $employee->id,
-                'department' => $this->faker->word,
-                'position' => $this->faker->word,
-                'work_status' => $this->faker->randomElement(['full_time', 'part_time', 'contract']),
-                'hire_date' => $this->faker->date(),
             ]);
 
             EmployeeIdentificationInfo::factory()->create([
                 'employee_id' => $employee->id,
-                'sss_number' => 'SSS-' . $this->faker->unique()->numberBetween(100000000, 999999999),
-                'pag_ibig_number' => 'PAG-IBIG-' . $this->faker->unique()->numberBetween(100000000, 999999999),
-                'philhealth_number' => 'PH-' . $this->faker->unique()->numberBetween(1000000000, 9999999999),
-                'tin_number' => 'TIN-' . $this->faker->unique()->numberBetween(100000000, 999999999),
             ]);
 
 
             EmployeeBankInfo::factory()->create([
                 'employee_id' => $employee->id,
-                'bank_name' => $this->faker->company,
-                'account_number' => $this->faker->unique()->bankAccountNumber,
-                'account_type' => $this->faker->randomElement(['savings', 'checking']),
+             
             ]);
+
         });
     }
 

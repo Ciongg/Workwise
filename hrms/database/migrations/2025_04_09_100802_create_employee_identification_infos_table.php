@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('philhealth_number')->unique();
             $table->string('tin_number')->unique();
             $table->timestamps();
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade'); 
         });
     }
 

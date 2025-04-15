@@ -16,6 +16,10 @@ class HRController extends Controller
         return view('hr.create-employee');
     }
 
+    public function showPayroll(){
+        return view('hr.show-payroll');
+    }
+
     public function index(){
        
         return view('hr.index');
