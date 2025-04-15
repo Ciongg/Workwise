@@ -11,6 +11,8 @@
     
     
     <title>Workwise</title>
+
+
 </head>
 <body>
     <nav class="flex justify-between items-center bg-gray-200 shadow-lg p-4 text-gray">

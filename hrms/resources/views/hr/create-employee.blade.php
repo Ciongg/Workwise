@@ -1,3 +1,3 @@
 <x-layout>
-    create employee
+    <livewire:employee-create />
 </x-layout>
