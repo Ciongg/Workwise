@@ -11,7 +11,7 @@ use App\Models\EmployeeIdentificationInfo;
 use App\Models\EmployeeBankInfo;
 use App\Models\Employee;
 use App\Models\EmployeePositionInfo;
-
+use App\Models\Payroll;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employee>
  */
@@ -50,7 +50,7 @@ class EmployeeFactory extends Factory
     {
         return $this->afterCreating(function (Employee $employee) {
             // Create related models after the employee is created
-            EmployeeWorkInfo::factory()->create([
+            $workInfo = EmployeeWorkInfo::factory()->create([
                 'employee_id' => $employee->id,
             ]);
 
@@ -64,24 +64,28 @@ class EmployeeFactory extends Factory
              
             ]);
 
+            Payroll::factory()->create([
+                'employee_id' => $employee->id,
+            ]);
+
         });
     }
 
 
-    public function withWorkInfo()
-    {
-        return $this->has(EmployeeWorkInfo::factory());
-    }
+    // public function withWorkInfo()
+    // {
+    //     return $this->has(EmployeeWorkInfo::factory());
+    // }
     
-    public function withIdentificationInfo()
-    {
-        return $this->has(EmployeeIdentificationInfo::factory());
-    }
+    // public function withIdentificationInfo()
+    // {
+    //     return $this->has(EmployeeIdentificationInfo::factory());
+    // }
  
 
-    public function withBankInfo(){
-        return $this->has(EmployeeBankInfo::factory());
-    }
+    // public function withBankInfo(){
+    //     return $this->has(EmployeeBankInfo::factory());
+    // }
 
     
 }

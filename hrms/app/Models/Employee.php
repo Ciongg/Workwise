@@ -49,6 +49,10 @@ class Employee extends Authenticatable
         return $this->hasOne(EmployeeIdentificationInfo::class);
     }
 
+    public function payrollInfo()    {
+        return $this->hasOne(payroll::class);
+    }
+
 
 
 
