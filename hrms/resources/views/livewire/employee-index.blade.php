@@ -25,15 +25,30 @@
                         <td class="py-3 px-6">{{ $employee->role }}</td>
                         <td class="py-3 px-6">
 
-                            <x-modal :employee="$employee" name="view-employee-{{ $employee->id }}" title="Employee View">
+                            <button wire:click="selectEmployee({{ $employee->id }})"
+                                class="p-2 px-3 bg-teal-500 text-white rounded cursor-pointer hover:bg-teal-600 transition duration-200 ease-in-out">
+                            View/Edit
+                        </button>
+
+                            {{-- <x-modal :employee="$employee" name="view-employee-{{ $employee->id }}" title="Employee View">
                             
                             </x-modal>
                             
                             <button x-data x-on:click="$dispatch('open-modal', {name: 'view-employee-{{ $employee->id }}'})" class=" p-4 cursor-pointer px-3 py- 1 bg-teal-500 text-white rounded">View/Edit</button>
-                              
+                               --}}
 
                         </td>
                     </tr>
                 @endforeach
+
             </tbody>
         </table>
+
+        @if ($selectedEmployee)
+        <x-modal :employee="$selectedEmployee" name="view-employee" title="Employee View" />
+        @endif
+
+        <div class="py-3">
+            {{ $employees->links() }}
+        </div>
+        

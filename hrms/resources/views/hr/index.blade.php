@@ -1,4 +1,4 @@
 <x-layout>
-    <livewire:employee-index :employees="$employees"/>
+     <livewire:employee-index />
 </x-layout>
 

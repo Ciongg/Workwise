@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Livewire\WithPagination;
 
 class HRController extends Controller
 {
+    use WithPagination;
     public function dashboard(){
         return view('hr.dashboard');
     }
@@ -14,9 +16,9 @@ class HRController extends Controller
         return view('hr.create-employee');
     }
 
-    public function index(Employee $employee){
-        $employees = Employee::all();
-        return view('hr.index', compact('employees'));
+    public function index(){
+       
+        return view('hr.index');
     }
 
    
