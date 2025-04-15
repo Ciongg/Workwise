@@ -26,17 +26,13 @@
                         <td class="py-3 px-6">{{ $employee->role }}</td>
                         <td class="py-3 px-6">
 
-
+                            <x-modal :employee="$employee" name="view-employee-{{ $employee->id }}" title="Employee View">
                             
-                                <x-modal :employee="$employee" name="view-employee-{{ $employee->id }}" title="Employee View">
-                                    <x-slot:body>
-                                        <span>Body</span>
+                            </x-modal>
+                            
+                            <button x-data x-on:click="$dispatch('open-modal', {name: 'view-employee-{{ $employee->id }}'})" class=" p-4 cursor-pointer px-3 py- 1 bg-teal-500 text-white rounded">Toggle Modal</button>
+                              
 
-                                    </x-slot>
-                                
-                                </x-modal>
-
-                                <button x-data x-on:click="$dispatch('open-modal', {name: 'view-employee-{{ $employee->id }}'})" class=" p-4 cursor-pointer px-3 py- 1 bg-teal-500 text-white rounded">Toggle Modal</button>
                             {{-- <button wire:click="$emit('openModal', {{ $employee->id }})" class="cursor-pointer">View</button> --}}
 
                            
@@ -47,7 +43,10 @@
                 @endforeach
             </tbody>
         </table>
+        
     </div>
-   
+    
+
+ 
    
 </x-layout>

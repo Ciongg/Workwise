@@ -15,11 +15,16 @@
 
     <!-- Modal Content -->
     <div class="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 relative z-10">
-        <!-- Close Button -->
+        <livewire:employee-modal :employee="$employee" />   
+
+
+    </div>
+</div>
+        {{-- <!-- Close Button -->
         <button class="absolute top-4 right-4 text-red-600 font-bold text-lg" x-on:click="$dispatch('close-modal')">✖</button>
 
         <h2 class="text-2xl font-bold mb-4">{{ $title }}</h2>
-        <h3 class="font-semibold text-lg mb-2 text-teal-500">Personal Information</h3>
+        <h3 class="font-semibold text-lg mb-2 text-teal-500">Work Information</h3>
         <!-- Personal Info -->
         <div class="grid grid-cols-2 gap-4 mb-6 ">
             <div><strong>First Name:</strong> {{ $employee->first_name }}</div>
@@ -80,6 +85,5 @@
                 </div>
             @endforeach
         </div>
-        @endif
-    </div>
-</div>
+        @endif --}}
+    
