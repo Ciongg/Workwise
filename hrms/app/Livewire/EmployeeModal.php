@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Livewire;
-
+use Livewire\Livewire;
 use Livewire\Component;
 use App\Models\Employee;
 class EmployeeModal extends Component
 {
-
+    
     public $employee;
     public $first_name, $last_name, $middle_name, $suffix, $gender, $birthdate;
     public $email, $phone_number, $address, $marital_status, $emergency_contact_number, $role;
@@ -20,6 +20,53 @@ class EmployeeModal extends Component
       public $sss_number, $pag_ibig_number, $philhealth_number, $tin_number;
 
       public $loan_type, $loan_amount, $monthly_amortization;
+
+
+      protected $listeners = ['refreshEmployee' => 'refreshEmployees'];
+
+    public function refreshEmployees($employeeId)
+    {
+        $this->resetForm();
+
+        $this->employee = Employee::find($employeeId);
+        if ($this->employee) {
+            $this->mount($this->employee);
+        }
+    }
+
+    public function resetForm()
+{
+    $this->reset([
+        'employee',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'suffix',
+        'gender',
+        'birthdate',
+        'email',
+        'phone_number',
+        'address',
+        'marital_status',
+        'emergency_contact_number',
+        'role',
+        'department',
+        'position',
+        'work_status',
+        'hire_date',
+        'bank_name',
+        'account_number',
+        'account_type',
+        'sss_number',
+        'pag_ibig_number',
+        'philhealth_number',
+        'tin_number',
+        'loan_type',
+        'loan_amount',
+        'monthly_amortization',
+    ]);
+}
+
 
 
     public function mount($employee)
@@ -120,9 +167,14 @@ class EmployeeModal extends Component
             ]);
         } 
 
-
+        $this->dispatch('employeeUpdated', $this->employee->id);
+        $this->resetForm();
+        $this->dispatch('close-modal');
+        
         session()->flash('message', 'Employee information updated successfully!');
+
     }
+
 
     public function render()
     {
