@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\EmployeePersonalInfo;
 use App\Models\EmployeeWorkInfo;
 use App\Models\EmployeeIdentificationInfo;
-use App\Models\EmployeeLoanInfo;
 use App\Models\EmployeeBankInfo;
 use App\Models\Employee;
 /**
@@ -63,12 +62,6 @@ class EmployeeFactory extends Factory
                 'tin_number' => 'TIN-' . $this->faker->unique()->numberBetween(100000000, 999999999),
             ]);
 
-            EmployeeLoanInfo::factory()->create([
-                'employee_id' => $employee->id,
-                'loan_type' => $this->faker->word,
-                'loan_amount' => $this->faker->randomFloat(2, 1000, 10000),
-                'monthly_amortization' => $this->faker->randomFloat(2, 100, 1000),
-            ]);
 
             EmployeeBankInfo::factory()->create([
                 'employee_id' => $employee->id,
@@ -89,10 +82,7 @@ class EmployeeFactory extends Factory
     {
         return $this->has(EmployeeIdentificationInfo::factory());
     }
-    public function withLoanInfo()
-    {
-        return $this->has(EmployeeLoanInfo::factory());
-    }
+ 
 
     public function withBankInfo(){
         return $this->has(EmployeeBankInfo::factory());

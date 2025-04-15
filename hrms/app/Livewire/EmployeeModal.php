@@ -19,7 +19,6 @@ class EmployeeModal extends Component
       // Identification Info
       public $sss_number, $pag_ibig_number, $philhealth_number, $tin_number;
 
-      public $loan_type, $loan_amount, $monthly_amortization;
 
 
 
@@ -77,17 +76,7 @@ class EmployeeModal extends Component
             $this->tin_number = $employee->identificationInfo->tin_number;
         }
 
-        // Loan Info
-        if ($employee->loanInfo) {
-            // For simplicity, assuming the employee has only one loan info for now.
-            // You can modify this based on your specific needs.
-            $loan = $employee->loanInfo->first();  // Assuming the employee has a single loan entry
-            if ($loan) {
-                $this->loan_type = $loan->loan_type;
-                $this->loan_amount = $loan->loan_amount;
-                $this->monthly_amortization = $loan->monthly_amortization;
-            }
-        }
+ 
     }
 
 

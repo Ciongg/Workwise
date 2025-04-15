@@ -49,7 +49,5 @@ class Employee extends Authenticatable
         return $this->hasOne(EmployeeIdentificationInfo::class);
     }
 
-    public function loanInfo()    {
-        return $this->hasMany(EmployeeLoanInfo::class);
-    }
+
 }

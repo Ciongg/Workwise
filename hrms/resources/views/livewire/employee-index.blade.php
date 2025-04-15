@@ -1,7 +1,7 @@
 
     <div class="overflow-x-auto">
 
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex justify-between items-center mb-4 mt-4 mx-6">
 
             <div class="mb-4 flex items-center gap-4">
                 <label class="text-gray-600">Filter by Role:</label>
@@ -13,7 +13,7 @@
                 </select>
             </div>
             <div class="mb-4 flex items-center gap-4">
-                <label class="text-gray-600">Filter by Role:</label>
+                <label class="text-gray-600">Filter by Name:</label>
                 <input type="text" wire:model.live="searchName" placeholder="Search by name" class="border rounded p-2">
             </div>
             

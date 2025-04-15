@@ -52,9 +52,6 @@
         {{$slot}}
 
     </div>
-
-    {{-- @livewire('wire-elements-modal') --}}
-    
     
     @livewireScripts
 </body>

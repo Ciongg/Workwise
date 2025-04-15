@@ -20,7 +20,11 @@
         </div>
         <div>
             <label for="gender" class="block text-sm font-medium text-gray-700">Gender:</label>
-            <input type="text" id="gender" wire:model.defer="gender" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+            <select id="gender" wire:model.defer="gender" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+                
+                <option value="male" {{ old('gender', $gender) === 'male' ? 'selected' : '' }}>Male</option>
+                <option value="female" {{ old('gender', $gender) === 'female' ? 'selected' : '' }}>Female</option>
+            </select>
         </div>
         <div>
             <label for="birthdate" class="block text-sm font-medium text-gray-700">Birthdate:</label>
@@ -40,7 +44,12 @@
         </div>
         <div>
             <label for="marital_status" class="block text-sm font-medium text-gray-700">Marital Status:</label>
-            <input type="text" id="marital_status" wire:model.defer="marital_status" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+            <select id="marital_status" wire:model.defer="marital_status" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+                <option value="single" {{ old('marital_status', $marital_status) === 'single' ? 'selected' : '' }}>Single</option>
+                <option value="married" {{ old('marital_status', $marital_status) === 'married' ? 'selected' : '' }}>Married</option>
+                <option value="divorced" {{ old('marital_status', $marital_status) === 'divorced' ? 'selected' : '' }}>Divorced</option>
+                <option value="widowed" {{ old('marital_status', $marital_status) === 'widowed' ? 'selected' : '' }}>Widowed</option>
+            </select>
         </div>
         <div>
             <label for="emergency_contact_number" class="block text-sm font-medium text-gray-700">Emergency Contact:</label>
@@ -48,7 +57,11 @@
         </div>
         <div>
             <label for="role" class="block text-sm font-medium text-gray-700">Role:</label>
-            <input type="text" id="role" wire:model.defer="role" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+            <select id="role" wire:model.defer="role" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+                <option value="employee" {{ old('role', $role) === 'employee' ? 'selected' : '' }}>Employee</option>
+                <option value="hr" {{ old('role', $role) === 'hr' ? 'selected' : '' }}>HR</option>
+                <option value="manager" {{ old('role', $role) === 'manager' ? 'selected' : '' }}>Manager</option>
+            </select>
         </div>
     </div>
 
@@ -65,7 +78,11 @@
         </div>
         <div>
             <label for="work_status" class="block text-sm font-medium text-gray-700">Status:</label>
-            <input type="text" id="work_status" wire:model.defer="work_status" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+            <select id="work_status" wire:model.defer="work_status" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+                <option value="active" {{ old('work_status', $work_status) === 'active' ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ old('work_status', $work_status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                <option value="on_leave" {{ old('work_status', $work_status) === 'on_leave' ? 'selected' : '' }}>On Leave</option>
+            </select>
         </div>
         <div>
             <label for="hire_date" class="block text-sm font-medium text-gray-700">Hire Date:</label>
@@ -86,7 +103,11 @@
         </div>
         <div>
             <label for="account_type" class="block text-sm font-medium text-gray-700">Account Type:</label>
-            <input type="text" id="account_type" wire:model.defer="account_type" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+            <select id="account_type" wire:model.defer="account_type" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+
+                <option value="savings" {{ old('account_type', $account_type) === 'savings' ? 'selected' : '' }}>Savings</option>
+                <option value="checking" {{ old('account_type', $account_type) === 'checking' ? 'selected' : '' }}>Checking</option>
+            </select>
         </div>
     </div>
 
@@ -111,22 +132,7 @@
         </div>
     </div>
 
-    <!-- Loan Info -->
-    <h3 class="text-lg font-semibold text-teal-500 mt-8 mb-2">Loans</h3>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-        <div>
-            <label for="loan_type" class="block text-sm font-medium text-gray-700">Loan Type:</label>
-            <input type="text" id="loan_type" wire:model.defer="loan_type" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <div>
-            <label for="loan_amount" class="block text-sm font-medium text-gray-700">Loan Amount:</label>
-            <input type="number" id="loan_amount" wire:model.defer="loan_amount" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <div>
-            <label for="monthly_amortization" class="block text-sm font-medium text-gray-700">Monthly Amortization:</label>
-            <input type="number" id="monthly_amortization" wire:model.defer="monthly_amortization" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
-        </div>
-    </div>
+  
 
     <!-- Save Button -->
     <div class="mt-6">

@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\Employee;
 use App\Models\EmployeeWorkInfo;
 use App\Models\EmployeeBankInfo;
-use App\Models\EmployeeLoanInfo;
+
 use App\Models\EmployeeIdentificationInfo;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,7 +19,6 @@ class EmployeeCreate extends Component
 
     public $bank_name, $account_number, $account_type;
 
-    public $loan_type, $loan_amount, $monthly_amortization;
 
     public $sss_number, $pag_ibig_number, $philhealth_number, $tin_number;
 
@@ -54,11 +53,6 @@ class EmployeeCreate extends Component
             'account_type' => $this->account_type,
         ]);
 
-        $employee->loanInfo()->create([
-            'loan_type' => $this->loan_type,
-            'loan_amount' => $this->loan_amount,
-            'monthly_amortization' => $this->monthly_amortization,
-        ]);
 
         $employee->identificationInfo()->create([
             'sss_number' => $this->sss_number,

@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Employee;
 use App\Models\EmployeeWorkInfo;
 use App\Models\EmployeeBankInfo;
-use App\Models\EmployeeLoanInfo;
 use App\Models\EmployeeIdentificationInfo;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
