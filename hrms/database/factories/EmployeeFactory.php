@@ -50,9 +50,11 @@ class EmployeeFactory extends Factory
     {
         return $this->afterCreating(function (Employee $employee) {
             // Create related models after the employee is created
-            $workInfo = EmployeeWorkInfo::factory()->create([
-                'employee_id' => $employee->id,
-            ]);
+            if (!$employee->workInfo) {
+                EmployeeWorkInfo::factory()->create([
+                    'employee_id' => $employee->id,
+                ]);
+            }
 
             EmployeeIdentificationInfo::factory()->create([
                 'employee_id' => $employee->id,

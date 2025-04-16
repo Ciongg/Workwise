@@ -17,7 +17,7 @@ class EmployeeIdentificationInfoFactory extends Factory
     public function definition(): array
     {
         return [
-            'employee_id' => Employee::factory(), // Automatically link employee_id
+            'employee_id' => null, // Automatically link employee_id
             'sss_number' => $this->faker->unique()->numerify('SSS-########'),
             'pag_ibig_number' => $this->faker->unique()->numerify('PAG-IBIG-########'),
             'philhealth_number' => $this->faker->unique()->numerify('PHIL-########'),

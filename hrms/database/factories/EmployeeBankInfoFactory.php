@@ -16,12 +16,17 @@ class EmployeeBankInfoFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'employee_id' => Employee::factory(),
-            'bank_name' => $this->faker->company,
-            'account_number' => $this->faker->unique()->numerify('###########'),
-            'account_type' => $this->faker->randomElement(['savings', 'checking']),
+        $banks = [
+            'BDO', 'BPI', 'Metrobank', 'Landbank', 'PNB', 
+            'Chinabank', 'RCBC', 'UnionBank', 'EastWest', 
+            'Security Bank', 'UCPB', 'DBP', 'PSBank'
+        ];
 
+        return [
+            'employee_id' => null,
+            'bank_name' => $this->faker->randomElement($banks), // Use only the listed banks
+            'account_number' => $this->faker->unique()->numerify('##########'), // 12-digit account number
+            'account_type' => $this->faker->randomElement(['savings', 'checking']), // Account type can be savings or checking
         ];
     }
 }

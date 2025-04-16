@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\Employee;
 use App\Models\EmployeeWorkInfo;
 use App\Models\EmployeeBankInfo;
-
+use App\Services\PayrollService;
 use App\Models\EmployeeIdentificationInfo;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,15 +15,120 @@ class EmployeeCreate extends Component
     public $first_name, $last_name, $middle_name, $suffix, $gender, $birthdate,
            $email, $phone_number, $marital_status, $address, $emergency_contact_number, $password, $role;
 
-    public $department, $position, $work_status, $hire_date;
+    public $work_status, $hire_date;
 
     public $bank_name, $account_number, $account_type;
 
 
     public $sss_number, $pag_ibig_number, $philhealth_number, $tin_number;
 
+    public $departments = [
+        'Engineering', 'Operations', 'Logistics', 'Procurement', 'Finance', 'HR', 'Sales/Marketing', 'Executive'
+    ];
+    
+    public $positionsData = [
+        ['Engineering', 'Electrical Engineer', 25000, 40000],
+        ['Engineering', 'Project Engineer', 30000, 45000],
+        ['Engineering', 'Technician', 15000, 25000],
+        ['Engineering', 'Electrician', 14000, 22000],
+        ['Operations', 'Project Manager', 35000, 50000],
+        ['Operations', 'Site Supervisor', 28000, 40000],
+        ['Operations', 'Foreman', 22000, 32000],
+        ['Logistics', 'Driver', 14000, 20000],
+        ['Logistics', 'Warehouse Staff', 13000, 18000],
+        ['Logistics', 'Delivery Assistant', 12000, 16000],
+        ['Procurement', 'Procurement Officer', 27000, 37000],
+        ['Procurement', 'Inventory Clerk', 18000, 24000],
+        ['Procurement', 'Supply Chain Assistant', 20000, 30000],
+        ['Finance', 'Accountant', 30000, 45000],
+        ['Finance', 'Bookkeeper', 20000, 30000],
+        ['HR', 'HR Officer', 25000, 35000],
+        ['HR', 'Admin Assistant', 18000, 25000],
+        ['Sales/Marketing', 'Sales Engineer', 28000, 42000],
+        ['Sales/Marketing', 'Marketing Officer', 26000, 38000],
+        ['Sales/Marketing', 'Business Development', 30000, 45000],
+        ['Executive', 'General Manager', 60000, 90000],
+        ['Executive', 'Operations Manager', 50000, 80000],
+    ];
+    
+    
+    public $department;
+    public $position;
+    public $positions = [];
+    public $min_salary;
+    public $max_salary;
+    public $salary;
+
+
+    public function updatedPosition($value)
+    {
+        $selected = collect($this->positionsData)
+            ->first(fn($item) => $item[0] === $this->department && $item[1] === $value);
+    
+        if ($selected) {
+            $this->min_salary = $selected[2];
+            $this->max_salary = $selected[3];
+        } else {
+            $this->min_salary = null;
+            $this->max_salary = null;
+        }
+    }
+    
+    //watch department
+    public function updatedDepartment($value)
+    {
+       
+
+        $this->positions = collect($this->positionsData)
+            ->filter(fn($item) => $item[0] === $value)
+            ->pluck(1)
+            ->values()
+            ->toArray();
+    
+        $this->position = null;
+    }
+
     public function submit()
     {
+        $this->validate([
+
+            'email' => 'required|email|unique:employees,email',
+            
+            'password' => 'required|min:6',
+        
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'middle_name' => 'nullable|string',
+            'suffix' => 'nullable|string',
+            'gender' => 'required|in:male,female',
+            'birthdate' => 'required|date',
+            'phone_number' => 'required|digits:11',
+            'emergency_contact_number' => 'required|digits:11',
+            'marital_status' => 'required',
+            'address' => 'required',
+            'role' => 'required|in:employee,hr,manager',
+        
+            // work info
+            'department' => 'required',
+            'position' => 'required',
+            'salary' => 'required|numeric|min:' . $this->min_salary . '|max:' . $this->max_salary,
+            'work_status' => 'required',
+            'hire_date' => 'required|date',
+        
+            // bank info
+            'bank_name' => 'required',
+            'account_number' => 'required|digits_between:10,12|unique:employee_bank_infos,account_number',  // unique validation for account_number
+            'account_type' => 'required|in:savings,checking',
+        
+            // ids
+            'sss_number' => 'required|unique:employee_identification_infos,sss_number',  // unique validation for sss_number
+            'pag_ibig_number' => 'required|unique:employee_identification_infos,pag_ibig_number',  // unique validation for pag_ibig_number
+            'philhealth_number' => 'required|unique:employee_identification_infos,philhealth_number',  // unique validation for philhealth_number
+            'tin_number' => 'required|unique:employee_identification_infos,tin_number',  // unique validation for tin_number
+        
+        ]);
+        
+
         $employee = Employee::create([
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
@@ -43,6 +148,7 @@ class EmployeeCreate extends Component
         $employee->workInfo()->create([
             'department' => $this->department,
             'position' => $this->position,
+            'salary' => $this->salary,
             'work_status' => $this->work_status,
             'hire_date' => $this->hire_date,
         ]);
@@ -60,6 +166,8 @@ class EmployeeCreate extends Component
             'philhealth_number' => $this->philhealth_number,
             'tin_number' => $this->tin_number,
         ]);
+
+        PayrollService::generatePayrollForEmployee($employee);
 
         session()->flash('success', 'Employee created successfully.');
         $this->reset();

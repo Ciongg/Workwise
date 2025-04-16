@@ -79,9 +79,10 @@
         <div>
             <label for="work_status" class="block text-sm font-medium text-gray-700">Status:</label>
             <select id="work_status" wire:model.defer="work_status" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
-                <option value="active" {{ old('work_status', $work_status) === 'active' ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ old('work_status', $work_status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                <option value="on_leave" {{ old('work_status', $work_status) === 'on_leave' ? 'selected' : '' }}>On Leave</option>
+                <option value="">Select Work Status</option>
+                <option value="full_time">Full-Time</option>
+                <option value="part_time">Part-Time</option>
+                <option value="contract">Contract</option>
             </select>
         </div>
         <div>

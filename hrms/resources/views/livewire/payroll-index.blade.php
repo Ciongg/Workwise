@@ -1,9 +1,9 @@
 <div class="p-6 bg-white shadow-md rounded-lg">
     <h2 class="text-2xl font-semibold mb-6 text-gray-800">Payroll List</h2>
-    <a href="{{route('hr.show-payroll-deductions')}} " class="color-blue font-bold hover:underline">Deductions</a>
+    <a href="{{route('hr.show-payroll-deductions')}} " class="color-teal-500 font-bold hover:underline">Deductions</a>
     <div class="mb-4">
         <button wire:click="recalculateAllPayrolls"
-            class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+            class="bg-teal-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
             Recalculate Payrolls
         </button>
     </div>

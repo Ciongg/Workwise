@@ -11,7 +11,7 @@ class EmployeeIndex extends Component
 
     public $searchRole = '';
     public $searchName = '';
-    public $sortField = 'id';
+    public $sortField = 'id'; //default ascending in the index
     public $sortDirection = 'asc';
 
 
@@ -24,6 +24,7 @@ class EmployeeIndex extends Component
 
     public function selectEmployee($id)
     {
+        logger()->info('Selected Employee ID: ' . $id); // Log the selected employee ID
         $this->selectedEmployee = Employee::find($id);
         $this->dispatch('open-modal', name: 'view-employee');
         
@@ -57,19 +58,22 @@ class EmployeeIndex extends Component
  
         $query = Employee::with('workInfo');
 
-        if ($this->searchRole !== '') {
+        // Filter by role if a role is selected
+        if (!empty($this->searchRole)) {
             $query->where('role', $this->searchRole);
         }
 
-        if ($this->searchName !== '') {
-            $query->where(function($q) {
+        // Filter by name if a search term is entered
+        if (!empty($this->searchName)) {
+            $query->where(function ($q) {
                 $q->where('first_name', 'like', '%' . $this->searchName . '%')
-                  ->orWhere('last_name', 'like', '%' . $this->searchName . '%');
+                ->orWhere('last_name', 'like', '%' . $this->searchName . '%');
             });
         }
-
         
-        $employees = $query->orderBy($this->sortField, $this->sortDirection)->paginate(10);
+        $employees = $query
+        ->orderBy($this->sortField, $this->sortDirection)
+        ->paginate(10);
         
 
     return view('livewire.employee-index', [

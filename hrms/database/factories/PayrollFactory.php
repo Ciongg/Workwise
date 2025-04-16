@@ -46,7 +46,7 @@ class PayrollFactory extends Factory
         $net = $gross - ($deductions + $additional_deductions);
 
         return [
-            'employee_id' => $employee->id,
+            'employee_id' => null,
             'pay_period_start' => now()->startOfMonth(),
             'pay_period_end' => now()->endOfMonth(),
             'allowance' => $allowance,

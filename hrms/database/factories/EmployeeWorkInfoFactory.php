@@ -18,35 +18,37 @@ class EmployeeWorkInfoFactory extends Factory
     {
 
         $positionSalaries = [
-            ['Engineering', 'Electrical Engineer', 30000, 60000],
-            ['Engineering', 'Project Engineer', 25000, 45000],
-            ['Engineering', 'Technician', 14000, 20000],
-            ['Engineering', 'Electrician', 15000, 25000],
-            ['Operations', 'Project Manager', 45000, 80000],
-            ['Operations', 'Site Supervisor', 25000, 40000],
-            ['Operations', 'Foreman', 20000, 30000],
-            ['Logistics', 'Driver', 12000, 18000],
-            ['Logistics', 'Warehouse Staff', 12000, 16000],
-            ['Logistics', 'Delivery Assistant', 11000, 15000],
-            ['Procurement', 'Procurement Officer', 18000, 30000],
-            ['Procurement', 'Inventory Clerk', 13000, 18000],
-            ['Procurement', 'Supply Chain Assistant', 14000, 22000],
-            ['Finance', 'Accountant', 20000, 35000],
-            ['Finance', 'Bookkeeper', 15000, 25000],
-            ['HR', 'HR Officer', 18000, 30000],
-            ['HR', 'Admin Assistant', 12000, 18000],
-            ['Sales/Marketing', 'Sales Engineer', 25000, 45000],
-            ['Sales/Marketing', 'Marketing Officer', 15000, 25000],
-            ['Sales/Marketing', 'Business Development', 20000, 35000],
-            ['Executive', 'General Manager', 80000, 150000],
-            ['Executive', 'Operations Manager', 50000, 90000],
+            ['Engineering', 'Electrical Engineer', 25000, 40000],
+            ['Engineering', 'Project Engineer', 30000, 45000],
+            ['Engineering', 'Technician', 15000, 25000],
+            ['Engineering', 'Electrician', 14000, 22000],
+            ['Operations', 'Project Manager', 35000, 50000],
+            ['Operations', 'Site Supervisor', 28000, 40000],
+            ['Operations', 'Foreman', 22000, 32000],
+            ['Logistics', 'Driver', 14000, 20000],
+            ['Logistics', 'Warehouse Staff', 13000, 18000],
+            ['Logistics', 'Delivery Assistant', 12000, 16000],
+            ['Procurement', 'Procurement Officer', 27000, 37000],
+            ['Procurement', 'Inventory Clerk', 18000, 24000],
+            ['Procurement', 'Supply Chain Assistant', 20000, 30000],
+            ['Finance', 'Accountant', 30000, 45000],
+            ['Finance', 'Bookkeeper', 20000, 30000],
+            ['HR', 'HR Officer', 25000, 35000],
+            ['HR', 'Admin Assistant', 18000, 25000],
+            ['Sales/Marketing', 'Sales Engineer', 28000, 42000],
+            ['Sales/Marketing', 'Marketing Officer', 26000, 38000],
+            ['Sales/Marketing', 'Business Development', 30000, 45000],
+            ['Executive', 'General Manager', 60000, 90000],
+            ['Executive', 'Operations Manager', 50000, 80000],
         ];
+
+        
 
         $entry = collect($positionSalaries)->random();
         [$department, $position, $minSalary, $maxSalary] = $entry;
 
         return [
-           'employee_id' => Employee::factory(), // Automatically link employee_id
+           'employee_id' => null, // Automatically link employee_id
             'work_status' => $this->faker->randomElement(['full_time', 'part_time', 'contract']),
             'department' => $department,
             'position' => $position,

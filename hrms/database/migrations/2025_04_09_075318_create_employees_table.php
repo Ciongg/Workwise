@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('gender');
             $table->date('birthdate');
             $table->string('email')->unique();
-            $table->string('phone_number');
+            $table->string('phone_number')->unique();
             $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed']);
             $table->string('address');
             $table->string('emergency_contact_number');
