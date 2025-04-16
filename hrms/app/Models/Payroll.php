@@ -23,6 +23,32 @@ class Payroll extends Model
         'status',
     ];
 
+    // app/Models/Payroll.php
+
+    public function recalculateDeductions()
+    {
+        $deductionSettings = PayrollDeductionSetting::first();
+        $basic = $this->basic_salary;
+        $allowance = $this->allowance ?? 0;
+        $overtime = $this->overtime_pay ?? 0;
+        $gross = $basic + $allowance + $overtime;
+
+        $sss = $basic * ($deductionSettings->sss_rate ?? 0.045);
+        $philhealth = $basic * ($deductionSettings->philhealth_rate ?? 0.03);
+        $pagibig = $deductionSettings->pagibig_fixed ?? 100;
+        $withholding_tax = $basic * ($deductionSettings->withholding_tax_rate ?? 0.1);
+        $deductions = $sss + $philhealth + $pagibig + $withholding_tax;
+
+        $net = $gross - $deductions;
+
+        $this->gross_pay = $gross;
+        $this->deductions = $deductions;
+        $this->net_pay = $net;
+
+        $this->save();
+    }
+
+
     public function employee()
     {
     return $this->belongsTo(Employee::class);

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\EmployeeWorkInfo;
+use App\Models\PayrollDeductionSetting;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Payroll>
  */
@@ -17,7 +18,8 @@ class PayrollFactory extends Factory
      */
     public function definition(): array
     {
-       
+        $deductionSettings = PayrollDeductionSetting::first();
+      
         $employee = Employee::inRandomOrder()->first() ?? Employee::factory()->create();
         
      
@@ -32,10 +34,10 @@ class PayrollFactory extends Factory
         $overtime = round(fake()->numberBetween(0, 300));
         $gross = $basic + $allowance + $overtime;
 
-        $sss = $basic * 0.045;
-        $philhealth = $basic * 0.03;
-        $pagibig = 100;
-        $withholding_tax = $basic * 0.1;
+        $sss = $basic * ($deductionSettings->sss_rate ?? 0.045);
+        $philhealth = $basic * ($deductionSettings->philhealth_rate ?? 0.03);
+        $pagibig = $deductionSettings->pagibig_fixed ?? 100;
+        $withholding_tax = $basic * ($deductionSettings->withholding_tax_rate ?? 0.1);
     
         $deductions = $sss + $philhealth + $pagibig + $withholding_tax;
 

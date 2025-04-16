@@ -1,5 +1,12 @@
 <div class="p-6 bg-white shadow-md rounded-lg">
     <h2 class="text-2xl font-semibold mb-6 text-gray-800">Payroll List</h2>
+    <a href="{{route('hr.show-payroll-deductions')}} " class="color-blue font-bold hover:underline">Deductions</a>
+    <div class="mb-4">
+        <button wire:click="recalculateAllPayrolls"
+            class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+            Recalculate Payrolls
+        </button>
+    </div>
     
     <div class="overflow-x-auto">
         <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200">
@@ -44,5 +51,9 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <div class="py-3">
+        {{ $employees->links() }}
     </div>
 </div>

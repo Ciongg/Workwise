@@ -14,8 +14,9 @@ Route::get('/hr/dashboard', [HRController::class, 'dashboard'])->name('hr.dashbo
 Route::get('/hr/dashboard/create-employee', [HRController::class, 'create'])->name('hr.create-employee');
 Route::get('/hr/dashboard/employees', [HRController::class, 'index'])->name('hr.show-employees');
 Route::get('/hr/dashboard/payroll', [HRController::class, 'showPayroll'])->name('hr.show-payroll');
-// Route::get('/hr/dashboard/payroll/deductions', [HRController::class, 'showPayrollDeductions'])->name('hr.show-payroll-deductions');
 
+Route::get('/hr/dashboard/payroll/deductions', [HRController::class, 'showPayrollDeductions'])->name('hr.show-payroll-deductions');
+Route::post('/hr/dashboard/payroll/deductions', [HRController::class, 'updatePayrollDeductions'])->name('hr.update-payroll-deductions');
 
 
 Route::post('/login', [SessionController::class, 'store'])->name('login');

@@ -26,6 +26,7 @@ class EmployeeIndex extends Component
     {
         $this->selectedEmployee = Employee::find($id);
         $this->dispatch('open-modal', name: 'view-employee');
+        
     }
 
     public function updatedSearchRole()
