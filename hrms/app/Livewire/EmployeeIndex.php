@@ -16,11 +16,11 @@ class EmployeeIndex extends Component
 
 
     use WithPagination;
-
+    
+    public $selectedEmployee = null;
     //$refresh is not needed it just readability that thats what it does, even withotu it it refreshes the livewire when it hears a signal.
     protected $listeners = ['employeeUpdated' => '$refresh'];
 
-    public $selectedEmployee = null;
 
     public function selectEmployee($id)
     {

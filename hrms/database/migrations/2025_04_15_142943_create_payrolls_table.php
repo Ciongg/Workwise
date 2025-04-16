@@ -16,13 +16,13 @@ return new class extends Migration
             $table->unsignedBigInteger('employee_id');
             $table->date('pay_period_start');
             $table->date('pay_period_end');
-            $table->decimal('basic_salary', 10, 2);
             $table->decimal('allowance', 10, 2)->default(0);
             $table->decimal('overtime_pay', 10, 2)->default(0);
             $table->decimal('gross_pay', 10, 2);
             $table->decimal('deductions', 10, 2);
+            $table->decimal('additional_deductions', 10, 2);
             $table->decimal('net_pay', 10, 2);
-            $table->enum('status', ['pending', 'paid'])->default('pending');
+            $table->enum('status', ['pending', 'paid', 'approved'])->default('pending');
             $table->timestamps();
             
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade'); 

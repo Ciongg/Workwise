@@ -14,6 +14,7 @@ class EmployeeWorkInfo extends Model
         'employee_id',
         'department',
         'position',
+        'salary',
         'work_status',
         'hire_date',
       

@@ -54,7 +54,7 @@ class EmployeeModal extends Component
             $this->emergency_contact_number = $employee->emergency_contact_number;
             $this->role = $employee->role;
 
-            if ($employee->workInfo) {
+        if ($employee->workInfo) {
             $this->department = $employee->workInfo->department;
             $this->position = $employee->workInfo->position;
             $this->work_status = $employee->workInfo->work_status;

@@ -1,4 +1,5 @@
-@props(['employee', 'name', 'title'])
+@props(['employee', 'name', 'title', 'modalKey'])
+
 
 <div
     x-data="{ show: false, name: '{{ $name }}' }"
@@ -15,6 +16,18 @@
 
     <!-- Modal Content -->
     <div class="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 relative z-10">
-        <livewire:employee-modal :employee="$employee" :key="$employee->id" />
+
+        @if($name === 'view-employee')
+
+            <livewire:employee-modal :employee="$employee" :key="$employee->id" />
+
+        @elseif($name === 'view-employee-payroll')
+
+        <livewire:employee-payroll-modal :employee="$employee" :key="$modalKey" />
+
+
+
+        @endif
+
     </div>
 </div>

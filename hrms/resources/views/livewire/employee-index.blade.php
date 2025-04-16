@@ -1,6 +1,8 @@
 
     <div class="overflow-x-auto">
-
+        @if(session('success'))
+        <div class="bg-green-100 text-green-800 p-2 mb-4 rounded">{{ session('success') }}</div>
+        @endif
         <div class="flex justify-between items-center mb-4 mt-4 mx-6">
 
             <div class="mb-4 flex items-center gap-4">

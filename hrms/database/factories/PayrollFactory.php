@@ -29,29 +29,31 @@ class PayrollFactory extends Factory
         }
         
         
-        $basic = $employee->workInfo->salary;
+        $basic_salary = $employee->workInfo->salary;
         $allowance = 1000;
         $overtime = round(fake()->numberBetween(0, 300));
-        $gross = $basic + $allowance + $overtime;
+        $gross = $basic_salary  + $allowance + $overtime;
+        
 
-        $sss = $basic * ($deductionSettings->sss_rate ?? 0.045);
-        $philhealth = $basic * ($deductionSettings->philhealth_rate ?? 0.03);
+        $sss = $basic_salary  * ($deductionSettings->sss_rate ?? 0.045);
+        $philhealth = $basic_salary  * ($deductionSettings->philhealth_rate ?? 0.03);
         $pagibig = $deductionSettings->pagibig_fixed ?? 100;
-        $withholding_tax = $basic * ($deductionSettings->withholding_tax_rate ?? 0.1);
-    
+        $withholding_tax = $basic_salary  * ($deductionSettings->withholding_tax_rate ?? 0.1);
+        $additional_deductions = round(fake()->numberBetween(0, 300));
         $deductions = $sss + $philhealth + $pagibig + $withholding_tax;
+        
 
-        $net = $gross - $deductions;
+        $net = $gross - ($deductions + $additional_deductions);
 
         return [
             'employee_id' => $employee->id,
             'pay_period_start' => now()->startOfMonth(),
             'pay_period_end' => now()->endOfMonth(),
-            'basic_salary' => $basic,
             'allowance' => $allowance,
             'overtime_pay' => $overtime,
             'gross_pay' => $gross,
             'deductions' => $deductions,
+            'additional_deductions' => $additional_deductions,
             'net_pay' => $net,
             'status' => 'pending',
         ];

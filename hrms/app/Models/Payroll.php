@@ -14,11 +14,11 @@ class Payroll extends Model
         'employee_id',
         'pay_period_start',
         'pay_period_end',
-        'basic_salary',
         'allowance',
         'overtime_pay',
         'gross_pay',
         'deductions',
+        'additional_deductions',
         'net_pay',
         'status',
     ];
@@ -28,22 +28,23 @@ class Payroll extends Model
     public function recalculateDeductions()
     {
         $deductionSettings = PayrollDeductionSetting::first();
-        $basic = $this->basic_salary;
+        $basic_salary = $this->employee->workInfo->salary ?? 0;
         $allowance = $this->allowance ?? 0;
         $overtime = $this->overtime_pay ?? 0;
-        $gross = $basic + $allowance + $overtime;
+        $gross = $basic_salary + $allowance + $overtime;
 
-        $sss = $basic * ($deductionSettings->sss_rate ?? 0.045);
-        $philhealth = $basic * ($deductionSettings->philhealth_rate ?? 0.03);
+        $sss = $basic_salary * ($deductionSettings->sss_rate ?? 0.045);
+        $philhealth = $basic_salary * ($deductionSettings->philhealth_rate ?? 0.03);
         $pagibig = $deductionSettings->pagibig_fixed ?? 100;
-        $withholding_tax = $basic * ($deductionSettings->withholding_tax_rate ?? 0.1);
+        $withholding_tax = $basic_salary * ($deductionSettings->withholding_tax_rate ?? 0.1);
         $deductions = $sss + $philhealth + $pagibig + $withholding_tax;
 
-        $net = $gross - $deductions;
+        $net = $gross - ($deductions + $this->additional_deductions);
 
         $this->gross_pay = $gross;
         $this->deductions = $deductions;
         $this->net_pay = $net;
+      
 
         $this->save();
     }
