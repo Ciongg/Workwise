@@ -18,6 +18,6 @@ class EmployeeSeeder extends Seeder
     {
         
         // Create additional employees using the factory
-        Employee::factory()->count(30)->create();
+        Employee::factory()->count(20)->create();
     }
 }

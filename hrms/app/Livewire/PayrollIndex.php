@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Employee;
+use App\Models\Payroll;
 class PayrollIndex extends Component
 {
 
@@ -29,7 +30,7 @@ class PayrollIndex extends Component
 
     public function recalculateAllPayrolls()
     {
-        $payrolls = \App\Models\Payroll::all();
+        $payrolls = Payroll::all();
 
         foreach ($payrolls as $payroll) {
             $payroll->recalculateDeductions();
@@ -38,6 +39,39 @@ class PayrollIndex extends Component
         
 
         session()->flash('success', 'Payroll recalculated based on updated deduction settings.');
+    }
+
+    public function generatePayslips()
+    {
+        // Fetch only approved payrolls
+        $approvedPayrolls = Payroll::where('status', 'approved')->get();
+
+        foreach ($approvedPayrolls as $payroll) {
+            // Save the approved payroll to the archived payrolls table
+            \App\Models\ArchivedPayroll::create([
+                'employee_id' => $payroll->employee_id,
+                'pay_period_start' => $payroll->pay_period_start,
+                'pay_period_end' => $payroll->pay_period_end,
+                'allowance' => $payroll->allowance,
+                'overtime_pay' => $payroll->overtime_pay,
+                'gross_pay' => $payroll->gross_pay,
+                'deductions' => $payroll->deductions,
+                'additional_deductions' => $payroll->additional_deductions,
+                'net_pay' => $payroll->net_pay,
+                'status' => 'paid', // Change status to paid
+            ]);
+
+            // Update the status of the current payroll to paid
+            $payroll->update(['status' => 'paid']);
+        }
+
+        // Update all current payrolls for the next month
+        Payroll::where('status', 'pending')->orWhere('status', 'paid')->update([
+            'pay_period_start' => now()->startOfMonth()->addMonth(),
+            'pay_period_end' => now()->endOfMonth()->addMonth(),
+        ]);
+
+        session()->flash('message', 'Payslips generated and archived successfully.');
     }
 
    

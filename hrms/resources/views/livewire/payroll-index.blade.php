@@ -7,6 +7,17 @@
             Recalculate Payrolls
         </button>
     </div>
+
+    <div class="mb-4 flex justify-between">
+        <button wire:click="generatePayslips"
+            class="bg-teal-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+            Generate Payslips
+        </button>
+        <a href="{{ route('hr.show-archived-payroll') }}"
+            class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
+            View Archived Payroll
+        </a>
+    </div>
     
     <div class="overflow-x-auto">
         <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200">

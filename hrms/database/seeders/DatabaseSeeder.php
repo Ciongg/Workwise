@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             EmployeeSeeder::class,
             PayrollDeductionSettingSeeder::class,
+            ArchivedPayrollSeeder::class, // Add this line
             // Add other seeders here if needed
         ]);
     }

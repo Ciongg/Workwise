@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\DB;
 class Payroll extends Model
 {
     /** @use HasFactory<\Database\Factories\PayrollFactory> */
@@ -23,7 +23,6 @@ class Payroll extends Model
         'status',
     ];
 
-    // app/Models/Payroll.php
 
     public function recalculateDeductions()
     {

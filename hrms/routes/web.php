@@ -4,7 +4,7 @@ use App\Http\Controllers\HRController;
 use App\Http\Controllers\SessionController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\ShowEmployeeModal;
-
+use App\Livewire\ArchivedPayrollIndex;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -17,7 +17,7 @@ Route::get('/hr/dashboard/payroll', [HRController::class, 'showPayroll'])->name(
 
 Route::get('/hr/dashboard/payroll/deductions', [HRController::class, 'showPayrollDeductions'])->name('hr.show-payroll-deductions');
 Route::post('/hr/dashboard/payroll/deductions', [HRController::class, 'updatePayrollDeductions'])->name('hr.update-payroll-deductions');
-
+Route::get('/hr/dashboard/payroll/archived', [HRController::class, 'showArchivedPayroll'])->name('hr.show-archived-payroll');
 
 Route::post('/login', [SessionController::class, 'store'])->name('login');
 

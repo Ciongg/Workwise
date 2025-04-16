@@ -21,6 +21,10 @@ class HRController extends Controller
         return view('hr.show-payroll');
     }
 
+    public function showArchivedPayroll(){
+        return view('hr.show-archived-payroll');
+    }
+
     public function index(){
        
         return view('hr.index');

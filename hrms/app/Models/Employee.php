@@ -50,8 +50,11 @@ class Employee extends Authenticatable
     }
 
     public function payrollInfo()    {
-        return $this->hasOne(payroll::class);
+        return $this->hasOne(Payroll::class);
     }
+
+
+
 
 
 
