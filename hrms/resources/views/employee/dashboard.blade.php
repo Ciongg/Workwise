@@ -11,6 +11,7 @@
         <div class="flex gap-5 justify-center text-center items-center mb-8">
             <a href="{{ route('employee.profile') }}" class="cursor-pointer bg-gray-400 shadow-md p-4 text-white font-bold rounded">Manage Own Profile</a>
             <a href="{{ route('employee.payslips') }}" class="cursor-pointer bg-gray-400 shadow-md p-4 text-white font-bold rounded">Payslips</a>
+            <a href="{{ route('employee.requests') }}" class="cursor-pointer bg-gray-400 shadow-md p-4 text-white font-bold rounded">Requests</a>
         </div>
 
         <!-- Time In/Out Section -->
