@@ -4,6 +4,8 @@ use App\Http\Controllers\HRController;
 use App\Http\Controllers\SessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
+use App\Livewire\Employee\EmployeeRequestForm;
+use App\Livewire\Employee\EmployeeOvertimeLog;
 
 
 Route::get('/', function () {
@@ -27,3 +29,7 @@ Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
 Route::get('/employee/profile', [EmployeeController::class, 'profile'])->name('employee.profile');
 Route::get('/employee/payslips', [EmployeeController::class, 'payslips'])->name('employee.payslips');
+
+// Livewire Components for Employee
+Route::get('/employee/requests', EmployeeRequestForm::class)->name('employee.requests');
+Route::get('/employee/overtime-log', EmployeeOvertimeLog::class)->name('employee.overtime-log');
