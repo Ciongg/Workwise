@@ -4,7 +4,7 @@
 <div
     x-data="{ show: false, name: '{{ $name }}' }"
     x-show="show"
-    x-on:open-modal.window="show = ($event.detail.name === name)"
+    x-on:open-modal.window="if ($event.detail.name === name) { show = true}"
     x-on:close-modal.window="show = false"
     x-on:keydown.escape.window="show = false"
     style="display: none;"

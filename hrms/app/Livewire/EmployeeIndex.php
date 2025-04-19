@@ -13,7 +13,7 @@ class EmployeeIndex extends Component
     public $searchName = '';
     public $sortField = 'id'; //default ascending in the index
     public $sortDirection = 'asc';
-
+    public $modalKey;
 
     use WithPagination;
     
@@ -24,11 +24,13 @@ class EmployeeIndex extends Component
 
     public function selectEmployee($id)
     {
-        logger()->info('Selected Employee ID: ' . $id); // Log the selected employee ID
         $this->selectedEmployee = Employee::find($id);
-        $this->dispatch('open-modal', name: 'view-employee');
-        
+        $this->modalKey = uniqid(); // Generate a unique key for the modal
+        $this->dispatch('open-modal', ['name' => 'view-employee']); // Ensure the name matches the modal's name
     }
+
+ 
+
 
     public function updatedSearchRole()
     {

@@ -74,6 +74,34 @@ class PayrollIndex extends Component
         session()->flash('message', 'Payslips generated and archived successfully.');
     }
 
+    public function generatePayslipForEmployee($employeeId)
+    {
+        $payroll = Payroll::where('employee_id', $employeeId)->where('status', 'approved')->first();
+
+        if ($payroll) {
+            // Save the approved payroll to the archived payrolls table
+            \App\Models\ArchivedPayroll::create([
+                'employee_id' => $payroll->employee_id,
+                'pay_period_start' => $payroll->pay_period_start,
+                'pay_period_end' => $payroll->pay_period_end,
+                'allowance' => $payroll->allowance,
+                'overtime_pay' => $payroll->overtime_pay,
+                'gross_pay' => $payroll->gross_pay,
+                'deductions' => $payroll->deductions,
+                'additional_deductions' => $payroll->additional_deductions,
+                'net_pay' => $payroll->net_pay,
+                'status' => 'paid', // Change status to paid
+            ]);
+
+            // Update the status of the current payroll to paid
+            $payroll->update(['status' => 'paid']);
+
+            session()->flash('message', 'Payslip generated and archived successfully for the employee.');
+        } else {
+            session()->flash('error', 'No approved payroll found for this employee.');
+        }
+    }
+
    
     public function render()
     {

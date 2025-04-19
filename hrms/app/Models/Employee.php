@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+
 class Employee extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\EmployeeFactory> */
@@ -15,18 +16,17 @@ class Employee extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
+        'email',
+        'password',
         'middle_name',
         'suffix',
         'gender',
         'birthdate',
-        'email',
         'phone_number',
         'role',
-        'password',
         'address',
         'marital_status',
         'emergency_contact_number',
-
     ];
 
     protected $hidden = [
@@ -34,29 +34,33 @@ class Employee extends Authenticatable
         'remember_token',
     ];
 
-
-   
-
-    public function workInfo(){
-        return $this->hasOne(EmployeeWorkInfo::class);
+    // Relationship with Work Info
+    public function workInfo()
+    {
+        return $this->hasOne(EmployeeWorkInfo::class, 'employee_id');
     }
 
-    public function bankInfo(){
-        return $this->hasOne(EmployeeBankInfo::class);
+    // Relationship with Bank Info
+    public function bankInfo()
+    {
+        return $this->hasOne(EmployeeBankInfo::class, 'employee_id');
     }
 
-    public function identificationInfo()    {
-        return $this->hasOne(EmployeeIdentificationInfo::class);
+    // Relationship with Identification Info
+    public function identificationInfo()
+    {
+        return $this->hasOne(EmployeeIdentificationInfo::class, 'employee_id');
     }
 
-    public function payrollInfo()    {
+    // Relationship with Payroll Info
+    public function payrollInfo()
+    {
         return $this->hasOne(Payroll::class);
     }
 
-
-
-
-
-
-
+    // Relationship with Archived Payrolls
+    public function archivedPayrolls()
+    {
+        return $this->hasMany(ArchivedPayroll::class, 'employee_id');
+    }
 }

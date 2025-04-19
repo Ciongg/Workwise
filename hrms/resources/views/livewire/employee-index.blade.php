@@ -73,6 +73,8 @@
                                 class="text-teal-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
                                 View/Edit
                             </a>
+
+                            
                         </td>
                     </tr>
                 @endforeach
@@ -83,8 +85,9 @@
             {{ $employees->links() }}
         </div>
 
+
         @if ($selectedEmployee)
-            <x-modal :employee="$selectedEmployee" name="view-employee" title="Employee View" />
+        <x-modal :employee="$selectedEmployee" name="view-employee" title="Employee View"  :modalKey="$modalKey"/>
         @endif
     </div>
 </div>
