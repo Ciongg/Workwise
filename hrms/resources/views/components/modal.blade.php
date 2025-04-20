@@ -1,4 +1,4 @@
-@props(['employee', 'name', 'title', 'modalKey', 'request'])
+@props(['employee', 'name', 'title', 'modalKey', 'request', 'attendance'])
 
 
 <div
@@ -28,6 +28,13 @@
         @elseif($name === 'view-employee-request')
 
         <livewire:employee-request-modal :request="$request" :key="$modalKey" />
+
+        @elseif($name === 'view-attendance')
+
+        <livewire:employee-attendance-modal :attendance="$attendance" :key="$modalKey" />
+
+        @elseif($name === 'create-attendance')
+        <livewire:attendance-create-modal :key="$modalKey" />
 
 
         @endif

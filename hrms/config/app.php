@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Manila', // for Philippine time
 
     /*
     |--------------------------------------------------------------------------

@@ -54,8 +54,6 @@ class EmployeeRequestModal extends Component
 
     public function render()
     {
-        return view('livewire.employee-request-modal', [
-            'request' => $this->request,
-        ]);
+        return view('livewire.employee-request-modal');
     }
 }

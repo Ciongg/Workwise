@@ -12,6 +12,7 @@ class EmployeeModal extends Component
     public $email, $phone_number, $address, $marital_status, $emergency_contact_number, $role;
       // Work Info
       public $department, $position, $work_status, $hire_date;
+      public $work_start_time, $work_end_time, $break_start_time, $break_end_time;
     
       // Bank Info
       public $bank_name, $account_number, $account_type;
@@ -48,6 +49,10 @@ class EmployeeModal extends Component
             $this->position = $employee->workInfo->position;
             $this->work_status = $employee->workInfo->work_status;
             $this->hire_date = $employee->workInfo->hire_date;
+            $this->work_start_time = $employee->workInfo->work_start_time ?? '08:00:00';
+            $this->work_end_time = $employee->workInfo->work_end_time ?? '17:00:00';
+            $this->break_start_time = $employee->workInfo->break_start_time ?? '12:00:00';
+            $this->break_end_time = $employee->workInfo->break_end_time ?? '13:00:00';
         }
 
         // Bank Info
@@ -71,6 +76,13 @@ class EmployeeModal extends Component
 
     public function save()
     {
+        $this->validate([
+            'work_start_time' => 'required|date_format:H:i',
+            'work_end_time' => 'required|date_format:H:i|after:work_start_time',
+            'break_start_time' => 'nullable|date_format:H:i',
+            'break_end_time' => 'nullable|date_format:H:i|after:break_start_time',
+        ]);
+
         // Update the Employee
         $this->employee->update([
             'first_name' => $this->first_name,
@@ -94,6 +106,10 @@ class EmployeeModal extends Component
                 'position' => $this->position,
                 'work_status' => $this->work_status,
                 'hire_date' => $this->hire_date,
+                'work_start_time' => $this->work_start_time,
+                'work_end_time' => $this->work_end_time,
+                'break_start_time' => $this->break_start_time,
+                'break_end_time' => $this->break_end_time,
             ]);
         } else {
             // Create new Work Info if none exists
@@ -118,6 +134,7 @@ class EmployeeModal extends Component
         $this->dispatch('close-modal');
         
         session()->flash('message', 'Employee information updated successfully!');
+        session()->flash('message', 'Work schedule updated successfully!');
 
     }
 

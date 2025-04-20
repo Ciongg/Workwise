@@ -34,6 +34,10 @@ class HRController extends Controller
         return view('hr.show-request');
     }
 
+    public function showAttendance(){
+        return view('hr.show-attendance');
+    }
+
 
     public function showPayrollDeductions()
     {

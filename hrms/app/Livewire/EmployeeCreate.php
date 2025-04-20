@@ -19,8 +19,12 @@ class EmployeeCreate extends Component
 
     public $bank_name, $account_number, $account_type;
 
-
     public $sss_number, $pag_ibig_number, $philhealth_number, $tin_number;
+
+    public $work_start_time = '08:00:00';
+    public $work_end_time = '17:00:00';
+    public $break_start_time = '12:00:00';
+    public $break_end_time = '13:00:00';
 
     public $departments = [
         'Engineering', 'Operations', 'Logistics', 'Procurement', 'Finance', 'HR', 'Sales/Marketing', 'Executive'
@@ -91,13 +95,10 @@ class EmployeeCreate extends Component
     public function submit()
     {
         $this->validate([
-
             'email' => 'required|email|unique:employees,email',
-            
             'password' => 'required|min:6',
-        
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string',
             'suffix' => 'nullable|string',
             'gender' => 'required|in:male,female',
@@ -114,6 +115,10 @@ class EmployeeCreate extends Component
             'salary' => 'required|numeric|min:' . $this->min_salary . '|max:' . $this->max_salary,
             'work_status' => 'required',
             'hire_date' => 'required|date',
+            'work_start_time' => 'required|date_format:H:i',
+            'work_end_time' => 'required|date_format:H:i|after:work_start_time',
+            'break_start_time' => 'nullable|date_format:H:i',
+            'break_end_time' => 'nullable|date_format:H:i|after:break_start_time',
         
             // bank info
             'bank_name' => 'required',
@@ -151,6 +156,10 @@ class EmployeeCreate extends Component
             'salary' => $this->salary,
             'work_status' => $this->work_status,
             'hire_date' => $this->hire_date,
+            'work_start_time' => $this->work_start_time,
+            'work_end_time' => $this->work_end_time,
+            'break_start_time' => $this->break_start_time,
+            'break_end_time' => $this->break_end_time,
         ]);
 
         $employee->bankInfo()->create([

@@ -19,6 +19,11 @@ return new class extends Migration
             $table->string('position');
             $table->string('salary');
             $table->date('hire_date');
+            $table->time('work_start_time');
+            $table->time('work_end_time');
+            $table->time('break_start_time')->nullable();
+            $table->time('break_end_time')->nullable();
+
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade'); 

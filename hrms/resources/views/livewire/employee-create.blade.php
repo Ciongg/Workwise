@@ -150,6 +150,32 @@
     </div>
 </div>
 
+<div>
+    <h3 class="text-lg font-semibold text-gray-700 mb-2">Work Schedule</h3>
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label for="work_start_time" class="block text-sm font-medium text-gray-700">Work Start Time</label>
+            <input type="time" id="work_start_time" wire:model="work_start_time" class="border rounded px-3 py-2 w-full">
+            @error('work_start_time') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+        <div>
+            <label for="work_end_time" class="block text-sm font-medium text-gray-700">Work End Time</label>
+            <input type="time" id="work_end_time" wire:model="work_end_time" class="border rounded px-3 py-2 w-full">
+            @error('work_end_time') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+        <div>
+            <label for="break_start_time" class="block text-sm font-medium text-gray-700">Break Start Time</label>
+            <input type="time" id="break_start_time" wire:model="break_start_time" class="border rounded px-3 py-2 w-full">
+            @error('break_start_time') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+        <div>
+            <label for="break_end_time" class="block text-sm font-medium text-gray-700">Break End Time</label>
+            <input type="time" id="break_end_time" wire:model="break_end_time" class="border rounded px-3 py-2 w-full">
+            @error('break_end_time') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+    </div>
+</div>
+
 <!-- Bank Information -->
 <div>
     <h3 class="text-lg font-semibold text-gray-700 mb-2">Bank Information</h3>

@@ -8,6 +8,7 @@
         <a href="{{ route('hr.show-employees') }}" class="cursor-pointer bg-gray-400 shadow-md p-4 text-white font-bold">Employees</a>
         <a href="{{ route('hr.show-payroll') }}" class="cursor-pointer bg-gray-400 shadow-md p-4 text-white font-bold">Payroll System</a>
         <a href="{{ route('hr.show-requests') }}" class="cursor-pointer bg-gray-400 shadow-md p-4 text-white font-bold">Employee Requests</a>
+        <a href="{{ route('hr.show-attendance') }}" class="cursor-pointer bg-gray-400 shadow-md p-4 text-white font-bold">Employee Attendance</a>
        
         
     

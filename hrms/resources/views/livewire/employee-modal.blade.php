@@ -77,6 +77,22 @@
             <input type="text" id="position" wire:model.defer="position" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
         </div>
         <div>
+            <label for="work_start_time" class="block text-sm font-medium text-gray-700">Work Start Time:</label>
+            <input type="time" id="work_start_time" wire:model.defer="work_start_time" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div>
+            <label for="work_end_time" class="block text-sm font-medium text-gray-700">Work End Time:</label>
+            <input type="time" id="work_end_time" wire:model.defer="work_end_time" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div>
+            <label for="break_start_time" class="block text-sm font-medium text-gray-700">Break Start Time:</label>
+            <input type="time" id="break_start_time" wire:model.defer="break_start_time" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div>
+            <label for="break_end_time" class="block text-sm font-medium text-gray-700">Break End Time:</label>
+            <input type="time" id="break_end_time" wire:model.defer="break_end_time" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div>
             <label for="work_status" class="block text-sm font-medium text-gray-700">Status:</label>
             <select id="work_status" wire:model.defer="work_status" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
                 <option value="">Select Work Status</option>

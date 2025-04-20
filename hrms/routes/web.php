@@ -20,6 +20,7 @@ Route::get('/hr/dashboard/payroll/deductions', [HRController::class, 'showPayrol
 Route::post('/hr/dashboard/payroll/deductions', [HRController::class, 'updatePayrollDeductions'])->name('hr.update-payroll-deductions');
 Route::get('/hr/dashboard/payroll/archived', [HRController::class, 'showArchivedPayroll'])->name('hr.show-archived-payroll');
 Route::get('/hr/dashboard/request', [HRController::class, 'showRequests'])->name('hr.show-requests');
+Route::get('/hr/dashboard/attendance', [HRController::class, 'showAttendance'])->name('hr.show-attendance');
 
 // Authentication Routes
 Route::post('/login', [SessionController::class, 'store'])->name('login');

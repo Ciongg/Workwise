@@ -58,7 +58,16 @@
                         <strong>Hire Date:</strong> {{ \Carbon\Carbon::parse($employee->workInfo->hire_date)->format('F j, Y') }}
                     </div>
                     <div>
-                        <strong>Salary:</strong> ₱{{ number_format($employee->workInfo->salary, 2) }}
+                        <strong>Work Start Time:</strong> {{ \Carbon\Carbon::parse($employee->workInfo->work_start_time)->format('h:i A') }}
+                    </div>
+                    <div>
+                        <strong>Work End Time:</strong> {{ \Carbon\Carbon::parse($employee->workInfo->work_end_time)->format('h:i A') }}
+                    </div>
+                    <div>
+                        <strong>Break Start Time:</strong> {{ $employee->workInfo->break_start_time ? \Carbon\Carbon::parse($employee->workInfo->break_start_time)->format('h:i A') : 'N/A' }}
+                    </div>
+                    <div>
+                        <strong>Break End Time:</strong> {{ $employee->workInfo->break_end_time ? \Carbon\Carbon::parse($employee->workInfo->break_end_time)->format('h:i A') : 'N/A' }}
                     </div>
                 </div>
             @else
