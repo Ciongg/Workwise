@@ -3,9 +3,13 @@
 
 <div
     x-data="{ show: false, name: '{{ $name }}' }"
+    x-init="
+        window.addEventListener('open-modal', e => {
+            if (e.detail.name === name) show = true
+        });
+        window.addEventListener('close-modal', e => show = false);
+    "
     x-show="show"
-    x-on:open-modal.window="if ($event.detail.name === name) { show = true}"
-    x-on:close-modal.window="show = false"
     x-on:keydown.escape.window="show = false"
     style="display: none;"
     x-transition.duration.100ms
@@ -35,6 +39,9 @@
 
         @elseif($name === 'create-attendance')
         <livewire:attendance-create-modal :key="$modalKey" />
+
+        @elseif($name === 'overtime-log')
+        <livewire:overtime-log-modal :request="$request" :key="$modalKey"  />
 
 
         @endif

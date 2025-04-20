@@ -68,5 +68,9 @@ class Employee extends Authenticatable
     {
         return $this->hasMany(EmployeeRequest::class);
     }
+
+    public function overtimeLogs() {
+        return $this->hasMany(OvertimeLog::class);
+    }
     
 }

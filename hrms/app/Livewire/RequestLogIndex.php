@@ -11,7 +11,26 @@ class RequestLogIndex extends Component
 {
     use WithPagination;
 
-    public $searchType = '';
+
+
+
+
+    public $showOvertimeLogModal = false;
+    public $selectedOvertimeRequest;
+    public $modalKey;
+
+
+
+    public function openOvertimeLog($requestId)
+    {
+    $this->selectedOvertimeRequest = EmployeeRequest::find($requestId);
+    $this->showOvertimeLogModal = true;
+    $this->modalKey = uniqid();
+    $this->dispatch('open-modal', ['name' => 'overtime-log']);
+    }
+
+
+    public $searchType = '';    
     public $searchStatus = '';
     public $sortField = 'created_at';
     public $sortDirection = 'desc';

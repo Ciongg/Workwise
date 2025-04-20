@@ -62,6 +62,7 @@
                                 class="text-teal-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
                                 View/Edit
                             </a>
+                           
                         </td>
                     </tr>
                 @endforeach
@@ -72,5 +73,9 @@
     @if ($selectedRequest)
         <x-modal name="view-employee-request" :request="$selectedRequest" title="Employee Request View" :modalKey="$modalKey" />
     @endif
+
+
+
+
 </div>
 

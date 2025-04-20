@@ -22,4 +22,8 @@ class EmployeeRequest extends Model
     {
         return $this->belongsTo(Employee::class);
     }
+
+    public function overtimeLog() {
+        return $this->hasOne(OvertimeLog::class, 'request_id');
+    }
 }

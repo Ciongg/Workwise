@@ -30,7 +30,7 @@ class SetTime extends Component
     public function simulateNewDay()
     {
         $today = \App\Services\TimeService::now()->toDateString();
-        \App\Models\Attendance::where('employee_id', auth()->id())
+        \App\Models\Attendance::where('employee_id', \Illuminate\Support\Facades\Auth::user()->id)
             ->where('date', $today)
             ->delete();
 

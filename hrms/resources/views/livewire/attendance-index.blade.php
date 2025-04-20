@@ -65,6 +65,8 @@
                             {{ $sortField === 'time_out' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
                         </span>
                     </th>
+                    <th class="px-4 py-3 border">Overtime In</th>
+                    <th class="px-4 py-3 border">Overtime Out</th>
                     <th class="px-4 py-3 border">Actions</th>
                 </tr>
             </thead>
@@ -82,6 +84,12 @@
                         </td>
                         <td class="px-4 py-2 border">
                             {{ $attendance->time_out ? \Carbon\Carbon::createFromFormat('H:i:s', $attendance->time_out)->format('h:i A') : 'N/A' }}
+                        </td>
+                        <td class="px-4 py-2 border">
+                            {{ optional($attendance->employee->overtimeLogs()->where('date', $attendance->date)->first())->time_in ?? '-' }}
+                        </td>
+                        <td class="px-4 py-2 border">
+                            {{ optional($attendance->employee->overtimeLogs()->where('date', $attendance->date)->first())->time_out ?? '-' }}
                         </td>
                         <td class="px-4 py-2 border">
                             <a 

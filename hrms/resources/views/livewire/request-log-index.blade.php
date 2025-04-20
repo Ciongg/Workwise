@@ -52,6 +52,12 @@
                             {{ $sortDirection === 'asc' ? '▲' : '▼' }}
                         </span>
                     </th>
+                    
+                    <th class="px-4 py-3 border cursor-pointer">
+                        Actions
+        
+                    </th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -74,6 +80,22 @@
                                 {{ ucfirst($request->status) }}
                             </span>
                         </td>
+
+                        <td class="px-4 py-2 border">
+                            @if(
+                                $request->request_type === 'overtime' && 
+                                $request->status === 'approved'
+                            )
+                                <button  
+                                    wire:click="openOvertimeLog({{ $request->id }})"
+                                    x-data 
+                                    x-on:click="$dispatch('open-modal', {name: 'overtime-log'})"
+                                    class="cursor-pointer ml-2 bg-blue-500 text-white px-3 py-2 rounded text-xs hover:bg-blue-600"
+                                >
+                                    Overtime Time In/Out
+                                </button>
+                            @endif
+                        </td>
                     </tr>
                 @empty
                     <tr>
@@ -83,6 +105,11 @@
             </tbody>
         </table>
     </div>
+
+    @if ($showOvertimeLogModal)
+    
+    <x-modal name="overtime-log" title="Log Overtime" :modalKey="$modalKey" :request="$selectedOvertimeRequest" />
+    @endif
 
     <!-- Pagination -->
     <div class="mt-4">
