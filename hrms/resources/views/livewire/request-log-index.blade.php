@@ -73,10 +73,16 @@
                         </td>
                         <td class="px-4 py-2 border">
                             <span class="px-2 py-1 rounded text-white 
-                                {{ 
-                                    $request->status === 'pending' ? 'bg-yellow-500' : 
-                                    ($request->status === 'approved' ? 'bg-green-500' : 'bg-red-500')
-                                }}">
+                                @if($request->status === 'approved')
+                                    bg-green-500
+                                @elseif($request->status === 'pending')
+                                    bg-yellow-500
+                                @elseif($request->status === 'completed')
+                                    bg-blue-500
+                                @else
+                                    bg-red-500
+                                @endif
+                            ">
                                 {{ ucfirst($request->status) }}
                             </span>
                         </td>

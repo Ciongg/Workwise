@@ -44,7 +44,6 @@ class OvertimeLogModal extends Component
         $start = \Carbon\Carbon::parse($log->ot_time_in);
         $end = $now;
 
-        // Always positive, even if user logs out before in (shouldn't happen, but safe)
         $hours = abs($end->floatDiffInHours($start));
 
         $log->update([
@@ -52,7 +51,20 @@ class OvertimeLogModal extends Component
             'total_hours' => $hours,
             'status' => 'completed',
         ]);
+
+        // Also set the associated employee_request to completed
+        $request = $log->request;
+        if ($request && $request->status !== 'completed') {
+            $request->update(['status' => 'completed']);
+        }
+
+        $employee = $log->employee;
+        if ($employee) {
+            \App\Services\PayrollService::generatePayrollForEmployee($employee);
+        }
+
         $this->time_out = $now->format('Y-m-d H:i:s');
+        $this->dispatch('overtimeCompleted');
         $this->dispatch('employeeRequestUpdated');
         $this->dispatch('close-modal');
     }

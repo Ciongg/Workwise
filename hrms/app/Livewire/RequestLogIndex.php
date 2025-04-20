@@ -13,7 +13,10 @@ class RequestLogIndex extends Component
 
 
 
-
+    protected $listeners = [
+        'overtimeCompleted' => '$refresh',
+      
+    ];
 
     public $showOvertimeLogModal = false;
     public $selectedOvertimeRequest;

@@ -49,7 +49,8 @@
                             <span class="px-2 py-1 rounded text-white 
                                 {{ 
                                     $request->status === 'pending' ? 'bg-yellow-500' : 
-                                    ($request->status === 'approved' ? 'bg-green-500' : 'bg-red-500')
+                                    ($request->status === 'approved' ? 'bg-green-500' : 
+                                    ($request->status === 'completed' ? 'bg-blue-500' : 'bg-red-500'))
                                 }}">
                                 {{ ucfirst($request->status) }}
                             </span>

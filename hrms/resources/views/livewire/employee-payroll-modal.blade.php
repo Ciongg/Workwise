@@ -174,6 +174,7 @@
     <h3 class="text-lg font-semibold text-teal-500 mb-4">Overtime Logs</h3>
     <div class="mb-4">
         <strong>Total Overtime Hours:</strong> {{ number_format($totalOvertimeHours, 2) }} hrs<br>
+        <strong>Total Overtime Pay:</strong> ₱{{ number_format($totalOvertimePay, 2) }}<br>
         <strong>Total Normal Hours:</strong> {{ number_format($totalNormalHours, 2) }} hrs
     </div>
     <div class="overflow-x-auto">

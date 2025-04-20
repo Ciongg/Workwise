@@ -30,6 +30,7 @@ class EmployeePayrollModal extends Component
     public $overtimeLogs = [];
     public $totalOvertimeHours = 0;
     public $totalNormalHours = 0;
+    public $totalOvertimePay = 0;
 
     public function mount($employee)
     {
@@ -77,6 +78,14 @@ class EmployeePayrollModal extends Component
 
         // Calculate total overtime hours
         $this->totalOvertimeHours = $employee->overtimeLogs()->sum('total_hours');
+
+        // Calculate hourly rate based on monthly salary
+        $monthlySalary = $employee->workInfo->salary ?? 0;
+        $dailyRate = $monthlySalary / 22;
+        $hourlyRate = $dailyRate / 8;
+
+        // Calculate total overtime pay (1.25x hourly rate)
+        $this->totalOvertimePay = $this->totalOvertimeHours * $hourlyRate * 1.25;
 
         // Calculate total normal hours from attendance
         $this->totalNormalHours = $employee->attendances()
