@@ -72,5 +72,9 @@ class Employee extends Authenticatable
     public function overtimeLogs() {
         return $this->hasMany(OvertimeLog::class);
     }
+
+    public function attendances() {
+        return $this->hasMany(Attendance::class);
+    }
     
 }

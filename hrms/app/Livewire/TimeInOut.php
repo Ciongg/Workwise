@@ -71,9 +71,9 @@ class TimeInOut extends Component
 
     public function timeOut()
     {
-        $now = TimeService::now();
+        $now = \App\Services\TimeService::now();
 
-        $attendance = Attendance::where('employee_id', Auth::id())
+        $attendance = \App\Models\Attendance::where('employee_id', \Illuminate\Support\Facades\Auth::id())
             ->where('date', $now->toDateString())
             ->whereNull('time_out')
             ->latest()
@@ -84,11 +84,22 @@ class TimeInOut extends Component
             return;
         }
 
+        // Calculate total_hours
+        $timeIn = $attendance->time_in;
+        $timeOut = $now->toTimeString();
+        $hours = null;
+        if ($timeIn && $timeOut) {
+            $in = \Carbon\Carbon::parse($attendance->date . ' ' . $timeIn);
+            $out = \Carbon\Carbon::parse($attendance->date . ' ' . $timeOut);
+            $hours = abs($out->floatDiffInHours($in));
+        }
+
         $attendance->update([
-            'time_out' => $now->toTimeString(),
+            'time_out' => $timeOut,
+            'total_hours' => $hours,
         ]);
 
-        $this->time_out = $now->toTimeString();
+        $this->time_out = $timeOut;
         $this->can_time_in = true;
         $this->can_time_out = false;
         $this->status = 'Timed Out';

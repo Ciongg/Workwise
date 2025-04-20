@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('date'); // Date of attendance
             $table->time('time_in')->nullable(); // Time in
             $table->time('time_out')->nullable(); // Time out
+            $table->decimal('total_hours', 8, 2)->nullable()->after('time_out');
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\EmployeeRequest; // ← Important: import your model
 use Illuminate\Support\Facades\Auth; // ← We'll use Auth for employee_id (assuming logged-in employee)
+use Carbon\Carbon; // ← Import Carbon for date handling
 
 class EmployeeRequestForm extends Component
 {
@@ -13,6 +14,17 @@ class EmployeeRequestForm extends Component
     public $start_time;
     public $end_time;
     public $change_reason = '';
+
+    public function updatedStartTime($value)
+    {
+        if ($value) {
+            $start = \Carbon\Carbon::parse($value);
+            // Auto-fill end time if it's empty or invalid
+            if (!$this->end_time || \Carbon\Carbon::parse($this->end_time)->lessThanOrEqualTo($start)) {
+                $this->end_time = $start->copy()->addHour()->format('Y-m-d\TH:i');
+            }
+        }
+    }
 
     public function submit()
     {
@@ -23,6 +35,17 @@ class EmployeeRequestForm extends Component
                 'start_time' => 'required|date',
                 'end_time' => 'required|date|after:start_time',
             ]);
+
+            // Check for existing overtime request on the same day for this user
+            $existing = EmployeeRequest::where('employee_id', Auth::id())
+                ->where('request_type', 'overtime')
+                ->whereDate('start_time', Carbon::parse($this->start_time)->toDateString())
+                ->exists();
+
+            if ($existing) {
+                session()->flash('error', 'You already have an overtime request for this date.');
+                return;
+            }
 
             EmployeeRequest::create([
                 'employee_id' => Auth::id(), // Assuming employee is logged in

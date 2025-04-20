@@ -32,11 +32,22 @@ class AttendanceCreateModal extends Component
     {
         $this->validate();
 
-        Attendance::create([
+        $timeIn = $this->time_in ? $this->time_in . ':00' : null;
+        $timeOut = $this->time_out ? $this->time_out . ':00' : null;
+        $hours = null;
+
+        if ($timeIn && $timeOut) {
+            $in = \Carbon\Carbon::parse($this->date . ' ' . $timeIn);
+            $out = \Carbon\Carbon::parse($this->date . ' ' . $timeOut);
+            $hours = abs($out->floatDiffInHours($in));
+        }
+
+        \App\Models\Attendance::create([
             'employee_id' => $this->employee_id,
             'date' => $this->date,
-            'time_in' => $this->time_in ? $this->time_in . ':00' : null,
-            'time_out' => $this->time_out ? $this->time_out . ':00' : null,
+            'time_in' => $timeIn,
+            'time_out' => $timeOut,
+            'total_hours' => $hours,
         ]);
 
         $this->dispatch('attendanceUpdated');

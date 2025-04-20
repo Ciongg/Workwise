@@ -43,7 +43,9 @@ class OvertimeLogModal extends Component
         $now = now();
         $start = \Carbon\Carbon::parse($log->ot_time_in);
         $end = $now;
-        $hours = $end->floatDiffInHours($start);
+
+        // Always positive, even if user logs out before in (shouldn't happen, but safe)
+        $hours = abs($end->floatDiffInHours($start));
 
         $log->update([
             'ot_time_out' => $now,

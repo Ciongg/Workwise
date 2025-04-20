@@ -85,11 +85,18 @@
                         <td class="px-4 py-2 border">
                             {{ $attendance->time_out ? \Carbon\Carbon::createFromFormat('H:i:s', $attendance->time_out)->format('h:i A') : 'N/A' }}
                         </td>
+                        {{-- Overtime In --}}
                         <td class="px-4 py-2 border">
-                            {{ optional($attendance->employee->overtimeLogs()->where('date', $attendance->date)->first())->time_in ?? '-' }}
+                            @php
+                                $otLog = $attendance->employee->overtimeLogs()
+                                    ->whereDate('ot_time_in', $attendance->date)
+                                    ->first();
+                            @endphp
+                            {{ $otLog && $otLog->ot_time_in ? \Carbon\Carbon::parse($otLog->ot_time_in)->format('h:i A') : '-' }}
                         </td>
+                        {{-- Overtime Out --}}
                         <td class="px-4 py-2 border">
-                            {{ optional($attendance->employee->overtimeLogs()->where('date', $attendance->date)->first())->time_out ?? '-' }}
+                            {{ $otLog && $otLog->ot_time_out ? \Carbon\Carbon::parse($otLog->ot_time_out)->format('h:i A') : '-' }}
                         </td>
                         <td class="px-4 py-2 border">
                             <a 
@@ -97,7 +104,7 @@
                                 x-data 
                                 x-on:click="$dispatch('open-modal', {name: 'view-attendance'})"
                                 class="text-teal-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
-                                View/Edit
+                                View
                             </a>
                         </td>
                     </tr>

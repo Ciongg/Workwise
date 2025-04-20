@@ -9,7 +9,6 @@ class EmployeePayrollModal extends Component
 {
     public $employee;
 
-    
     public $payroll;
     public $activeTab = 'payroll';
 
@@ -27,10 +26,13 @@ class EmployeePayrollModal extends Component
     
     public $pay_period_start, $pay_period_end, $allowance, $overtime_pay, $gross_pay, $deductions, $net_pay, $status, $additional_deductions;
 
+    // Overtime Info
+    public $overtimeLogs = [];
+    public $totalOvertimeHours = 0;
+    public $totalNormalHours = 0;
 
- 
-    public function mount($employee){
-
+    public function mount($employee)
+    {
         $this->employee = $employee;
 
         $this->email = $employee->email;
@@ -55,9 +57,7 @@ class EmployeePayrollModal extends Component
             $this->tin_number = $employee->identificationInfo->tin_number;
         }
 
-
         if ($employee->payrollInfo) {
-
             $this->payroll = $employee->payrollInfo;
 
             $this->pay_period_start = \Carbon\Carbon::parse($this->payroll->pay_period_start)->format('Y-m-d');
@@ -70,72 +70,67 @@ class EmployeePayrollModal extends Component
             $this->deductions = $this->payroll->deductions;
             $this->net_pay = $this->payroll->net_pay;
             $this->status = $this->payroll->status;
-         
         }
 
+        // Overtime logs for this employee
+        $this->overtimeLogs = $employee->overtimeLogs()->orderByDesc('ot_time_in')->get();
 
+        // Calculate total overtime hours
+        $this->totalOvertimeHours = $employee->overtimeLogs()->sum('total_hours');
+
+        // Calculate total normal hours from attendance
+        $this->totalNormalHours = $employee->attendances()
+            ->whereNotNull('total_hours')
+            ->sum('total_hours');
     }
 
     public function save()
     {
-    // Calculate gross and net pay
-    $gross = $this->salary + $this->allowance + $this->overtime_pay;
-    $net = $gross - $this->deductions;
+        // Calculate gross and net pay
+        $gross = $this->salary + $this->allowance + $this->overtime_pay;
+        $net = $gross - $this->deductions;
 
-    // Update Payroll Info if available
+        // Update Payroll Info if available
+        if ($this->employee->workInfo) {
+            $this->employee->workInfo->update([
+                'salary' => $this->salary,
+            ]);
+        } else {
+            // Create new Work Info if none exists
+            $this->employee->workInfo()->create([
+                'salary' => $this->salary,
+            ]);
+        }
+        if ($this->employee->payrollInfo) {
+            $this->employee->payrollInfo->update([
+                'pay_period_start' => $this->pay_period_start,
+                'pay_period_end' => $this->pay_period_end,
+                'allowance' => $this->allowance,
+                'overtime_pay' => $this->overtime_pay,
+                'additional_deductions' => $this->additional_deductions,
+                'status' => $this->status,
+            ]);
+        } else {
+            // Create new Payroll Info if none exists
+            $this->employee->payrollInfo()->create([
+                'pay_period_start' => $this->pay_period_start,
+                'pay_period_end' => $this->pay_period_end,
+                'allowance' => $this->allowance,
+                'overtime_pay' => $this->overtime_pay,
+                'additional_deductions' => $this->additional_deductions,
+                'status' => $this->status,
+            ]);
+        }
 
-    if ($this->employee->workInfo){
-        $this->employee->workInfo->update([
-          
-            'salary' => $this->salary,
-           
-        ]);
-    } else {
-        // Create new Work Info if none exists
-        $this->employee->workInfo()->create([
-            
-            'salary' => $this->salary,
-           
-        ]);
-    }
-    if ($this->employee->payrollInfo) {
-        $this->employee->payrollInfo->update([
-            'pay_period_start' => $this->pay_period_start,
-            'pay_period_end' => $this->pay_period_end,
-            'allowance' => $this->allowance,
-            'overtime_pay' => $this->overtime_pay,
-            'additional_deductions' => $this->additional_deductions,
-          
-            'status' => $this->status,
-        ]);
-    } else {
-        // Create new Payroll Info if none exists
-        $this->employee->payrollInfo()->create([
-            'pay_period_start' => $this->pay_period_start,
-            'pay_period_end' => $this->pay_period_end,
-            'allowance' => $this->allowance,
-            'overtime_pay' => $this->overtime_pay,
-            'additional_deductions' => $this->additional_deductions,
-            
-            'status' => $this->status,
-        ]);
-    }
+        $this->employee->refresh();
 
-    $this->employee->refresh();
-
-    session()->flash('message', 'Payroll information updated successfully!');
-    $this->dispatch('employeeSalaryUpdated', employeeId: $this->employee->id);
-    $this->dispatch('close-modal');
-
+        session()->flash('message', 'Payroll information updated successfully!');
+        $this->dispatch('employeeSalaryUpdated', employeeId: $this->employee->id);
+        $this->dispatch('close-modal');
     }
 
-
-  
-    
-    
     public function render()
     {
-        
         return view('livewire.employee-payroll-modal');
     }
 }

@@ -34,9 +34,15 @@ class EmployeeAttendanceModal extends Component
             'time_out' => 'nullable|date_format:H:i|after:time_in',
         ]);
 
-        // Always save as H:i:s
         $timeIn = $this->time_in ? $this->time_in . ':00' : null;
         $timeOut = $this->time_out ? $this->time_out . ':00' : null;
+        $hours = null;
+
+        if ($timeIn && $timeOut) {
+            $in = \Carbon\Carbon::parse($this->date . ' ' . $timeIn);
+            $out = \Carbon\Carbon::parse($this->date . ' ' . $timeOut);
+            $hours = abs($out->floatDiffInHours($in));
+        }
 
         if ($this->attendance) {
             $this->attendance->update([
@@ -44,6 +50,7 @@ class EmployeeAttendanceModal extends Component
                 'date' => $this->date,
                 'time_in' => $timeIn,
                 'time_out' => $timeOut,
+                'total_hours' => $hours,
             ]);
         } else {
             \App\Models\Attendance::create([
@@ -51,6 +58,7 @@ class EmployeeAttendanceModal extends Component
                 'date' => $this->date,
                 'time_in' => $timeIn,
                 'time_out' => $timeOut,
+                'total_hours' => $hours,
             ]);
         }
 

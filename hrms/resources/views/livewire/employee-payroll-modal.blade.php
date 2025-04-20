@@ -15,6 +15,11 @@
             class="px-4 py-2 rounded-lg font-medium text-white {{ $activeTab === 'info' ? 'bg-teal-600' : 'bg-gray-400' }}">
             Information
         </button>
+        <button 
+            wire:click="$set('activeTab', 'overtime')" 
+            class="px-4 py-2 rounded-lg font-medium text-white {{ $activeTab === 'overtime' ? 'bg-teal-600' : 'bg-gray-400' }}">
+            Overtime
+        </button>
 
 
     @if ($activeTab === 'payroll')
@@ -163,9 +168,42 @@
             <input type="text" id="tin_number" wire:model.defer="tin_number" disabled class="mt-1 block w-full px-4 py-2 bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
         </div>
     </div>
-    @endif
+@endif
 
-
-
+@if ($activeTab === 'overtime')
+    <h3 class="text-lg font-semibold text-teal-500 mb-4">Overtime Logs</h3>
+    <div class="mb-4">
+        <strong>Total Overtime Hours:</strong> {{ number_format($totalOvertimeHours, 2) }} hrs<br>
+        <strong>Total Normal Hours:</strong> {{ number_format($totalNormalHours, 2) }} hrs
+    </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200">
+            <thead class="bg-gray-100 text-xs uppercase text-gray-600 text-center">
+                <tr>
+                    <th class="px-4 py-3 border">Date</th>
+                    <th class="px-4 py-3 border">Time In</th>
+                    <th class="px-4 py-3 border">Time Out</th>
+                    <th class="px-4 py-3 border">Hours</th>
+                    <th class="px-4 py-3 border">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($overtimeLogs as $log)
+                    <tr>
+                        <td class="px-4 py-2 border">{{ $log->ot_time_in ? \Carbon\Carbon::parse($log->ot_time_in)->format('F j, Y') : '-' }}</td>
+                        <td class="px-4 py-2 border">{{ $log->ot_time_in ? \Carbon\Carbon::parse($log->ot_time_in)->format('g:i A') : '-' }}</td>
+                        <td class="px-4 py-2 border">{{ $log->ot_time_out ? \Carbon\Carbon::parse($log->ot_time_out)->format('g:i A') : '-' }}</td>
+                        <td class="px-4 py-2 border">{{ number_format($log->total_hours, 2) }}</td>
+                        <td class="px-4 py-2 border">{{ ucfirst($log->status) }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center text-gray-500">No overtime logs found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+@endif
 
 </div>
