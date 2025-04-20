@@ -19,7 +19,7 @@ class EmployeeRequestForm extends Component
     {
         if ($value) {
             $start = \Carbon\Carbon::parse($value);
-            // Auto-fill end time if it's empty or invalid
+            // Only set if end_time is empty or before start_time
             if (!$this->end_time || \Carbon\Carbon::parse($this->end_time)->lessThanOrEqualTo($start)) {
                 $this->end_time = $start->copy()->addHour()->format('Y-m-d\TH:i');
             }
@@ -53,7 +53,7 @@ class EmployeeRequestForm extends Component
                 'reason' => $this->overtime_reason,
                 'start_time' => $this->start_time,
                 'end_time' => $this->end_time,
-                'status' => 'pending',
+                'status' => 'approved',
             ]);
 
             session()->flash('success', 'Overtime Request Submitted Successfully!');

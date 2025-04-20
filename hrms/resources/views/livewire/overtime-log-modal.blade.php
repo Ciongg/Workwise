@@ -1,4 +1,4 @@
-<div class="p-4">
+<div class="p-4" wire:poll.1000ms="pollTime">
     <h2 class="text-lg font-bold mb-2">Log Overtime</h2>
     <div class="mb-2">
         <strong>Date:</strong>
@@ -8,6 +8,10 @@
         {{ \Carbon\Carbon::parse($request->start_time)->format('F j, Y g:i A') }}
         -
         {{ \Carbon\Carbon::parse($request->end_time)->format('F j, Y g:i A') }}
+    </div>
+    <div class="mb-2">
+        <strong>Current Time:</strong>
+        {{ $current_time ? \Carbon\Carbon::parse($current_time)->format('F j, Y g:i:s A') : now()->format('F j, Y g:i:s A') }}
     </div>
     <div class="mb-2">
         <strong>Time In:</strong>

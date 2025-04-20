@@ -79,11 +79,13 @@
                                     bg-yellow-500
                                 @elseif($request->status === 'completed')
                                     bg-blue-500
-                                @else
+                                @elseif($request->status === 'auto_timed_out')
                                     bg-red-500
+                                @else
+                                    bg-gray-400
                                 @endif
                             ">
-                                {{ ucfirst($request->status) }}
+                                {{ $request->status === 'auto_timed_out' ? 'Auto Timed Out' : ucfirst($request->status) }}
                             </span>
                         </td>
 

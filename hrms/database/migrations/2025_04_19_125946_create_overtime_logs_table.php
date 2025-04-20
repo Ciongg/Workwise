@@ -18,7 +18,7 @@ return new class extends Migration
             $table->datetime('ot_time_in')->nullable();
             $table->datetime('ot_time_out')->nullable();
             $table->decimal('total_hours', 8, 2)->nullable();
-            $table->enum('status', ['pending', 'completed'])->default('pending');
+            $table->enum('status', ['pending', 'completed', 'auto_timed_out'])->default('pending');
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

@@ -50,9 +50,10 @@
                                 {{ 
                                     $request->status === 'pending' ? 'bg-yellow-500' : 
                                     ($request->status === 'approved' ? 'bg-green-500' : 
-                                    ($request->status === 'completed' ? 'bg-blue-500' : 'bg-red-500'))
+                                    ($request->status === 'completed' ? 'bg-blue-500' : 
+                                    ($request->status === 'auto_timed_out' ? 'bg-red-500' : 'bg-gray-400')))
                                 }}">
-                                {{ ucfirst($request->status) }}
+                                {{ $request->status === 'auto_timed_out' ? 'Auto Timed Out' : ucfirst($request->status) }}
                             </span>
                         </td>
 

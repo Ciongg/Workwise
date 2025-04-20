@@ -19,7 +19,7 @@ return new class extends Migration
             $table->time('time_out')->nullable(); // Time out
             $table->decimal('total_hours', 8, 2)->nullable()->after('time_out');
             $table->timestamps();
-
+            $table->enum('status', ['completed', 'auto_timed_out'])->default('completed')->after('total_hours');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });
     }

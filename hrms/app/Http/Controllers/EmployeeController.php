@@ -12,7 +12,10 @@ class EmployeeController extends Controller
 
     public function profile()
     {
-        $employee = Auth::user()->load(['workInfo', 'bankInfo', 'identificationInfo']);
+        $employee = Auth::user();
+        if ($employee instanceof \App\Models\User) {
+            $employee->load(['workInfo', 'bankInfo', 'identificationInfo']);
+        }
         return view('employee.profile', compact('employee'));
     }
 

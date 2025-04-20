@@ -12,10 +12,12 @@ class OvertimeLogModal extends Component
     public $request;
     public $time_in;
     public $time_out;
+    public $current_time; // Add this property
 
     public function mount($request)
     {
         $this->request = $request;
+        $this->current_time = now(); // Initialize current time
     }
 
     public function timeIn()
@@ -49,13 +51,13 @@ class OvertimeLogModal extends Component
         $log->update([
             'ot_time_out' => $now,
             'total_hours' => $hours,
-            'status' => 'completed',
+            'status' => 'auto_timed_out',
         ]);
 
         // Also set the associated employee_request to completed
         $request = $log->request;
-        if ($request && $request->status !== 'completed') {
-            $request->update(['status' => 'completed']);
+        if ($request && $request->status !== 'auto_timed_out') {
+            $request->update(['status' => 'auto_timed_out']);
         }
 
         $employee = $log->employee;
@@ -63,10 +65,40 @@ class OvertimeLogModal extends Component
             \App\Services\PayrollService::generatePayrollForEmployee($employee);
         }
 
-        $this->time_out = $now->format('Y-m-d H:i:s');
+      
         $this->dispatch('overtimeCompleted');
         $this->dispatch('employeeRequestUpdated');
         $this->dispatch('close-modal');
+    }
+
+    public function pollTime()
+    {
+        $this->current_time = now(); // Update current time on every poll
+
+        // Auto time out logic (if applicable)
+        $log = $this->request->overtimeLog;
+        if ($log && !$log->ot_time_out && $this->request->end_time) {
+            $scheduledOut = \Carbon\Carbon::parse($this->request->end_time)->addMinute();
+            if ($this->current_time->greaterThanOrEqualTo($scheduledOut)) {
+                $start = \Carbon\Carbon::parse($log->ot_time_in);
+                $hours = abs($scheduledOut->floatDiffInHours($start));
+                $log->update([
+                    'ot_time_out' => $scheduledOut,
+                    'total_hours' => $hours,
+                    'status' => 'auto_timed_out',
+                ]);
+
+                $request = $log->request;
+                if ($request && $request->status !== 'auto_timed_out') {
+                    $request->update(['status' => 'auto_timed_out']);
+                }
+
+                
+                $this->dispatch('overtimeCompleted');
+                $this->dispatch('employeeRequestUpdated');
+                $this->dispatch('close-modal');
+            }
+        }
     }
 
     public function getCanTimeInProperty()

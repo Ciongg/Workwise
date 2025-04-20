@@ -43,6 +43,18 @@ class TimeInOut extends Component
     {
         $now = TimeService::now();
 
+        // Get employee's work end time
+        $employee = \App\Models\Employee::find(Auth::id());
+        $workInfo = $employee ? $employee->workInfo : null;
+
+        if ($workInfo) {
+            $workEnd = \Carbon\Carbon::parse($now->toDateString() . ' ' . $workInfo->work_end_time);
+            if ($now->greaterThanOrEqualTo($workEnd)) {
+                session()->flash('error', 'You cannot time in after your scheduled work end time.');
+                return;
+            }
+        }
+
         // Prevent multiple time-ins for the same day without time-out
         $existing = Attendance::where('employee_id', Auth::id())
             ->where('date', $now->toDateString())
@@ -84,7 +96,6 @@ class TimeInOut extends Component
             return;
         }
 
-        // Calculate total_hours
         $timeIn = $attendance->time_in;
         $timeOut = $now->toTimeString();
         $hours = null;
@@ -97,6 +108,7 @@ class TimeInOut extends Component
         $attendance->update([
             'time_out' => $timeOut,
             'total_hours' => $hours,
+            'status' => 'completed',
         ]);
 
         $this->time_out = $timeOut;
@@ -105,7 +117,6 @@ class TimeInOut extends Component
         $this->status = 'Timed Out';
         session()->flash('successTimeRegister', 'Attendance logged successfully!');
 
-        // Optionally reset for next day
         $this->time_in = null;
         $this->time_out = null;
     }
@@ -126,8 +137,41 @@ class TimeInOut extends Component
 
     public function render()
     {
+        $today = \App\Services\TimeService::now()->toDateString();
+        $attendance = \App\Models\Attendance::where('employee_id', \Illuminate\Support\Facades\Auth::id())
+            ->where('date', $today)
+            ->whereNull('time_out')
+            ->latest()
+            ->first();
+
+        // Auto time out logic
+        if ($attendance) {
+            $employee = $attendance->employee;
+            $workInfo = $employee->workInfo;
+            if ($workInfo && $attendance->time_in) {
+                $workEnd = \Carbon\Carbon::parse($attendance->date . ' ' . $workInfo->work_end_time);
+                $now = \App\Services\TimeService::now();
+                if ($now->greaterThanOrEqualTo($workEnd->copy()->addMinute())) { // <-- changed to addMinute()
+                    // Auto time out
+                    $in = \Carbon\Carbon::parse($attendance->date . ' ' . $attendance->time_in);
+                    $hours = abs($workEnd->copy()->addMinute()->floatDiffInHours($in));
+                    $attendance->update([
+                        'time_out' => $workEnd->copy()->addMinute()->format('H:i:s'),
+                        'total_hours' => $hours,
+                        'status' => 'auto_timed_out',
+                    ]);
+                    // Refresh state
+                    $this->time_in = null;
+                    $this->time_out = null;
+                    $this->can_time_in = true;
+                    $this->can_time_out = false;
+                    $this->status = 'Auto Timed Out';
+                    session()->flash('successTimeRegister', 'You were automatically timed out.');
+                }
+            }
+        }
+
         // Repeat the logic here for polling
-        $today = TimeService::now()->toDateString();
         $attendance = Attendance::where('employee_id', Auth::id())
             ->where('date', $today)
             ->latest()
