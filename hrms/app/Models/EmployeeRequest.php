@@ -17,4 +17,9 @@ class EmployeeRequest extends Model
         'end_time',
         'status',
     ];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

@@ -8,6 +8,8 @@ use App\Models\Employee;
 class EmployeePayrollModal extends Component
 {
     public $employee;
+
+    
     public $payroll;
     public $activeTab = 'payroll';
 

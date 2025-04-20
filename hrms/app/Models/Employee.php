@@ -63,4 +63,10 @@ class Employee extends Authenticatable
     {
         return $this->hasMany(ArchivedPayroll::class, 'employee_id');
     }
+
+    public function requests()
+    {
+        return $this->hasMany(EmployeeRequest::class);
+    }
+    
 }

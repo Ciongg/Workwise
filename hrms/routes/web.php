@@ -19,6 +19,7 @@ Route::get('/hr/dashboard/payroll', [HRController::class, 'showPayroll'])->name(
 Route::get('/hr/dashboard/payroll/deductions', [HRController::class, 'showPayrollDeductions'])->name('hr.show-payroll-deductions');
 Route::post('/hr/dashboard/payroll/deductions', [HRController::class, 'updatePayrollDeductions'])->name('hr.update-payroll-deductions');
 Route::get('/hr/dashboard/payroll/archived', [HRController::class, 'showArchivedPayroll'])->name('hr.show-archived-payroll');
+Route::get('/hr/dashboard/request', [HRController::class, 'showRequests'])->name('hr.show-requests');
 
 // Authentication Routes
 Route::post('/login', [SessionController::class, 'store'])->name('login');
@@ -29,3 +30,4 @@ Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->nam
 Route::get('/employee/profile', [EmployeeController::class, 'profile'])->name('employee.profile');
 Route::get('/employee/payslips', [EmployeeController::class, 'payslips'])->name('employee.payslips');
 Route::get('/employee/requests', [EmployeeController::class, 'requests'])->name('employee.requests');
+Route::get('/employee/request', [EmployeeController::class, 'showRequestLogs'])->name('employee.show-request-logs');

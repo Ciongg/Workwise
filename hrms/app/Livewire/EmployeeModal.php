@@ -22,18 +22,7 @@ class EmployeeModal extends Component
 
 
 
-    //this was wrong
-    //   protected $listeners = ['refreshEmployee' => 'refreshEmployees'];
 
-    // public function refreshEmployees($employeeId)
-    // {
-        
-
-    //     $this->employee = Employee::find($employeeId);
-    //     if ($this->employee) {
-    //         $this->mount($this->employee);
-    //     }
-    // }
 
 
 

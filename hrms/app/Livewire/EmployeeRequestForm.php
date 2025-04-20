@@ -39,7 +39,7 @@ class EmployeeRequestForm extends Component
         } elseif ($this->request_type === 'profile_change') {
             // Validate profile change fields
             $validated = $this->validate([
-                'profile_reason' => 'required|string',
+                'change_reason' => 'required|string',
             ]);
 
             EmployeeRequest::create([

@@ -16,15 +16,20 @@ class EmployeeController extends Controller
         return view('employee.profile', compact('employee'));
     }
 
+    
     public function payslips()
     {
         $employee = Auth::user();
         $payslips = $employee->archivedPayrolls()->orderBy('pay_period_start', 'desc')->get();
-
+        
         return view('livewire.employee-payslip', compact('payslips'));
     }
-
+    
     public function requests(){
         return view('employee.request');
+    }
+
+    public function showRequestLogs(){
+        return  view('employee.request-logs');
     }
 }

@@ -24,12 +24,15 @@ class HRController extends Controller
     public function showArchivedPayroll(){
         return view('hr.show-archived-payroll');
     }
-
+    
     public function index(){
-       
+        
         return view('hr.index');
     }
-
+    
+    public function showRequests(){
+        return view('hr.show-request');
+    }
 
 
     public function showPayrollDeductions()
