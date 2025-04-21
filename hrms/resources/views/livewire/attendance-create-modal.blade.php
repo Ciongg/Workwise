@@ -21,6 +21,29 @@
             <label class="block text-sm font-medium text-gray-700">Time Out</label>
             <input type="time" wire:model.defer="time_out" class="border rounded p-2 w-full">
         </div>
+
+        {{-- Overtime Fields --}}
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Overtime Request ID</label>
+            <input type="number" wire:model.live="request_id" class="border rounded p-2 w-full">
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Overtime Time In</label>
+            <input type="datetime-local" wire:model.defer="ot_time_in" class="border rounded p-2 w-full" @if($request_id) readonly @endif>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Overtime Time Out</label>
+            <input type="datetime-local" wire:model.defer="ot_time_out" class="border rounded p-2 w-full" @if($request_id) readonly @endif>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Overtime Status</label>
+            <select wire:model.defer="ot_status" class="border rounded p-2 w-full">
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+                <option value="auto_timed_out">Auto Timed Out</option>
+            </select>
+        </div>
+
         <div class="mt-6 flex gap-2">
             <button type="submit" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600">
                 Create Attendance

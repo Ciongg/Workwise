@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('reason')->nullable();
             $table->datetime('start_time')->nullable();
             $table->datetime('end_time')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected', 'auto_timed_out', 'completed'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'rejected', 'cancelled', 'auto_timed_out', 'completed'])->default('pending');
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

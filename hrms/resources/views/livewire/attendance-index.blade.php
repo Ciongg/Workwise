@@ -67,6 +67,12 @@
                     </th>
                     <th class="px-4 py-3 border">Overtime In</th>
                     <th class="px-4 py-3 border">Overtime Out</th>
+                    <th class="px-4 py-3 border cursor-pointer" wire:click="sortBy('status')">
+                        Status
+                        <span class="{{ $sortField === 'status' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'status' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
                     <th class="px-4 py-3 border">Actions</th>
                 </tr>
             </thead>
@@ -84,7 +90,7 @@
                         </td>
                         <td class="px-4 py-2 border">
                             {{ $attendance->time_out ? \Carbon\Carbon::createFromFormat('H:i:s', $attendance->time_out)->format('h:i A') : 'N/A' }}
-                        </td>
+                        
                         {{-- Overtime In --}}
                         <td class="px-4 py-2 border">
                             @php
@@ -98,6 +104,21 @@
                         <td class="px-4 py-2 border">
                             {{ $otLog && $otLog->ot_time_out ? \Carbon\Carbon::parse($otLog->ot_time_out)->format('h:i A') : '-' }}
                         </td>
+                    </td>
+                    <td class="px-4 py-2 border">
+                        <span class="px-2 py-1 rounded text-white
+                            @if($attendance->status === 'completed')
+                                bg-blue-500
+                            @elseif($attendance->status === 'auto_timed_out')
+                                bg-red-500
+                            @else
+                                bg-gray-400
+                            @endif
+                        ">
+                            {{ $attendance->status === 'auto_timed_out' ? 'Auto Timed Out' : ucfirst($attendance->status) }}
+                        </span>
+                    </td>
+                    
                         <td class="px-4 py-2 border">
                             <a 
                                 wire:click="selectAttendance({{ $attendance->id }})"

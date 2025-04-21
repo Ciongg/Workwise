@@ -53,7 +53,7 @@ class EmployeeRequestForm extends Component
                 'reason' => $this->overtime_reason,
                 'start_time' => $this->start_time,
                 'end_time' => $this->end_time,
-                'status' => 'approved',
+                'status' => 'pending',
             ]);
 
             session()->flash('success', 'Overtime Request Submitted Successfully!');

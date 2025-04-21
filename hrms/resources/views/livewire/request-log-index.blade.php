@@ -103,6 +103,16 @@
                                     Overtime Time In/Out
                                 </button>
                             @endif
+
+                            @if(in_array($request->status, ['completed', 'rejected', 'cancelled', 'auto_timed_out', 'approved', 'pending']))
+                                <button
+                                    wire:click="deleteRequest({{ $request->id }})"
+                                    class="ml-2 bg-red-500 text-white px-3 py-2 rounded text-xs hover:bg-red-600"
+                                    onclick="return confirm('Are you sure you want to delete this request?')"
+                                >
+                                    Delete
+                                </button>
+                            @endif
                         </td>
                     </tr>
                 @empty

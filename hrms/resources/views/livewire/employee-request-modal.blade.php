@@ -44,6 +44,7 @@
                 <option value="pending">Pending</option>
                 <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
+                <option value="cancelled">Cancelled</option>
             </select>
             @error('status') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>

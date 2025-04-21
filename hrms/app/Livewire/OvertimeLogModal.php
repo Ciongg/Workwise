@@ -51,13 +51,12 @@ class OvertimeLogModal extends Component
         $log->update([
             'ot_time_out' => $now,
             'total_hours' => $hours,
-            'status' => 'auto_timed_out',
+            'status' => 'completed', // <-- FIX: set to completed
         ]);
 
-        // Also set the associated employee_request to completed
         $request = $log->request;
-        if ($request && $request->status !== 'auto_timed_out') {
-            $request->update(['status' => 'auto_timed_out']);
+        if ($request && $request->status !== 'completed') {
+            $request->update(['status' => 'completed']);
         }
 
         $employee = $log->employee;
@@ -65,7 +64,6 @@ class OvertimeLogModal extends Component
             \App\Services\PayrollService::generatePayrollForEmployee($employee);
         }
 
-      
         $this->dispatch('overtimeCompleted');
         $this->dispatch('employeeRequestUpdated');
         $this->dispatch('close-modal');
@@ -73,31 +71,44 @@ class OvertimeLogModal extends Component
 
     public function pollTime()
     {
-        $this->current_time = now(); // Update current time on every poll
+        $this->current_time = now();
 
-        // Auto time out logic (if applicable)
         $log = $this->request->overtimeLog;
-        if ($log && !$log->ot_time_out && $this->request->end_time) {
-            $scheduledOut = \Carbon\Carbon::parse($this->request->end_time)->addMinute();
-            if ($this->current_time->greaterThanOrEqualTo($scheduledOut)) {
-                $start = \Carbon\Carbon::parse($log->ot_time_in);
-                $hours = abs($scheduledOut->floatDiffInHours($start));
-                $log->update([
-                    'ot_time_out' => $scheduledOut,
-                    'total_hours' => $hours,
-                    'status' => 'auto_timed_out',
-                ]);
+        $now = $this->current_time;
+        $start = \Carbon\Carbon::parse($this->request->start_time);
+        $end = \Carbon\Carbon::parse($this->request->end_time);
 
-                $request = $log->request;
-                if ($request && $request->status !== 'auto_timed_out') {
-                    $request->update(['status' => 'auto_timed_out']);
-                }
+        // 1. Auto-cancel if user missed time-in window 10 minutes
+        if (!$log && $now->greaterThan($start->copy()->addMinutes(10))) {
+            // Create a cancelled log and update request
+            OvertimeLog::create([
+                'employee_id' => $this->request->employee_id,
+                'request_id' => $this->request->id,
+                'ot_time_in' => null,
+                'ot_time_out' => null,
+                'total_hours' => 0,
+                'status' => 'cancelled',
+            ]);
+            $this->request->update(['status' => 'cancelled']);
+            $this->dispatch('employeeRequestUpdated');
+            $this->dispatch('close-modal');
+            return;
+        }
 
-                
-                $this->dispatch('overtimeCompleted');
-                $this->dispatch('employeeRequestUpdated');
-                $this->dispatch('close-modal');
-            }
+        // 2. Auto time out if user timed in but didn't time out
+        if ($log && $log->ot_time_in && !$log->ot_time_out && $now->greaterThanOrEqualTo($end->copy()->addMinute())) {
+            $start = \Carbon\Carbon::parse($log->ot_time_in);
+            $hours = abs($end->copy()->addMinute()->floatDiffInHours($start));
+            $log->update([
+                'ot_time_out' => $end->copy()->addMinute(5),
+                'total_hours' => $hours,
+                'status' => 'auto_timed_out',
+            ]);
+            $this->request->update(['status' => 'auto_timed_out']);
+            $this->dispatch('overtimeCompleted');
+            $this->dispatch('employeeRequestUpdated');
+            $this->dispatch('close-modal');
+            return;
         }
     }
 

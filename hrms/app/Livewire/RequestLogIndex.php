@@ -32,6 +32,14 @@ class RequestLogIndex extends Component
     $this->dispatch('open-modal', ['name' => 'overtime-log']);
     }
 
+    public function deleteRequest($id)
+    {
+        $request = EmployeeRequest::find($id);
+        if ($request && in_array($request->status, ['completed', 'rejected', 'cancelled', 'approved', 'auto_timed_out', 'pending'])) {
+            $request->delete();
+            session()->flash('success', 'Request deleted successfully.');
+        }
+    }
 
     public $searchType = '';    
     public $searchStatus = '';
