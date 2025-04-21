@@ -2,7 +2,7 @@
     <div class="mt-8">
         <livewire:set-time />
     </div>
-    
+
     <h2 class="text-2xl font-semibold mb-6 text-gray-800">Payroll List</h2>
 
     <!-- Current Date and Payroll Period -->
@@ -87,16 +87,11 @@
                             <div class="flex flex-col gap-2 justify-center">
                                 <a 
                                     wire:click="selectPayroll({{ $employee->id }})"
-                                    x-data 
-                                    x-on:click="$dispatch('open-modal', {name: 'view-employee-payroll'})"
+                                  
                                     class="text-teal-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
                                     View/Edit
                                 </a>
-                                <a 
-                                    wire:click="generatePayslipForEmployee({{ $employee->id }})"
-                                    class="text-yellow-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
-                                    Generate Payslip
-                                </a>
+                                
                             </div>
                         </td>
                     </tr>
@@ -108,6 +103,7 @@
         </div>
 
         @if ($selectedPayroll)
+        
         <x-modal :employee="$selectedPayroll" name="view-employee-payroll" title="Employee Payroll View"  :modalKey="$modalKey"/>
         @endif
     </div>

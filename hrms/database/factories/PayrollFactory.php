@@ -55,7 +55,7 @@ class PayrollFactory extends Factory
             'deductions' => $deductions,
             'additional_deductions' => $additional_deductions,
             'net_pay' => $net,
-            'status' => 'pending',
+            'status' => 'approved',
         ];
     }
 }

@@ -1,4 +1,4 @@
-@props(['employee', 'name', 'title', 'modalKey', 'request', 'attendance'])
+@props(['employee', 'name', 'title', 'modalKey', 'request', 'attendance', 'archivedPayroll'])
 
 
 <div
@@ -42,7 +42,9 @@
 
         @elseif($name === 'overtime-log')
         <livewire:overtime-log-modal :request="$request" :key="$modalKey"  />
-
+        
+        @elseif($name === 'view-employee-archived-payroll')
+        <livewire:archived-payroll-modal :archivedPayroll="$archivedPayroll" :key="$modalKey" />
 
         @endif
 

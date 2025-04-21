@@ -2,10 +2,13 @@
 <x-layout>
     <div class="p-6 bg-white shadow-md rounded-lg">
         <h2 class="text-2xl font-bold text-gray-800 mb-6">Payslips</h2>
-        
 
+        @php
+            // Only show approved payslips
+            $approvedPayslips = $payslips->where('status', 'approved');
+        @endphp
 
-        @forelse ($payslips as $payslip)
+        @forelse ($approvedPayslips as $payslip)
             <div x-data="{ open: false, showDetails: false }" class="mb-4 border rounded shadow">
                 <!-- Payslip Header -->
                 <div class="p-4 bg-gray-100 flex justify-between items-center cursor-pointer" x-on:click="open = !open">
@@ -104,7 +107,7 @@
                 </div>
             </div>
         @empty
-            <p class="text-gray-600">No payslips available.</p>
+            <p class="text-gray-600">No approved payslips available.</p>
         @endforelse
     </div>
 </x-layout>

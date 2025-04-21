@@ -45,11 +45,10 @@
                     <th class="px-4 py-3 border">Overtime Pay</th>
                     <th class="px-4 py-3 border">Gross Pay</th>
                     <th class="px-4 py-3 border">Deductions</th>
-                    <th class="px-4 py-3 border">Extra Deductions</th>
                     <th class="px-4 py-3 border">Net Pay</th>
-                    <th class="px-4 py-3 border">Pay Period Start</th>
-                    <th class="px-4 py-3 border">Pay Period End</th>
+                    <th class="px-4 py-3 border">Pay Period</th>
                     <th class="px-4 py-3 border">Status</th>
+                    <th class="px-4 py-3 border">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,23 +63,38 @@
                         <td class="px-4 py-2 border">₱{{ number_format($employee->overtime_pay, 2) }}</td>
                         <td class="px-4 py-2 border font-bold">₱{{ number_format($employee->gross_pay, 2) }}</td>
                         <td class="px-4 py-2 border">₱{{ number_format($employee->deductions, 2) }}</td>
-                        <td class="px-4 py-2 border">₱{{ number_format($employee->additional_deductions, 2) }}</td>
                         <td class="px-4 py-2 border font-bold">₱{{ number_format($employee->net_pay, 2) }}</td>
-                        <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($employee->pay_period_start)->format('F j, Y') }}</td>
-                        <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($employee->pay_period_end)->format('F j, Y') }}</td>
                         <td class="px-4 py-2 border">
-                            <span class="inline-block px-2 py-1 rounded text-sm font-medium bg-green-100 text-green-800">
+                            {{ \Carbon\Carbon::parse($employee->pay_period_start)->format('F j, Y') }} - 
+                            {{ \Carbon\Carbon::parse($employee->pay_period_end)->format('F j, Y') }}
+                        </td>
+                        <td class="px-4 py-2 border">
+                            <span class="inline-block px-2 py-1 rounded text-sm font-medium 
+                                {{ $employee->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                    ($employee->status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') }}">
                                 {{ ucfirst($employee->status) }}
                             </span>
+                        </td>
+                        <td class="px-4 py-2 border">
+                            <a 
+                                    wire:click="selectArchivedPayroll({{ $employee->id }})"
+                                    
+                                    class="text-teal-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
+                                    View/Edit
+                                </a>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+        <!-- Pagination -->
+        <div class="mt-4">
+            {{ $employees->links() }}
+        </div>
     </div>
 
-    <!-- Pagination -->
-    <div class="mt-4">
-        {{ $employees->links() }}
-    </div>
+    @if ($selectedArchivedPayroll)
+    
+    <x-modal :archivedPayroll="$selectedArchivedPayroll" name="view-employee-archived-payroll" title="Employee Archived Payroll View" :modalKey="$modalKey" />
+    @endif
 </div>

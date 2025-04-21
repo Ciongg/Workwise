@@ -5,7 +5,7 @@ namespace App\Livewire;
 use App\Models\ArchivedPayroll;
 use Livewire\Component;
 use Livewire\WithPagination;
-
+use App\Models\Employee;
 class ArchivedPayrollIndex extends Component
 {
     use WithPagination;
@@ -14,7 +14,20 @@ class ArchivedPayrollIndex extends Component
     public $selectedYear = null;
     public $searchName = null;
 
+    public $selectedArchivedPayroll = null;
+    public $modalKey;
+
+
     protected $paginationTheme = 'tailwind'; // Optional: Use Tailwind pagination styles
+
+    public function selectArchivedPayroll($id)
+    {
+        $this->selectedArchivedPayroll = ArchivedPayroll::with('employee')->findOrFail($id); // Fetch ArchivedPayroll with related Employee
+        $this->modalKey = uniqid(); // Generate a unique key for the modal
+        $this->dispatch('open-modal', name: 'view-employee-archived-payroll'); // Trigger the modal
+    }
+
+
 
     // Add query string support for filters
     protected $queryString = [

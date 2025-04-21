@@ -17,22 +17,7 @@ class PayrollIndex extends Component
 
     protected $listeners = ['employeeSalaryUpdated' => 'recalculateAllPayrolls', 'timeUpdated' => '$refresh'];
 
-    public function mount()
-    {
-        // Check if the current date has passed the payroll period
-        $latestPayroll = Payroll::orderBy('pay_period_end', 'desc')->first();
-
-        if ($latestPayroll) {
-            $currentDate = TimeService::now();
-            $payPeriodEnd = \Carbon\Carbon::parse($latestPayroll->pay_period_end);
-
-            // If the current date is after the payroll period end, generate payslips
-            if ($currentDate->greaterThan($payPeriodEnd)) {
-                $this->generatePayslips();
-                
-            }
-        }
-    }
+    
 
     public function selectPayroll($id)
     {
@@ -52,13 +37,29 @@ class PayrollIndex extends Component
         session()->flash('success', 'Payroll recalculated based on updated deduction settings.');
     }
 
+    public function mount()
+    {
+        // Check if the current date has passed the latest payroll period
+        $latestPayroll = Payroll::orderBy('pay_period_end', 'desc')->first();
+    
+        if ($latestPayroll) {
+            $currentDate = TimeService::now();
+            $payPeriodEnd = \Carbon\Carbon::parse($latestPayroll->pay_period_end);
+    
+            // If the current date is after the payroll period end, generate payslips
+            if ($currentDate->greaterThan($payPeriodEnd)) {
+                $this->generatePayslips();
+                $this->resetPage();
+            }
+        }
+    }
+    
     public function generatePayslips()
     {
-        // Fetch all payrolls (approved and others)
         $payrolls = Payroll::all();
 
         foreach ($payrolls as $payroll) {
-            // Save the current payroll to the archived payrolls table
+            // Archive all payrolls regardless of status
             \App\Models\ArchivedPayroll::create([
                 'employee_id' => $payroll->employee_id,
                 'pay_period_start' => $payroll->pay_period_start,
@@ -69,39 +70,36 @@ class PayrollIndex extends Component
                 'deductions' => $payroll->deductions,
                 'additional_deductions' => $payroll->additional_deductions,
                 'net_pay' => $payroll->net_pay,
-                'status' => $payroll->status, // Keep the same status (e.g., pending, approved)
+                'status' => $payroll->status,
             ]);
+            // Delete from main payroll table
+            $payroll->delete();
 
-            // Define the new payroll period based on the current payroll period
+            // Create a new pending payroll for the next month
             $current_pay_period_start = \Carbon\Carbon::parse($payroll->pay_period_start);
             $new_pay_period_start = $current_pay_period_start->copy()->addMonth()->startOfMonth();
             $new_pay_period_end = $new_pay_period_start->copy()->endOfMonth();
 
-            // Recalculate overtime pay for the new payroll period
-            $employee = $payroll->employee;
-            $overtime_hours = $employee->overtimeLogs()
-                ->whereIn('status', ['completed', 'auto_timed_out'])
-                ->whereBetween('ot_time_in', [$new_pay_period_start, $new_pay_period_end])
-                ->sum('total_hours');
-
-            $daily_rate = $employee->workInfo->salary / 22;
-            $hourly_rate = $daily_rate / 8;
-            $overtime_pay = $overtime_hours * $hourly_rate * 1.25;
-
-            // Update the current payroll for the next month
-            $payroll->update([
+            Payroll::create([
+                'employee_id' => $payroll->employee_id,
                 'pay_period_start' => $new_pay_period_start,
                 'pay_period_end' => $new_pay_period_end,
-                'overtime_pay' => $overtime_pay, // Reset overtime pay based on new period
-                'additional_deductions' => 0, // Reset additional deductions
-                'status' => 'pending', // Reset status to pending
+                'allowance' => $payroll->allowance,
+                'overtime_pay' => $payroll->overtime_pay, // carry over
+                'gross_pay' => $payroll->gross_pay,       // carry over
+                'deductions' => $payroll->deductions,     // carry over
+                'additional_deductions' => $payroll->additional_deductions, // carry over
+                'net_pay' => $payroll->net_pay,            // carry over
+                'status' => 'pending',
             ]);
+            
         }
 
-        session()->flash('message', 'Payslips generated and archived successfully. Payrolls have been reset for the next month.');
-        $this->resetPage(); // Reset pagination
-        
+        session()->flash('message', 'All payrolls archived and new pending payrolls created for next month.');
+        $this->resetPage();
     }
+    
+
 
     public function render()
     {
