@@ -1,15 +1,19 @@
 <div class="p-6 bg-white shadow-md rounded-lg">
+    <div class="mt-8">
+        <livewire:set-time />
+    </div>
+    
     <h2 class="text-2xl font-semibold mb-6 text-gray-800">Payroll List</h2>
 
     <!-- Current Date and Payroll Period -->
     <div class="mb-4 text-gray-700">
         <p class="text-lg">
-            <strong>Today's Date:</strong> {{ \Carbon\Carbon::now()->format('F j, Y') }}
+            <strong>Today's Date:</strong> {{ \App\Services\TimeService::now()->format('F j, Y') }}
         </p>
         <p class="text-lg">
             <strong>Current Payroll Period:</strong> 
-            {{ \Carbon\Carbon::now()->startOfMonth()->format('F j') }} - 
-            {{ \Carbon\Carbon::now()->endOfMonth()->format('j, Y') }}
+            {{ \App\Services\TimeService::now()->startOfMonth()->format('F j') }} - 
+            {{ \App\Services\TimeService::now()->endOfMonth()->format('j, Y') }}
         </p>
     </div>
 
@@ -48,7 +52,7 @@
                     <th class="px-4 py-3 border">Extra Deductions</th>
                     <th class="px-4 py-3 border">Net Pay</th>
                     <th class="px-4 py-3 border">Status</th>
-                    <th class="px-6 py-3 border">Date</th> <!-- Adjusted Date Column Width -->
+                    <th class="px-6 py-3 border">Date</th>
                     <th class="px-4 py-3 border">Actions</th>
                 </tr>
             </thead>
@@ -73,7 +77,6 @@
                                 {{ ucfirst($employee->payrollInfo->status) }}
                             </span>
                         </td>
-                        <!-- Adjusted Date Column -->
                         <td class="px-6 py-3 border">
                             <div class="text-center">
                                 <span class="font-bold">{{ \Carbon\Carbon::parse($employee->payrollInfo->pay_period_start)->format('F') }}</span>
@@ -81,8 +84,7 @@
                             </div>
                         </td>
                         <td class="px-4 py-3 border">
-                            <div class="flex flex-col gap-2 justify-center"> <!-- Stack Buttons -->
-                                <!-- View/Edit Button -->
+                            <div class="flex flex-col gap-2 justify-center">
                                 <a 
                                     wire:click="selectPayroll({{ $employee->id }})"
                                     x-data 
@@ -90,8 +92,6 @@
                                     class="text-teal-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
                                     View/Edit
                                 </a>
-
-                                <!-- Generate Payslip Button -->
                                 <a 
                                     wire:click="generatePayslipForEmployee({{ $employee->id }})"
                                     class="text-yellow-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
@@ -112,3 +112,5 @@
         @endif
     </div>
 </div>
+
+

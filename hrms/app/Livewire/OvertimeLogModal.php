@@ -25,16 +25,19 @@ class OvertimeLogModal extends Component
     {
         if ($this->request->overtimeLog) return;
 
-        $now = now();
+        // Use the request's start time for time-in
+        $start_time = \Carbon\Carbon::parse($this->request->start_time);
+
         OvertimeLog::create([
             'employee_id' => $this->request->employee_id,
             'request_id' => $this->request->id,
-            'ot_time_in' => $now,
+            'ot_time_in' => $start_time,
             'ot_time_out' => null,
             'total_hours' => 0,
             'status' => 'pending',
         ]);
-        $this->time_in = $now->format('Y-m-d H:i:s');
+
+        $this->time_in = $start_time->format('Y-m-d H:i:s');
         $this->dispatch('employeeRequestUpdated');
     }
 
@@ -43,16 +46,16 @@ class OvertimeLogModal extends Component
         $log = $this->request->overtimeLog;
         if (!$log || $log->ot_time_out) return;
 
-        $now = now();
-        $start = \Carbon\Carbon::parse($log->ot_time_in);
-        $end = $now;
+        // Use the request's end time for time-out
+        $end_time = \Carbon\Carbon::parse($this->request->end_time);
 
-        $hours = abs($end->floatDiffInHours($start));
+        $start = \Carbon\Carbon::parse($log->ot_time_in);
+        $hours = abs($end_time->floatDiffInHours($start));
 
         $log->update([
-            'ot_time_out' => $now,
+            'ot_time_out' => $end_time,
             'total_hours' => $hours,
-            'status' => 'completed', // <-- FIX: set to completed
+            'status' => 'completed', // Set to completed
         ]);
 
         $request = $log->request;
@@ -60,20 +63,13 @@ class OvertimeLogModal extends Component
             $request->update(['status' => 'completed']);
         }
 
-
-
-
         $employee = $log->employee;
         if ($employee) {
-           
             $payroll = PayrollService::generatePayrollForEmployee($employee);
-            $employee->refresh(); // 💥 force re-fetch from DB
-            $employee->load('payrollInfo'); // 💥 make sure latest payrollInfo
+            $employee->refresh();
+            $employee->load('payrollInfo');
             logger($payroll->overtime_pay);
-            
         }
-
-        
 
         $this->dispatch('overtimeCompleted');
         $this->dispatch('employeeRequestUpdated');

@@ -16,5 +16,5 @@
     </form>
 
     <button wire:click="resetTime" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mb-2">Reset to System Time</button>
-    <button wire:click="simulateNewDay" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Simulate New Day</button>
+    <button wire:click="simulateNewDay" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Simulate New Day for Attendance</button>
 </div>

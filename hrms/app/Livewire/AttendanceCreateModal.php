@@ -26,6 +26,7 @@ class AttendanceCreateModal extends Component
         'time_out' => 'nullable|date_format:H:i|after:time_in',
         'ot_time_in' => 'nullable|date_format:H:i',
         'ot_time_out' => 'nullable|date_format:H:i|after:ot_time_in',
+        'request_id' => 'nullable|exists:employee_requests,id',
     ];
 
     public function updatedEmployeeId()
@@ -38,9 +39,9 @@ class AttendanceCreateModal extends Component
     {
         $request = \App\Models\EmployeeRequest::find($value);
         if ($request) {
-            // Format as H:i for time input fields
-            $this->ot_time_in = \Carbon\Carbon::parse($request->start_time)->format('H:i');
-            $this->ot_time_out = \Carbon\Carbon::parse($request->end_time)->format('H:i');
+            // Only set the time part for <input type="time">
+            $this->ot_time_in = $request->start_time ? \Carbon\Carbon::parse($request->start_time)->format('H:i') : null;
+            $this->ot_time_out = $request->end_time ? \Carbon\Carbon::parse($request->end_time)->format('H:i') : null;
         } else {
             $this->ot_time_in = null;
             $this->ot_time_out = null;
@@ -51,10 +52,29 @@ class AttendanceCreateModal extends Component
     {
         $this->validate();
 
+        // Custom validation: request_id must belong to employee_id
+        if ($this->request_id) {
+            $request = \App\Models\EmployeeRequest::where('id', $this->request_id)
+                ->where('employee_id', $this->employee_id)
+                ->first();
+
+            if (!$request) {
+                
+                $this->addError('request_id', 'The selected request does not belong to this employee.');
+                return;
+            }
+        }
+
         $timeIn = $this->time_in ? $this->time_in . ':00' : null;
         $timeOut = $this->time_out ? $this->time_out . ':00' : null;
-        $otTimeIn = $this->ot_time_in ? $this->ot_time_in . ':00' : null;
-        $otTimeOut = $this->ot_time_out ? $this->ot_time_out . ':00' : null;
+
+        // Combine date and time for overtime
+        $otTimeIn = ($this->ot_time_in && $this->date)
+            ? $this->date . ' ' . $this->ot_time_in . ':00'
+            : null;
+        $otTimeOut = ($this->ot_time_out && $this->date)
+            ? $this->date . ' ' . $this->ot_time_out . ':00'
+            : null;
 
         $hours = null;
         $otHours = null;
@@ -66,30 +86,41 @@ class AttendanceCreateModal extends Component
         }
 
         if ($otTimeIn && $otTimeOut) {
-            $otIn = \Carbon\Carbon::parse($this->date . ' ' . $otTimeIn);
-            $otOut = \Carbon\Carbon::parse($this->date . ' ' . $otTimeOut);
+            $otIn = \Carbon\Carbon::parse($otTimeIn);
+            $otOut = \Carbon\Carbon::parse($otTimeOut);
             $otHours = abs($otOut->floatDiffInHours($otIn));
         }
 
-        $attendance = \App\Models\Attendance::create([
-            'employee_id' => $this->employee_id,
-            'date' => $this->date,
-            'time_in' => $timeIn,
-            'time_out' => $timeOut,
-            'total_hours' => $hours,
-        ]);
-
-        if ($otTimeIn || $otTimeOut) {
-            \App\Models\OvertimeLog::create([
+        try {
+            $attendance = \App\Models\Attendance::create([
                 'employee_id' => $this->employee_id,
-                'request_id' => $this->request_id, // If linked to a request, set the request ID
-                'ot_time_in' => $otTimeIn,
-                'ot_time_out' => $otTimeOut,
-                'total_hours' => $otHours,
-                'status' => $this->ot_status,
+                'date' => $this->date,
+                'time_in' => $timeIn,
+                'time_out' => $timeOut,
+                'total_hours' => $hours,
             ]);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to create attendance: ' . $e->getMessage());
+            return;
         }
 
+        if ($otTimeIn || $otTimeOut) {
+            try {
+                \App\Models\OvertimeLog::create([
+                    'employee_id' => $this->employee_id,
+                    'request_id' => $this->request_id, // If linked to a request, set the request ID
+                    'ot_time_in' => $otTimeIn,
+                    'ot_time_out' => $otTimeOut,
+                    'total_hours' => $otHours,
+                    'status' => $this->ot_status,
+                ]);
+            } catch (\Exception $e) {
+                session()->flash('error', 'Attendance created, but failed to create overtime log: ' . $e->getMessage());
+                return;
+            }
+        }
+
+        session()->flash('success', 'Attendance created successfully.');
         $this->dispatch('attendanceUpdated');
         $this->dispatch('closeCreateAttendance');
         $this->dispatch('close-modal');
