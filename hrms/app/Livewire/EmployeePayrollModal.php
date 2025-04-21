@@ -74,9 +74,7 @@ class EmployeePayrollModal extends Component
         }
             // Overtime logs for this employee
             
-            $this->overtimeLogs = $employee->overtimeLogs()->orderByDesc('ot_time_in')->get();
-
-            $this->totalOvertimeHours = $employee->overtimeLogs()->sum('total_hours');
+          
                 // $this->totalOvertimeHours = $employee->overtimeLogs()
                 //     ->whereIn('status', ['completed', 'auto_timed_out'])
                 //     ->whereBetween('ot_time_in', [
@@ -143,6 +141,43 @@ class EmployeePayrollModal extends Component
         $this->dispatch('employeeSalaryUpdated', employeeId: $this->employee->id);
         $this->dispatch('close-modal');
     }
+
+
+    public function loadOvertimeLogs()
+{
+    if ($this->pay_period_start && $this->pay_period_end) {
+        $this->overtimeLogs = $this->employee->overtimeLogs()
+            ->whereBetween('ot_time_in', [
+                \Carbon\Carbon::parse($this->pay_period_start)->startOfDay(),
+                \Carbon\Carbon::parse($this->pay_period_end)->endOfDay()
+            ])
+            ->orderByDesc('ot_time_in')
+            ->get();
+
+        $this->totalOvertimeHours = $this->employee->overtimeLogs()
+            ->whereBetween('ot_time_in', [
+                \Carbon\Carbon::parse($this->pay_period_start)->startOfDay(),
+                \Carbon\Carbon::parse($this->pay_period_end)->endOfDay()
+            ])
+            ->sum('total_hours');
+
+        // Recalculate overtime pay
+        $monthlySalary = $this->employee->workInfo->salary ?? 0;
+        $dailyRate = $monthlySalary / 22;
+        $hourlyRate = $dailyRate / 8;
+
+        $this->totalOvertimePay = $this->totalOvertimeHours * $hourlyRate * 1.25;
+    }
+}
+
+    public function updatedActiveTab($value)
+    {
+        if ($value === 'overtime') {
+            $this->loadOvertimeLogs();
+        }
+    }
+
+
 
     public function render()
     {

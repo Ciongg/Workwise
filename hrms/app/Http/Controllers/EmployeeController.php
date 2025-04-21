@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Employee;
 class EmployeeController extends Controller
 {
     public function dashboard(){
@@ -21,12 +22,13 @@ class EmployeeController extends Controller
 
     
     public function payslips()
-    {
-        $employee = Auth::user();
-        $payslips = $employee->archivedPayrolls()->orderBy('pay_period_start', 'desc')->get();
-        
-        return view('livewire.employee-payslip', compact('payslips'));
-    }
+{   //error due to employee being the autehnticatable user. as stated in config/auth.php
+    /** @var \App\Models\Employee $employee */
+    $employee = Auth::user();
+    $payslips = $employee->archivedPayrolls()->orderBy('pay_period_start', 'desc')->get();
+    
+    return view('livewire.employee-payslip', compact('payslips'));
+}
     
     public function requests(){
         return view('employee.request');

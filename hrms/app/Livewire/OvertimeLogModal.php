@@ -86,7 +86,7 @@ class OvertimeLogModal extends Component
         $end = \Carbon\Carbon::parse($this->request->end_time);
 
         // 1. Auto-cancel if user missed time-in window 10 minutes
-        if (!$log && $now->greaterThan($start->copy()->addMinutes(10))) {
+        if (!$log && $now->greaterThan($start->copy()->addMinutes(8))) {
             // Create a cancelled log and update request
             OvertimeLog::create([
                 'employee_id' => $this->request->employee_id,

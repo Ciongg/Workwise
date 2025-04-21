@@ -29,6 +29,7 @@ class PayrollIndex extends Component
             // If the current date is after the payroll period end, generate payslips
             if ($currentDate->greaterThan($payPeriodEnd)) {
                 $this->generatePayslips();
+                
             }
         }
     }
@@ -98,6 +99,8 @@ class PayrollIndex extends Component
         }
 
         session()->flash('message', 'Payslips generated and archived successfully. Payrolls have been reset for the next month.');
+        $this->resetPage(); // Reset pagination
+        
     }
 
     public function render()

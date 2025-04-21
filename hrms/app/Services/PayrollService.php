@@ -7,6 +7,7 @@ use App\Models\Payroll;
 use App\Models\PayrollDeductionSetting;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Services\TimeService;
 
 class PayrollService
 {
@@ -23,9 +24,9 @@ class PayrollService
         $basic_salary = $employee->workInfo->salary;
         $allowance = 1000;
 
-        // Define pay period
-        $pay_period_start = Carbon::now()->startOfMonth()->startOfDay();
-        $pay_period_end = Carbon::now()->endOfMonth()->endOfDay();
+        // Use TimeService for pay period
+        $pay_period_start = TimeService::now()->startOfMonth()->startOfDay();
+        $pay_period_end = TimeService::now()->endOfMonth()->endOfDay();
 
         // Calculate total overtime hours within the period
         $overtime_hours = $employee->overtimeLogs()

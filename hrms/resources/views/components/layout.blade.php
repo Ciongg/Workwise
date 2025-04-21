@@ -8,44 +8,50 @@
     @livewireStyles
     <title>Workwise</title>
 </head>
-<body>
-    <nav class="flex justify-between items-center bg-gray-200 shadow-lg p-4 text-gray">
-        <div class="flex items-center gap-12">
-            <div>Workwise</div>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="flex justify-between items-center bg-teal-600 text-white px-8 py-4 shadow-md">
+        <!-- Left side -->
+        <div class="flex items-center gap-10">
+            <div class="text-2xl font-bold">Workwise</div>
+
             @guest
-                <div>
-                    <a href="/">Home</a>
-                    <a href="/about">About</a>
-                    <a href="/contact">Contact</a>
+                <div class="flex gap-6">
+                    <a href="/" class="hover:underline">Home</a>
+                    <a href="/about" class="hover:underline">About</a>
+                    <a href="/contact" class="hover:underline">Contact</a>
                 </div>
             @endguest
 
             @auth
-                <a href="{{ auth()->user()->role === 'hr' ? route('hr.dashboard') : route('employee.dashboard') }}">
+                <a href="{{ auth()->user()->role === 'hr' ? route('hr.dashboard') : route('employee.dashboard') }}" class="hover:underline font-semibold">
                     Dashboard
                 </a>
             @endauth
         </div>
-         
-        <div class="flex items-center gap-12">
+
+        <!-- Right side -->
+        <div class="flex items-center gap-6">
             @guest
-                <a href="/">Login</a>
+                <a href="/" class="hover:underline font-semibold">Login</a>
             @endguest
 
             @auth
                 <form action="/logout" method="POST">
                     @csrf
-                    <button class="cursor-pointer" type="submit">Logout</button>
+                    <button type="submit" class="hover:underline font-semibold">
+                        Logout
+                    </button>
                 </form>
             @endauth
         </div>
     </nav>
 
-    <div>
-        {{$slot}}
-    </div>
-    
+    <!-- Main content -->
+    <main class="flex-grow p-6">
+        {{ $slot }}
+    </main>
+
     @livewireScripts
 </body>
 </html>
-
