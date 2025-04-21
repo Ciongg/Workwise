@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\OvertimeLog;
 use App\Models\EmployeeRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Services\PayrollService;
 
 class OvertimeLogModal extends Component
 {
@@ -59,10 +60,20 @@ class OvertimeLogModal extends Component
             $request->update(['status' => 'completed']);
         }
 
+
+
+
         $employee = $log->employee;
         if ($employee) {
-            \App\Services\PayrollService::generatePayrollForEmployee($employee);
+           
+            $payroll = PayrollService::generatePayrollForEmployee($employee);
+            $employee->refresh(); // 💥 force re-fetch from DB
+            $employee->load('payrollInfo'); // 💥 make sure latest payrollInfo
+            logger($payroll->overtime_pay);
+            
         }
+
+        
 
         $this->dispatch('overtimeCompleted');
         $this->dispatch('employeeRequestUpdated');
@@ -90,6 +101,7 @@ class OvertimeLogModal extends Component
                 'status' => 'cancelled',
             ]);
             $this->request->update(['status' => 'cancelled']);
+            $this->dispatch('overtimeCompleted');
             $this->dispatch('employeeRequestUpdated');
             $this->dispatch('close-modal');
             return;
