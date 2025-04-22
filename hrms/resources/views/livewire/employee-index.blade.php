@@ -20,7 +20,7 @@
             <select wire:model.live="searchRole" class="border rounded p-2">
                 <option value="">All</option>
                 <option value="hr">HR</option>
-                <option value="manager">Manager</option>
+                
                 <option value="employee">Employee</option>
             </select>
         </div>

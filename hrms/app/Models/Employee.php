@@ -35,6 +35,23 @@ class Employee extends Authenticatable
         'remember_token',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($employee) {
+            if ($employee->isForceDeleting()) {
+                // Permanently delete related payrolls
+                $employee->payrollInfo()->forceDelete();
+            } else {
+                // Soft delete related payrolls
+                $employee->payrollInfo()->delete();
+            }
+        });
+    }
+
+    
+
     // Relationship with Work Info
     public function workInfo()
     {

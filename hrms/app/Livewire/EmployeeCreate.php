@@ -6,30 +6,34 @@ use Livewire\Component;
 use App\Models\Employee;
 use App\Models\EmployeeWorkInfo;
 use App\Models\EmployeeBankInfo;
-use App\Services\PayrollService;
 use App\Models\EmployeeIdentificationInfo;
+use App\Services\PayrollService;
 use Illuminate\Support\Facades\Hash;
 
 class EmployeeCreate extends Component
 {
-    public $first_name, $last_name, $middle_name, $suffix, $gender, $birthdate,
-           $email, $phone_number, $marital_status, $address, $emergency_contact_number, $password, $role;
+    // Personal Info
+    public $first_name, $last_name, $middle_name, $suffix, $gender, $birthdate;
+    public $email, $phone_number, $emergency_contact_number, $marital_status, $address;
+    public $password, $role;
 
-    public $work_status, $hire_date;
+    // Work Info
+    public $department, $position, $salary, $work_status, $hire_date;
+    public $work_start_time = '08:00', $work_end_time = '17:00';
+    public $break_start_time = '12:00', $break_end_time = '13:00';
 
+    // Bank Info
     public $bank_name, $account_number, $account_type;
 
+    // ID Info
     public $sss_number, $pag_ibig_number, $philhealth_number, $tin_number;
 
-    public $work_start_time = '08:00:00';
-    public $work_end_time = '17:00:00';
-    public $break_start_time = '12:00:00';
-    public $break_end_time = '13:00:00';
-
+    // Others
     public $departments = [
-        'Engineering', 'Operations', 'Logistics', 'Procurement', 'Finance', 'HR', 'Sales/Marketing', 'Executive'
+        'Engineering', 'Operations', 'Logistics', 'Procurement',
+        'Finance', 'HR', 'Sales/Marketing', 'Executive'
     ];
-    
+
     public $positionsData = [
         ['Engineering', 'Electrical Engineer', 25000, 40000],
         ['Engineering', 'Project Engineer', 30000, 45000],
@@ -54,62 +58,129 @@ class EmployeeCreate extends Component
         ['Executive', 'General Manager', 60000, 90000],
         ['Executive', 'Operations Manager', 50000, 80000],
     ];
-    
-    
-    public $department;
-    public $position;
-    public $positions = [];
-    public $min_salary;
-    public $max_salary;
-    public $salary;
 
+    public $positions = [];
+    public $min_salary, $max_salary;
+
+    // Listeners for changes
+    public function updated($propertyName)
+    {
+        if (in_array($propertyName, ['first_name', 'last_name', 'suffix'])) {
+            $this->generateEmail();
+        }
+    }
+
+    public function updatedDepartment($value)
+    {
+        $this->positions = collect($this->positionsData)
+            ->where(0, $value)
+            ->pluck(1)
+            ->values()
+            ->toArray();
+
+        $this->position = null;
+    }
 
     public function updatedPosition($value)
     {
         $selected = collect($this->positionsData)
             ->first(fn($item) => $item[0] === $this->department && $item[1] === $value);
-    
+
         if ($selected) {
             $this->min_salary = $selected[2];
             $this->max_salary = $selected[3];
         } else {
-            $this->min_salary = null;
-            $this->max_salary = null;
+            $this->min_salary = $this->max_salary = null;
         }
     }
-    
-    //watch department
-    public function updatedDepartment($value)
-    {
-       
 
-        $this->positions = collect($this->positionsData)
-            ->filter(fn($item) => $item[0] === $value)
-            ->pluck(1)
-            ->values()
-            ->toArray();
-    
-        $this->position = null;
+    // Generate Email
+    private function generateEmail()
+    {
+        $formattedFirstName = preg_replace('/\s+/', '.', strtolower(trim($this->first_name)));
+        $formattedLastName = strtolower(trim($this->last_name));
+        $formattedSuffix = strtolower(trim($this->suffix));
+
+        $parts = array_filter([$formattedFirstName, $formattedLastName, $formattedSuffix]);
+        $this->email = implode('.', $parts) . '@geneaux.com';
     }
 
+    // Main Submit
     public function submit()
     {
+        $this->validateData();
+
+        try {
+            $employee = Employee::create([
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+                'middle_name' => $this->middle_name,
+                'suffix' => $this->suffix,
+                'gender' => $this->gender,
+                'birthdate' => $this->birthdate,
+                'email' => $this->email,
+                'phone_number' => $this->phone_number,
+                'marital_status' => $this->marital_status,
+                'address' => $this->address,
+                'emergency_contact_number' => $this->emergency_contact_number,
+                'password' => Hash::make($this->password),
+                'role' => $this->role,
+            ]);
+
+            $employee->workInfo()->create([
+                'department' => $this->department,
+                'position' => $this->position,
+                'salary' => $this->salary,
+                'work_status' => $this->work_status,
+                'hire_date' => $this->hire_date,
+                'work_start_time' => $this->work_start_time,
+                'work_end_time' => $this->work_end_time,
+                'break_start_time' => $this->break_start_time,
+                'break_end_time' => $this->break_end_time,
+            ]);
+
+            $employee->bankInfo()->create([
+                'bank_name' => $this->bank_name,
+                'account_number' => $this->account_number,
+                'account_type' => $this->account_type,
+            ]);
+
+            $employee->identificationInfo()->create([
+                'sss_number' => $this->sss_number,
+                'pag_ibig_number' => $this->pag_ibig_number,
+                'philhealth_number' => $this->philhealth_number,
+                'tin_number' => $this->tin_number,
+            ]);
+
+            PayrollService::generatePayrollForEmployee($employee);
+
+            session()->flash('success', 'Employee created successfully.');
+            $this->reset();
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            session()->flash('error', 'Database error: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            session()->flash('error', 'Unexpected error: ' . $e->getMessage());
+        }
+    }
+
+    // Separate Validation
+    private function validateData()
+    {
         $this->validate([
-            'email' => 'required|email|unique:employees,email',
-            'password' => 'required|min:6',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string',
             'suffix' => 'nullable|string',
             'gender' => 'required|in:male,female',
             'birthdate' => 'required|date',
-            'phone_number' => 'required|digits:11',
+            'email' => 'required|email|unique:employees,email',
+            'password' => 'required|min:6',
+            'phone_number' => 'required|digits:11|unique:employees,phone_number',
             'emergency_contact_number' => 'required|digits:11',
             'marital_status' => 'required',
             'address' => 'required',
             'role' => 'required|in:employee,hr,manager',
-        
-            // work info
             'department' => 'required',
             'position' => 'required',
             'salary' => 'required|numeric|min:' . $this->min_salary . '|max:' . $this->max_salary,
@@ -119,71 +190,20 @@ class EmployeeCreate extends Component
             'work_end_time' => 'required|date_format:H:i|after:work_start_time',
             'break_start_time' => 'nullable|date_format:H:i',
             'break_end_time' => 'nullable|date_format:H:i|after:break_start_time',
-        
-            // bank info
             'bank_name' => 'required',
-            'account_number' => 'required|digits_between:10,12|unique:employee_bank_infos,account_number',  // unique validation for account_number
+            'account_number' => 'required|digits_between:10,13|unique:employee_bank_infos,account_number',
             'account_type' => 'required|in:savings,checking',
-        
-            // ids
-            'sss_number' => 'required|unique:employee_identification_infos,sss_number',  // unique validation for sss_number
-            'pag_ibig_number' => 'required|unique:employee_identification_infos,pag_ibig_number',  // unique validation for pag_ibig_number
-            'philhealth_number' => 'required|unique:employee_identification_infos,philhealth_number',  // unique validation for philhealth_number
-            'tin_number' => 'required|unique:employee_identification_infos,tin_number',  // unique validation for tin_number
-        
+            'sss_number' => 'required|unique:employee_identification_infos,sss_number|regex:/^\d{2}-\d{7}-\d{1}$/',
+            'pag_ibig_number' => 'required|unique:employee_identification_infos,pag_ibig_number|regex:/^\d{4}-\d{4}-\d{4}$/',
+            'philhealth_number' => 'required|unique:employee_identification_infos,philhealth_number|regex:/^\d{4}-\d{5}-\d{2}$/',
+            'tin_number' => 'required|unique:employee_identification_infos,tin_number|regex:/^\d{3}-\d{3}-\d{3}-\d{3}$/',
         ]);
-        
-
-        $employee = Employee::create([
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'middle_name' => $this->middle_name,
-            'suffix' => $this->suffix,
-            'gender' => $this->gender,
-            'birthdate' => $this->birthdate,
-            'email' => $this->email,
-            'phone_number' => $this->phone_number,
-            'marital_status' => $this->marital_status,
-            'address' => $this->address,
-            'emergency_contact_number' => $this->emergency_contact_number,
-            'password' => Hash::make($this->password),
-            'role' => $this->role,
-        ]);
-
-        $employee->workInfo()->create([
-            'department' => $this->department,
-            'position' => $this->position,
-            'salary' => $this->salary,
-            'work_status' => $this->work_status,
-            'hire_date' => $this->hire_date,
-            'work_start_time' => $this->work_start_time,
-            'work_end_time' => $this->work_end_time,
-            'break_start_time' => $this->break_start_time,
-            'break_end_time' => $this->break_end_time,
-        ]);
-
-        $employee->bankInfo()->create([
-            'bank_name' => $this->bank_name,
-            'account_number' => $this->account_number,
-            'account_type' => $this->account_type,
-        ]);
-
-
-        $employee->identificationInfo()->create([
-            'sss_number' => $this->sss_number,
-            'pag_ibig_number' => $this->pag_ibig_number,
-            'philhealth_number' => $this->philhealth_number,
-            'tin_number' => $this->tin_number,
-        ]);
-
-        PayrollService::generatePayrollForEmployee($employee);
-
-        session()->flash('success', 'Employee created successfully.');
-        $this->reset();
     }
 
     public function render()
     {
-        return view('livewire.employee-create');
+        return view('livewire.employee-create', [
+            'errorMessage' => session()->get('error'),
+        ]);
     }
 }

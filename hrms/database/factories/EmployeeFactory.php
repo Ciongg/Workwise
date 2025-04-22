@@ -19,30 +19,36 @@ class EmployeeFactory extends Factory
 {
     protected $model = Employee::class;
 
-    
-   
     public function definition(): array
     {
-        $roles = ['employee', 'hr', 'manager'];
+        $roles = ['employee', 'hr'];
+
+        // Generate first and last name first
+        $firstName = $this->faker->firstName;
+        $lastName = $this->faker->lastName;
 
         return [
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'middle_name' => $this->faker->lastName,
             'suffix' => null,
             'gender' => $this->faker->randomElement(['Male', 'Female']),
             'birthdate' => $this->faker->date('Y-m-d', '-20 years'),
-            'email' => $this->faker->unique()->safeEmail,
-            'phone_number' => $this->faker->phoneNumber,
+            
+            // Generate email based on the generated first and last name
+            'email' => strtolower($firstName . '.' . $lastName) . '@geneaux.com',
+
+            // Always start with 09 + 9 random numbers
+            'phone_number' => '09' . $this->faker->numerify('#########'),
+
             'address' => $this->faker->address,
             'marital_status' => $this->faker->randomElement(['single', 'married', 'divorced', 'widowed']),
-            'emergency_contact_number' => $this->faker->phoneNumber,
+            
+            'emergency_contact_number' => '09' . $this->faker->numerify('#########'),
+
             'role' => $this->faker->randomElement($roles),
-            'password' => Hash::make('password123'), // default password
+            'password' => Hash::make('password123'),
             'remember_token' => Str::random(10),
-
-
-         
         ];
     }
 

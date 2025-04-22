@@ -60,7 +60,6 @@
             <select id="role" wire:model.defer="role" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
                 <option value="employee" {{ old('role', $role) === 'employee' ? 'selected' : '' }}>Employee</option>
                 <option value="hr" {{ old('role', $role) === 'hr' ? 'selected' : '' }}>HR</option>
-                <option value="manager" {{ old('role', $role) === 'manager' ? 'selected' : '' }}>Manager</option>
             </select>
         </div>
     </div>

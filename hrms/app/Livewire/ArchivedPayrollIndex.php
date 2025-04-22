@@ -21,6 +21,9 @@ class ArchivedPayrollIndex extends Component
     public $selectedArchivedPayroll = null;
     public $modalKey;
 
+
+    protected $listeners =['archivedPayrollUpdated' => '$refresh' ];
+
     protected $paginationTheme = 'tailwind'; // Optional: Use Tailwind pagination styles
 
     public function selectArchivedPayroll($id)
@@ -62,57 +65,8 @@ class ArchivedPayrollIndex extends Component
     {
         $this->resetPage(); // Reset pagination when the search term changes
     }
-
-    public function render()
-    {
-        $query = ArchivedPayroll::query();
-
-        // Apply filters if month is selected
-        if ($this->selectedMonth) {
-            $query->whereMonth('pay_period_start', $this->selectedMonth);
-        }
-
-        // Apply filters if year is selected
-        if ($this->selectedYear) {
-            $query->whereYear('pay_period_start', $this->selectedYear);
-        }
-
-        // Apply filter for employee name
-        if ($this->searchName) {
-            $query->whereHas('employee', function ($q) {
-                $q->where('first_name', 'like', '%' . $this->searchName . '%')
-                  ->orWhere('last_name', 'like', '%' . $this->searchName . '%');
-            });
-        }
-
-        // Status filter
-        if ($this->statusFilter) {
-            $query->where('status', $this->statusFilter);
-        }
-
-        // Sorting
-        if (in_array($this->sortField, ['id', 'net_pay'])) {
-            $query->orderBy($this->sortField, $this->sortDirection);
-        } elseif ($this->sortField === 'employee_name') {
-            $query->join('employees', 'archived_payrolls.employee_id', '=', 'employees.id')
-                  ->orderByRaw("CONCAT(employees.first_name, ' ', employees.last_name) {$this->sortDirection}")
-                  ->select('archived_payrolls.*');
-        } elseif (in_array($this->sortField, ['department', 'position', 'salary'])) {
-            $query->join('employees', 'archived_payrolls.employee_id', '=', 'employees.id')
-                  ->join('employee_work_infos', 'employees.id', '=', 'employee_work_infos.employee_id')
-                  ->orderBy("employee_work_infos.{$this->sortField}", $this->sortDirection)
-                  ->select('archived_payrolls.*');
-        }
-
-        $employees = $query->paginate(10); // Paginate with 10 items per page
-
-        return view('livewire.archived-payroll-index', [
-            'employees' => $employees,
-            'months' => $this->getMonths(),
-            'years' => $this->getYears(),
-        ]);
-    }
-
+    
+    
     private function getMonths()
     {
         return [
@@ -136,5 +90,58 @@ class ArchivedPayrollIndex extends Component
         $startYear = now()->year - 5; // Show the last 5 years
         $endYear = now()->year + 1;  // Include next year
         return range($startYear, $endYear);
+    }
+    
+    public function render()
+    {
+        $query = ArchivedPayroll::withTrashed()->with(['employee' => function ($query) {
+            $query->withTrashed(); // Include soft-deleted employees
+        }]);
+
+        // Apply filters if month is selected
+        if ($this->selectedMonth) {
+            $query->whereMonth('pay_period_start', $this->selectedMonth);
+        }
+
+        // Apply filters if year is selected
+        if ($this->selectedYear) {
+            $query->whereYear('pay_period_start', $this->selectedYear);
+        }
+
+        // Apply filter for employee name
+        if ($this->searchName) {
+            $query->whereHas('employee', function ($q) {
+                $q->where('first_name', 'like', '%' . $this->searchName . '%')
+                  ->orWhere('last_name', 'like', '%' . $this->searchName . '%')
+                  ->orWhereRaw("TRIM(first_name || ' ' || last_name) LIKE ?", ['%' . $this->searchName . '%']);
+            });
+        }
+
+        // Status filter
+        if ($this->statusFilter) {
+            $query->where('status', $this->statusFilter);
+        }
+
+        // Sorting
+        if (in_array($this->sortField, ['id', 'net_pay'])) {
+            $query->orderBy($this->sortField, $this->sortDirection);
+        } elseif ($this->sortField === 'employee_name') {
+            $query->join('employees', 'archived_payrolls.employee_id', '=', 'employees.id')
+                  ->orderByRaw("CONCAT(employees.first_name, ' ', employees.last_name) {$this->sortDirection}")
+                  ->select('archived_payrolls.*');
+        } elseif (in_array($this->sortField, ['department', 'position', 'salary'])) {
+            $query->join('employees', 'archived_payrolls.employee_id', '=', 'employees.id')
+                  ->join('employee_work_infos', 'employees.id', '=', 'employee_work_infos.employee_id')
+                  ->orderBy("employee_work_infos.{$this->sortField}", $this->sortDirection)
+                  ->select('archived_payrolls.*');
+        }
+
+        $archivedPayrolls = $query->paginate(10); // Paginate with 10 items per page
+
+        return view('livewire.archived-payroll-index', [
+            'archivedPayrolls' => $archivedPayrolls,
+            'months' => $this->getMonths(),
+            'years' => $this->getYears(),
+        ]);
     }
 }

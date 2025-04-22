@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->softDeletes();
-            $table->enum('role', ['employee', 'hr', 'manager']);
+            $table->enum('role', ['employee', 'hr']);
             $table->string('password');
             $table->string('email')->unique();
             $table->string('first_name');

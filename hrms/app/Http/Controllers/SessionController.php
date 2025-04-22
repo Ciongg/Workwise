@@ -24,9 +24,7 @@ class SessionController extends Controller
         
         if (Auth::user()->role === 'hr') {
             return redirect()->route('hr.dashboard')->with('success', 'Login successful');
-        } elseif (Auth::user()->role === 'manager') {
-            return redirect()->route('manager.dashboard')->with('success', 'Login successful');
-        } else {
+        }else {
             return redirect()->route('employee.dashboard')->with('success', 'Login successful');
         }
     }

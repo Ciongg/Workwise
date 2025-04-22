@@ -105,7 +105,10 @@ class PayrollIndex extends Component
 
     public function render()
     {
-        $employees = Employee::with('payrollInfo')->paginate(10);
+        $employees = Employee::with(['payrollInfo' => function ($query) {
+            $query->whereNull('deleted_at'); // Exclude soft-deleted payrolls
+        }])->paginate(10);
+
         return view('livewire.payroll-index', compact('employees'));
     }
 }

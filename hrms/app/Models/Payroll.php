@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Payroll extends Model
 {
     /** @use HasFactory<\Database\Factories\PayrollFactory> */
     use HasFactory;
-
+    use SoftDeletes;
     protected $fillable = [
         'employee_id',
         'pay_period_start',

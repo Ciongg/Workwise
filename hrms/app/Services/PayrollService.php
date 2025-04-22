@@ -13,6 +13,10 @@ class PayrollService
 {
     public static function generatePayrollForEmployee(Employee $employee): Payroll
     {
+        if ($employee->trashed()) {
+            throw new \Exception("Cannot generate payroll for a deleted employee.");
+        }
+
         $deductionSettings = PayrollDeductionSetting::first();
 
         $employee->loadMissing('workInfo');
