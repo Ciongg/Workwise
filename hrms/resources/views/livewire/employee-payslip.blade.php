@@ -5,7 +5,7 @@
 
         @php
             // Only show approved payslips
-            $approvedPayslips = $payslips->where('status', 'approved');
+            $approvedPayslips = $payslips->whereIn('status', ['approved', 'paid']);
         @endphp
 
         @forelse ($approvedPayslips as $payslip)

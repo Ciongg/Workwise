@@ -54,6 +54,28 @@ class EmployeeIndex extends Component
         }
     }
     
+    public function confirmDelete($id)
+    {
+        $employee = Employee::find($id);
+
+        if (!$employee) {
+            session()->flash('error', 'Employee not found.');
+            return;
+        }
+
+        // Soft delete the employee
+        $employee->delete();
+
+        // Optionally, you can add logic to handle related data (e.g., payroll, requests, etc.)
+        // Example: Archive payrolls or mark related data as inactive
+        $employee->archivedPayrolls()->delete(); // Soft delete archived payrolls
+        $employee->requests()->delete(); // Soft delete requests
+        $employee->overtimeLogs()->delete(); // Soft delete overtime logs
+        $employee->attendances()->delete(); // Soft delete attendances
+
+        session()->flash('success', 'Employee deleted successfully.');
+        $this->resetPage(); // Reset pagination to avoid issues with deleted records
+    }
     
       public function render()
     {

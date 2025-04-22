@@ -36,7 +36,7 @@ class EmployeeRequestModal extends Component
             'reason' => 'required|string|max:255',
             'startTime' => 'nullable|date',
             'endTime' => 'nullable|date|after:startTime',
-            'status' => 'required|in:pending,cancelled,approved,rejected',
+            'status' => 'required|in:pending,approved,rejected,cancelled,auto_timed_out,completed',
         ]);
 
         // Update the request

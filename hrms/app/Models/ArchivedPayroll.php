@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ArchivedPayroll extends Model
 {
     use HasFactory;
-
+    
     protected $fillable = [
         'employee_id',
         'pay_period_start',

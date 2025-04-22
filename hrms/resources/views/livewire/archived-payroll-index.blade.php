@@ -30,22 +30,60 @@
             <label for="searchName" class="block text-sm font-medium text-gray-700">Search Name</label>
             <input type="text" id="searchName" wire:model.live="searchName" placeholder="Search by name" class="border rounded p-2 w-full">
         </div>
+        <div>
+            <label for="statusFilter" class="block text-sm font-medium text-gray-700">Status</label>
+            <select id="statusFilter" wire:model.live="statusFilter" class="border rounded p-2 w-full">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+            </select>
+        </div>
     </div>
 
     <div class="overflow-x-auto">
         <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200">
             <thead class="bg-gray-100 text-xs uppercase text-gray-600 text-center">
                 <tr>
-                    <th class="px-4 py-3 border">ID</th>
-                    <th class="px-4 py-3 border">Name</th>
-                    <th class="px-4 py-3 border">Department</th>
-                    <th class="px-4 py-3 border">Position</th>
-                    <th class="px-4 py-3 border">Salary</th>
+                    <th class="px-4 py-3 border cursor-pointer" wire:click="sortBy('id')">
+                        ID
+                        <span class="{{ $sortField === 'id' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'id' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border cursor-pointer" wire:click="sortBy('employee_name')">
+                        Name
+                        <span class="{{ $sortField === 'employee_name' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'employee_name' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border cursor-pointer" wire:click="sortBy('department')">
+                        Department
+                        <span class="{{ $sortField === 'department' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'department' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border cursor-pointer" wire:click="sortBy('position')">
+                        Position
+                        <span class="{{ $sortField === 'position' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'position' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border cursor-pointer" wire:click="sortBy('salary')">
+                        Salary
+                        <span class="{{ $sortField === 'salary' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'salary' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
                     <th class="px-4 py-3 border">Allowance</th>
                     <th class="px-4 py-3 border">Overtime Pay</th>
                     <th class="px-4 py-3 border">Gross Pay</th>
                     <th class="px-4 py-3 border">Deductions</th>
-                    <th class="px-4 py-3 border">Net Pay</th>
+                    <th class="px-4 py-3 border cursor-pointer" wire:click="sortBy('net_pay')">
+                        Net Pay
+                        <span class="{{ $sortField === 'net_pay' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'net_pay' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
                     <th class="px-4 py-3 border">Pay Period</th>
                     <th class="px-4 py-3 border">Status</th>
                     <th class="px-4 py-3 border">Actions</th>

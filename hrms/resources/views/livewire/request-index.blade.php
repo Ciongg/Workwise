@@ -49,13 +49,13 @@
                             <span class="px-2 py-1 rounded text-white 
                                 {{ 
                                     $request->status === 'pending' ? 'bg-yellow-500' : 
-                                    ($request->status === 'approved' ? 'bg-green-500' : 
-                                    ($request->status === 'completed' ? 'bg-blue-500' : 
+                                    ($request->status === 'approved' ? 'bg-blue-500' : 
+                                    ($request->status === 'completed' ? 'bg-green-500' : 
                                     ($request->status === 'auto_timed_out' ? 'bg-red-500' : 'bg-gray-400')))
                                 }}">
                                 {{ $request->status === 'auto_timed_out' ? 'Auto Timed Out' : ucfirst($request->status) }}
                             </span>
-                        </td>
+                        </td>   
 
                         <!-- Actions -->
                         <td class="border p-2">

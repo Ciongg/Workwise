@@ -59,8 +59,14 @@ class AttendanceCreateModal extends Component
                 ->first();
 
             if (!$request) {
-                
                 $this->addError('request_id', 'The selected request does not belong to this employee.');
+                return;
+            }
+
+            // Check if the request_id is already associated with an OvertimeLog
+            $existingOvertimeLog = \App\Models\OvertimeLog::where('request_id', $this->request_id)->first();
+            if ($existingOvertimeLog) {
+                $this->addError('request_id', 'This Overtime Request ID is already associated with an overtime log.');
                 return;
             }
         }

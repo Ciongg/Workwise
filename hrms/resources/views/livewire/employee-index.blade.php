@@ -1,6 +1,18 @@
 <div class="p-6 bg-white shadow-md rounded-lg">
     <h2 class="text-2xl font-semibold mb-6 text-gray-800">Employee List</h2>
 
+    @if (session()->has('success'))
+        <div class="bg-green-100 text-green-800 p-2 mb-4 rounded">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="bg-red-100 text-red-800 p-2 mb-4 rounded">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="flex justify-between items-center mb-4 mt-4 mx-6">
         <!-- Filter by Role -->
         <div class="mb-4 flex items-center gap-4">
@@ -73,8 +85,12 @@
                                 class="text-teal-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
                                 View/Edit
                             </a>
-
-                            
+                            <button
+                                wire:click="confirmDelete({{ $employee->id }})"
+                                class="ml-2 bg-red-500 text-white px-3 py-2 rounded text-xs hover:bg-red-600"
+                                onclick="return confirm('Are you sure you want to delete this employee? This action cannot be undone.')">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 @endforeach

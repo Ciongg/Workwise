@@ -56,9 +56,11 @@ class PayrollIndex extends Component
     
     public function generatePayslips()
     {
+        
         $payrolls = Payroll::all();
-
+        
         foreach ($payrolls as $payroll) {
+            $newStatus = $payroll->status === 'approved' ? 'paid' : $payroll->status;
             // Archive all payrolls regardless of status
             \App\Models\ArchivedPayroll::create([
                 'employee_id' => $payroll->employee_id,
@@ -70,7 +72,7 @@ class PayrollIndex extends Component
                 'deductions' => $payroll->deductions,
                 'additional_deductions' => $payroll->additional_deductions,
                 'net_pay' => $payroll->net_pay,
-                'status' => $payroll->status,
+                'status' => $newStatus,
             ]);
             // Delete from main payroll table
             $payroll->delete();
@@ -79,17 +81,17 @@ class PayrollIndex extends Component
             $current_pay_period_start = \Carbon\Carbon::parse($payroll->pay_period_start);
             $new_pay_period_start = $current_pay_period_start->copy()->addMonth()->startOfMonth();
             $new_pay_period_end = $new_pay_period_start->copy()->endOfMonth();
-
+            
             Payroll::create([
                 'employee_id' => $payroll->employee_id,
                 'pay_period_start' => $new_pay_period_start,
                 'pay_period_end' => $new_pay_period_end,
                 'allowance' => $payroll->allowance,
-                'overtime_pay' => $payroll->overtime_pay, // carry over
-                'gross_pay' => $payroll->gross_pay,       // carry over
-                'deductions' => $payroll->deductions,     // carry over
-                'additional_deductions' => $payroll->additional_deductions, // carry over
-                'net_pay' => $payroll->net_pay,            // carry over
+                'overtime_pay' => 0, // reset overtime for the new month
+                'gross_pay' => $payroll->gross_pay, 
+                'deductions' => $payroll->deductions, // reset deductions for the new month
+                'additional_deductions' => 0, // reset additional deductions for the new month
+                'net_pay' => $payroll->gross_pay, // initial net pay = gross pay for new month
                 'status' => 'pending',
             ]);
             

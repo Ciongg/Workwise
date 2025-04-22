@@ -6,6 +6,7 @@ use App\Models\ArchivedPayroll;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Employee;
+
 class ArchivedPayrollIndex extends Component
 {
     use WithPagination;
@@ -13,10 +14,12 @@ class ArchivedPayrollIndex extends Component
     public $selectedMonth = null;
     public $selectedYear = null;
     public $searchName = null;
+    public $statusFilter = '';
+    public $sortField = 'id';
+    public $sortDirection = 'asc';
 
     public $selectedArchivedPayroll = null;
     public $modalKey;
-
 
     protected $paginationTheme = 'tailwind'; // Optional: Use Tailwind pagination styles
 
@@ -27,7 +30,16 @@ class ArchivedPayrollIndex extends Component
         $this->dispatch('open-modal', name: 'view-employee-archived-payroll'); // Trigger the modal
     }
 
-
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+        $this->resetPage();
+    }
 
     // Add query string support for filters
     protected $queryString = [
@@ -71,6 +83,25 @@ class ArchivedPayrollIndex extends Component
                 $q->where('first_name', 'like', '%' . $this->searchName . '%')
                   ->orWhere('last_name', 'like', '%' . $this->searchName . '%');
             });
+        }
+
+        // Status filter
+        if ($this->statusFilter) {
+            $query->where('status', $this->statusFilter);
+        }
+
+        // Sorting
+        if (in_array($this->sortField, ['id', 'net_pay'])) {
+            $query->orderBy($this->sortField, $this->sortDirection);
+        } elseif ($this->sortField === 'employee_name') {
+            $query->join('employees', 'archived_payrolls.employee_id', '=', 'employees.id')
+                  ->orderByRaw("CONCAT(employees.first_name, ' ', employees.last_name) {$this->sortDirection}")
+                  ->select('archived_payrolls.*');
+        } elseif (in_array($this->sortField, ['department', 'position', 'salary'])) {
+            $query->join('employees', 'archived_payrolls.employee_id', '=', 'employees.id')
+                  ->join('employee_work_infos', 'employees.id', '=', 'employee_work_infos.employee_id')
+                  ->orderBy("employee_work_infos.{$this->sortField}", $this->sortDirection)
+                  ->select('archived_payrolls.*');
         }
 
         $employees = $query->paginate(10); // Paginate with 10 items per page

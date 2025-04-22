@@ -13,21 +13,22 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->softDeletes();
+            $table->enum('role', ['employee', 'hr', 'manager']);
+            $table->string('password');
+            $table->string('email')->unique();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('middle_name')->nullable();
             $table->string('suffix')->nullable();
             $table->string('gender');
             $table->date('birthdate');
-            $table->string('email')->unique();
             $table->string('phone_number')->unique();
-            $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed']);
-            $table->string('address');
             $table->string('emergency_contact_number');
-            $table->string('password');
+            $table->string('address');
+            $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed']);
             $table->rememberToken();
-            $table->enum('role', ['employee', 'hr', 'manager']);
+            $table->timestamps();
         });
     }
 
