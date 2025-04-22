@@ -24,7 +24,7 @@
                 <option value="employee">Employee</option>
             </select>
         </div>
-        <!-- Filter by Name -->
+        <!-- Filter by Names -->
         <div class="mb-4 flex items-center gap-4">
             <label class="text-gray-600">Filter by Name:</label>
             <input type="text" wire:model.live="searchName" placeholder="Search by name" class="border rounded p-2">

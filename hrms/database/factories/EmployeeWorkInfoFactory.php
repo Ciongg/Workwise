@@ -54,7 +54,7 @@ class EmployeeWorkInfoFactory extends Factory
             'work_start_time' => '08:00', // Default work start time
             'work_end_time' => '17:00',   // Default work end time
             'break_start_time' => '12:00', // Default break start time
-            'break_end_time' => '13:00',   // Default break end time
+            'break_end_time' => '13:00',   // Default break endd time
         ];
     }
 }

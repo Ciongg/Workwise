@@ -32,7 +32,7 @@ class EmployeeFactory extends Factory
             'last_name' => $lastName,
             'middle_name' => $this->faker->lastName,
             'suffix' => null,
-            'gender' => $this->faker->randomElement(['Male', 'Female']),
+            'gender' => $this->faker->randomElement(['male', 'female']),
             'birthdate' => $this->faker->date('Y-m-d', '-20 years'),
             
             // Generate email based on the generated first and last name
