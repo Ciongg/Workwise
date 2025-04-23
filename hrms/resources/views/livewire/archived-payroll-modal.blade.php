@@ -47,7 +47,6 @@
                 <label class="block text-sm font-medium text-gray-700">Status</label>
                 <select wire:model.defer="status" class="border rounded p-2 w-full">
                     <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
                     <option value="paid">Paid</option>
                 </select>
                 @error('status') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror

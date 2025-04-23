@@ -22,4 +22,9 @@ class Attendance extends Model
     {
         return $this->belongsTo(Employee::class);
     }
+
+    public function overtimeLogs()
+    {
+        return $this->hasMany(OvertimeLog::class);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Attendance;
 use App\Models\Employee;
+use App\Models\EmployeeRequest;
 
 class EmployeeAttendanceModal extends Component
 {
@@ -13,6 +14,8 @@ class EmployeeAttendanceModal extends Component
     public $date;
     public $time_in;
     public $time_out;
+    public $status;
+    public $ot_status;
     public $isNew = false;
 
     public function mount($attendance = null)
@@ -22,6 +25,22 @@ class EmployeeAttendanceModal extends Component
         $this->date = $attendance?->date ?? now()->toDateString();
         $this->time_in = $attendance && $attendance->time_in ? substr($attendance->time_in, 0, 5) : null;
         $this->time_out = $attendance && $attendance->time_out ? substr($attendance->time_out, 0, 5) : null;
+
+        // Set the status directly from the attendance if it exists, otherwise default to 'completed'
+        $this->status = $attendance ? $attendance->status : 'pending'; // Defaulting to 'pending'
+
+        // Initialize overtime status to null
+        $this->ot_status = null;
+
+        // Load overtime status if attendance exists
+        if ($attendance) {
+            $otLog = $attendance->employee->overtimeLogs()->whereDate('ot_time_in', $attendance->date)->first();
+            if ($otLog) {
+                $this->ot_status = $otLog->status;
+            }
+        }
+
+        // Check if this is a new attendance record
         $this->isNew = !$attendance;
     }
 
@@ -32,6 +51,8 @@ class EmployeeAttendanceModal extends Component
             'date' => 'required|date',
             'time_in' => 'nullable|date_format:H:i',
             'time_out' => 'nullable|date_format:H:i|after:time_in',
+            'status' => 'required|in:completed,auto_timed_out',
+            'ot_status' => 'nullable|in:pending,completed,auto_timed_out',
         ]);
 
         $timeIn = $this->time_in ? $this->time_in . ':00' : null;
@@ -51,6 +72,7 @@ class EmployeeAttendanceModal extends Component
                 'time_in' => $timeIn,
                 'time_out' => $timeOut,
                 'total_hours' => $hours,
+                'status' => $this->status, // Save status
             ]);
         } else {
             \App\Models\Attendance::create([
@@ -59,7 +81,18 @@ class EmployeeAttendanceModal extends Component
                 'time_in' => $timeIn,
                 'time_out' => $timeOut,
                 'total_hours' => $hours,
+                'status' => $this->status, // Save status
             ]);
+        }
+
+        // Update overtime status if available
+        if ($this->ot_status && $this->attendance) {
+            $otLog = $this->attendance->employee->overtimeLogs()
+                ->whereDate('ot_time_in', $this->attendance->date)
+                ->first();
+            if ($otLog) {
+                $otLog->update(['status' => $this->ot_status]);
+            }
         }
 
         $this->dispatch('attendanceUpdated');

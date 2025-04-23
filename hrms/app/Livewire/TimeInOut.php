@@ -71,6 +71,7 @@ class TimeInOut extends Component
             'date' => $now->toDateString(),
             'time_in' => $now->toTimeString(),
             'time_out' => null,
+            'status' => 'pending',
         ]);
 
         $this->time_in = $now->toTimeString();

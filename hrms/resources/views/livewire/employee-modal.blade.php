@@ -8,6 +8,12 @@
 
     <!-- Personal Info -->
     <h2 class="text-2xl font-semibold mb-4">Edit Employee</h2>
+    <button
+                                wire:click="confirmDelete({{ $employee->id }})"
+                                class="ml-2 bg-red-500 text-white px-3 py-2 rounded text-xs hover:bg-red-600"
+                                onclick="return confirm('Are you sure you want to delete this employee? This action cannot be undone.')">
+                                Delete
+                            </button>
     <form wire:submit.prevent="save">
         <h3 class="text-lg font-semibold text-gray-700 mb-2">Personal Information</h3>
         <div class="grid grid-cols-2 gap-4">

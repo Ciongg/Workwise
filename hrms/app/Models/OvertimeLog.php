@@ -20,6 +20,11 @@ class OvertimeLog extends Model
         return $this->belongsTo(Employee::class);
     }
 
+    public function attendance()
+    {
+        return $this->belongsTo(Attendance::class);
+    }
+
     public function request()
     {
         return $this->belongsTo(EmployeeRequest::class, 'request_id');

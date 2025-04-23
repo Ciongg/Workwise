@@ -45,7 +45,7 @@
                 <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
                 <option value="completed">Completed</option>
-                <option value="auto_timed_out">Auto TImed Out</option>
+                <option value="auto_timed_out">Auto Timed Out</option>
                 <option value="cancelled">Cancelled</option>
             </select>
             @error('status') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror

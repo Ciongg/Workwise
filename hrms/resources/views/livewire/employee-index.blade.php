@@ -85,12 +85,7 @@
                                 class="text-teal-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
                                 View/Edit
                             </a>
-                            <button
-                                wire:click="confirmDelete({{ $employee->id }})"
-                                class="ml-2 bg-red-500 text-white px-3 py-2 rounded text-xs hover:bg-red-600"
-                                onclick="return confirm('Are you sure you want to delete this employee? This action cannot be undone.')">
-                                Delete
-                            </button>
+                            
                         </td>
                     </tr>
                 @endforeach

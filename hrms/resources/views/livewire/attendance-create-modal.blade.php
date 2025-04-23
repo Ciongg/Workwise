@@ -44,6 +44,7 @@
             <input type="number" wire:model.live="request_id" class="border rounded p-2 w-full">
             @error('request_id') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
+
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Overtime Time In</label>
             <input type="time"
@@ -53,6 +54,7 @@
                    @if($request_id) readonly @endif>
             @error('ot_time_in') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
+
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Overtime Time Out</label>
             <input type="time"
@@ -62,6 +64,7 @@
                    @if($request_id) readonly @endif>
             @error('ot_time_out') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
+        
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Overtime Status</label>
             <select wire:model.defer="ot_status" class="border rounded p-2 w-full">

@@ -24,6 +24,17 @@
             <label class="block text-sm font-medium text-gray-700">Time Out</label>
             <input type="time" wire:model.defer="time_out" class="border rounded p-2 w-full">
         </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Attendance Status</label>
+            <select wire:model="status" class="border rounded p-2 w-full">
+                <option value="completed" @if($status === 'completed') selected @endif>Completed</option>
+                <option value="auto_timed_out" @if($status === 'auto_timed_out') selected @endif>Auto Timed Out</option>
+                <option value="pending" @if($status === 'pending') selected @endif>Pending</option> <!-- Added Pending -->
+            </select>
+            @error('status') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+        
+        
 
         @php
             $otLog = null;
@@ -41,24 +52,24 @@
         @if($otLog)
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Overtime Time In</label>
-                <input type="datetime-local"
-                       wire:model.defer="ot_time_in"
+                <input disabled
+                       type="datetime-local"
                        value="{{ old('ot_time_in', $otRequest ? \Carbon\Carbon::parse($otRequest->start_time)->format('Y-m-d\TH:i') : ($otLog->ot_time_in ? \Carbon\Carbon::parse($otLog->ot_time_in)->format('Y-m-d\TH:i') : '')) }}"
                        class="border rounded p-2 w-full">
             </div>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Overtime Time Out</label>
-                <input type="datetime-local"
-                       wire:model.defer="ot_time_out"
+                <input disabled
+                       type="datetime-local"
                        value="{{ old('ot_time_out', $otRequest ? \Carbon\Carbon::parse($otRequest->end_time)->format('Y-m-d\TH:i') : ($otLog->ot_time_out ? \Carbon\Carbon::parse($otLog->ot_time_out)->format('Y-m-d\TH:i') : '')) }}"
                        class="border rounded p-2 w-full">
             </div>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Overtime Status</label>
                 <select wire:model.defer="ot_status" class="border rounded p-2 w-full">
-                    <option value="pending" @if($otLog->status === 'pending') selected @endif>Pending</option>
-                    <option value="completed" @if($otLog->status === 'completed') selected @endif>Completed</option>
-                    <option value="auto_timed_out" @if($otLog->status === 'auto_timed_out') selected @endif>Auto Timed Out</option>
+                    <option value="pending" @if($ot_status === 'pending') selected @endif>Pending</option>
+                    <option value="completed" @if($ot_status === 'completed') selected @endif>Completed</option>
+                    <option value="auto_timed_out" @if($ot_status === 'auto_timed_out') selected @endif>Auto Timed Out</option>
                 </select>
             </div>
         @endif

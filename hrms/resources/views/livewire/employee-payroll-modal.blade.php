@@ -70,7 +70,6 @@
             <select id="status" wire:model.defer="status" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
                 <option value="pending">Pending</option>
                 <option value="approved">Approved</option>
-                <option value="paid">Paid</option>
             </select>
         </div>
     </div>

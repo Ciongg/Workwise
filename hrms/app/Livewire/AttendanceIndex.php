@@ -31,8 +31,11 @@ class AttendanceIndex extends Component
 
     public function selectAttendance($id)
     {
-        $this->selectedAttendance = Attendance::with('employee')->find($id);
+        $this->selectedAttendance = Attendance::with('employee')->findOrFail($id);
         $this->modalKey = uniqid();
+    
+        // Dispatch a browser event to open the modal AFTER data is ready
+          $this->dispatch('open-modal', name: 'view-attendance');
     }
 
     public function openCreateAttendance()

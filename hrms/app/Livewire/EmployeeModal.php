@@ -225,6 +225,31 @@ class EmployeeModal extends Component
         session()->flash('message', 'Employee information updated successfully.');
     }
 
+    public function confirmDelete($id)
+    {
+        $employee = Employee::find($id);
+
+        if (!$employee) {
+            session()->flash('error', 'Employee not found.');
+            return;
+        }
+
+        // Soft delete the employee
+        $employee->delete();
+
+        // Optionally, you can add logic to handle related data (e.g., payroll, requests, etc.)
+        // Example: Archive payrolls or mark related data as inactive
+        $employee->archivedPayrolls()->delete(); // Soft delete archived payrolls
+        $employee->requests()->delete(); // Soft delete requests
+        $employee->overtimeLogs()->delete(); // Soft delete overtime logs
+        $employee->attendances()->delete(); // Soft delete attendances
+
+        session()->flash('success', 'Employee deleted successfully.');
+        $this->dispatch('employeeUpdated'); 
+        $this->dispatch('close-modal');
+    }
+    
+
     public function render()
     {
         return view('livewire.employee-modal', [
