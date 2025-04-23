@@ -40,14 +40,14 @@
         <div class="mt-4 flex gap-2">
             <button 
                 wire:click="timeIn" 
-                class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
+                class="cursor-pointer bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
                 @if(!$can_time_in) disabled style="opacity:0.5;cursor:not-allowed;" @endif
             >
                 Time In
             </button>
             <button 
                 wire:click="timeOut" 
-                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                class="cursor-pointer bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
                 @if(!$can_time_out) disabled style="opacity:0.5;cursor:not-allowed;" @endif
             >
                 Time Out

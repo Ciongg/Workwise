@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('work_status', ['full_time', 'part_time', 'contract']);
             $table->string('department');
             $table->string('position');
-            $table->string('salary');
+            $table->decimal('salary');
             $table->date('hire_date');
             $table->time('work_start_time');
             $table->time('work_end_time');

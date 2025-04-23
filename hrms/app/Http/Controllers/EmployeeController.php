@@ -37,4 +37,8 @@ class EmployeeController extends Controller
     public function showRequestLogs(){
         return  view('employee.request-logs');
     }
+    
+    public function showAttendance(){
+        return  view('employee.attendance');
+    }
 }

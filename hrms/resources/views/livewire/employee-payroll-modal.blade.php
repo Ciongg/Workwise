@@ -118,7 +118,7 @@
         <div>
             <label for="work_status" class="block text-sm font-medium text-gray-700">Work Status:</label>
             <select id="work_status" wire:model.defer="work_status" disabled class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
-                <option value="full_time">Full-Time/option>
+                <option value="full_time">Full-Time</option>
                 <option value="part_time">Part-Time</option>
                 <option value="contract">Contract</option>
             </select>

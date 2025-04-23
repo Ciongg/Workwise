@@ -17,6 +17,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->date('pay_period_start');
             $table->date('pay_period_end');
+            $table->decimal('salary');
             $table->decimal('allowance', 10, 2)->default(0);
             $table->decimal('overtime_pay', 10, 2)->default(0);
             $table->decimal('gross_pay', 10, 2);

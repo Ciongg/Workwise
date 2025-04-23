@@ -1,4 +1,4 @@
-<div class="p-8 bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto" wire:poll.1000ms="pollTime">
+<div class="p-8 bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto" wire:poll.5000ms="pollTime">
     <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Overtime Logging</h2>
 
     @if($request->status === 'cancelled')
@@ -6,25 +6,34 @@
             Overtime request was cancelled because you did not time in within the allowed window.
         </div>
     @endif
+    
+    @if (session()->has('success'))
+    <div class="bg-green-500 text-white font-bold px-4 py-2 rounded mb-4">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="bg-red-500 text-white font-bold px-4 py-2 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="space-y-6 text-gray-700 text-sm">
         <div class="flex justify-between">
-            <span class="font-semibold">Date:</span>
-            <span>{{ \Carbon\Carbon::parse($request->start_time)->format('F j, Y g:i A') }}</span>
-        </div>
-
-        <div class="flex justify-between">
             <span class="font-semibold">Requested:</span>
             <div class="text-right">
-                <div>{{ \Carbon\Carbon::parse($request->start_time)->format('F j, Y g:i A') }}</div>
+                <div><span class="text-teal-500 font-bold">Start: </span> {{ \Carbon\Carbon::parse($request->start_time)->format('F j, Y g:i A') }}</div>
                 <div>-</div>
-                <div>{{ \Carbon\Carbon::parse($request->end_time)->format('F j, Y g:i A') }}</div>
+                <div><span class="text-teal-500 font-bold">End: </span> {{ \Carbon\Carbon::parse($request->end_time)->format('F j, Y g:i A') }}</div>
             </div>
         </div>
 
         <div class="flex justify-between">
             <span class="font-semibold">Current Time:</span>
-            <span>{{ $current_time ? \Carbon\Carbon::parse($current_time)->format('F j, Y g:i:s A') : now()->format('F j, Y g:i:s A') }}</span>
+            <span>
+                {{ \App\Services\TimeService::now()->format('F j, Y g:i A') }}
+            </span>
         </div>
     </div>
 

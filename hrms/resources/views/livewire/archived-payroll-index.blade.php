@@ -104,7 +104,7 @@
                         </td>
                         <td class="px-4 py-2 border">{{ $payroll->employee->workInfo->department ?? 'N/A' }}</td>
                         <td class="px-4 py-2 border">{{ $payroll->employee->workInfo->position ?? 'N/A' }}</td>
-                        <td class="px-4 py-2 border font-bold">₱{{ number_format($payroll->employee->workInfo->salary ?? 0, 2) }}</td>
+                        <td class="px-4 py-2 border font-bold">₱{{ number_format($payroll->salary ?? 0, 2) }}</td>
                         <td class="px-4 py-2 border">₱{{ number_format($payroll->allowance, 2) }}</td>
                         <td class="px-4 py-2 border">₱{{ number_format($payroll->overtime_pay, 2) }}</td>
                         <td class="px-4 py-2 border font-bold">₱{{ number_format($payroll->gross_pay, 2) }}</td>

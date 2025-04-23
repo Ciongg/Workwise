@@ -12,9 +12,9 @@
         <input type="datetime-local" id="custom_time" wire:model.live="custom_time" class="border rounded p-2 w-full mb-4">
         @error('custom_time') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
 
-        <button type="submit" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600">Set Time</button>
+        <button type="submit" class="cursor-pointer bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600">Set Time</button>
     </form>
 
-    <button wire:click="resetTime" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mb-2">Reset to System Time</button>
-    <button wire:click="simulateNewDay" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Simulate New Day for Attendance</button>
+    <button wire:click="resetTime" class="cursor-pointer bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mb-2">Reset to System Time</button>
+    <button wire:click="simulateNewDay" class="cursor-pointer bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Simulate New Day for Attendance</button>
 </div>

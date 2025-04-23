@@ -13,17 +13,29 @@
         </p>
     </div>
 
-    <div class="flex flex-wrap gap-4 mb-6">
-        <a href="{{route('hr.show-payroll-deductions')}}"
-            class="bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
-            View Deductions
-        </a>
+
+        <div class="flex flex-wrap gap-4 mb-6">
+            <a href="{{ route('hr.show-payroll-deductions') }}"
+                class="bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
+                View Deductions
+            </a>
+        
+            <button wire:click="recalculateAllPayrolls"
+                class="cursor-pointer bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
+                Recalculate Payrolls
+            </button>
+
+            <a href="{{ route('hr.show-archived-payroll') }}"
+                class="bg-gray-500 text-white font-bold px-4 py-2 rounded hover:bg-gray-600 transition">
+                View Archived Payroll
+            </a>
+        
+        </div>
+        
+
+        
     
-        <a href="{{ route('hr.show-archived-payroll') }}"
-            class="bg-gray-500 text-white font-bold px-4 py-2 rounded hover:bg-gray-600 transition">
-            View Archived Payroll
-        </a>
-    </div>
+
 
     <!-- Make table container scrollable on small screens -->
     <div class="overflow-x-auto">
@@ -93,13 +105,10 @@
 
         <div class="mt-8">
             <livewire:set-time />
-            <button wire:click="recalculateAllPayrolls"
-                class="ml-6 mt-16 bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
-                Recalculate Payrolls
-            </button>
+          
             <button wire:click="generatePayslips"
-                class="bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
-                Generate Payslips
+                class="cursor-pointer ml-6 mt-6 bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
+                Generate Payslips Manually
             </button>
         </div>
 

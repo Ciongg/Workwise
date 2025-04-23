@@ -4,52 +4,49 @@
     <form wire:submit.prevent="save">
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700">Pay Period Start</label>
-                <input type="date" wire:model.defer="pay_period_start" class="border rounded p-2 w-full">
-                @error('pay_period_start') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <label for="pay_period_start" class="block text-sm font-medium text-gray-700">Pay Period Start:</label>
+                <input disabled type="date" id="pay_period_start" wire:model.defer="pay_period_start" class="cursor-not-allowed mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Pay Period End</label>
-                <input type="date" wire:model.defer="pay_period_end" class="border rounded p-2 w-full">
-                @error('pay_period_end') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <label for="pay_period_end" class="block text-sm font-medium text-gray-700">Pay Period End:</label>
+                <input disabled type="date" id="pay_period_end" wire:model.defer="pay_period_end" class="cursor-not-allowed mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Allowance</label>
-                <input type="number" wire:model.defer="allowance" class="border rounded p-2 w-full">
-                @error('allowance') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <label for="salary" class="block text-sm font-medium text-gray-700">Basic Salary:</label>
+                <input type="number" id="salary" wire:model.defer="salary" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Overtime Pay</label>
-                <input type="number" wire:model.defer="overtime_pay" class="border rounded p-2 w-full">
-                @error('overtime_pay') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <label for="allowance" class="block text-sm font-medium text-gray-700">Allowance:</label>
+                <input type="number" id="allowance" wire:model.defer="allowance" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Gross Pay</label>
-                <input type="number" wire:model.defer="gross_pay" class="border rounded p-2 w-full">
-                @error('gross_pay') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <label for="overtime_pay" class="block text-sm font-medium text-gray-700">Overtime Pay:</label>
+                <input type="number" id="overtime_pay" wire:model.defer="overtime_pay" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Deductions</label>
-                <input type="number" wire:model.defer="deductions" class="border rounded p-2 w-full">
-                @error('deductions') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <label for="gross_pay" class="block text-sm font-medium text-gray-700">Gross Pay:</label>
+                <input type="number" id="gross_pay" wire:model.defer="gross_pay" disabled class="cursor-not-allowed mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+                <label for="gross_pay" class="block text-[0.8rem] font-medium text-gray-700">(Basic Salary + Allowance + Overtime Pay):</label>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Additional Deductions</label>
-                <input type="number" wire:model.defer="additional_deductions" class="border rounded p-2 w-full">
-                @error('additional_deductions') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <label for="deductions" class="block text-sm font-medium text-gray-700">Deductions:</label>
+                <input type="number" id="deductions" wire:model.defer="deductions" disabled class="cursor-not-allowed mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+                <label for="deductions" class="block text-[0.8rem] font-medium text-gray-700">(Mandated SSS + PhilHealth + PagIBIG + Withholding Tax + Extra Deductions):</label>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Net Pay</label>
-                <input type="number" wire:model.defer="net_pay" class="border rounded p-2 w-full">
-                @error('net_pay') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <label for="additional_deductions" class="block text-sm font-medium text-gray-700">Additional Deductions:</label>
+                <input type="number" id="additional_deductions" wire:model.defer="additional_deductions" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Status</label>
-                <select wire:model.defer="status" class="border rounded p-2 w-full">
+                <label for="net_pay" class="block text-sm font-medium text-gray-700">Net Pay:</label>
+                <input type="number" id="net_pay" wire:model.defer="net_pay" disabled class="cursor-not-allowed mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            </div>
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700">Status:</label>
+                <select id="status" wire:model.defer="status" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
                     <option value="pending">Pending</option>
                     <option value="paid">Paid</option>
                 </select>
-                @error('status') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
             </div>
         </div>
 

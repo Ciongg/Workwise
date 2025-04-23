@@ -66,6 +66,7 @@ class PayrollIndex extends Component
                 'employee_id' => $payroll->employee_id,
                 'pay_period_start' => $payroll->pay_period_start,
                 'pay_period_end' => $payroll->pay_period_end,
+                'salary' => $payroll->employee->workInfo->salary,
                 'allowance' => $payroll->allowance,
                 'overtime_pay' => $payroll->overtime_pay,
                 'gross_pay' => $payroll->gross_pay,

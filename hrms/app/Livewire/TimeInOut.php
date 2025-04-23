@@ -157,7 +157,7 @@ class TimeInOut extends Component
                     $in = \Carbon\Carbon::parse($attendance->date . ' ' . $attendance->time_in);
                     $hours = abs($workEnd->copy()->addMinute()->floatDiffInHours($in));
                     $attendance->update([
-                        'time_out' => $workEnd->copy()->addMinute()->format('H:i:s'),
+                        'time_out' => $workEnd->copy()->format('H:i:s'),
                         'total_hours' => $hours,
                         'status' => 'auto_timed_out',
                     ]);

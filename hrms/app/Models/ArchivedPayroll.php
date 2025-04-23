@@ -14,6 +14,7 @@ class ArchivedPayroll extends Model
         'employee_id',
         'pay_period_start',
         'pay_period_end',
+        'salary',
         'allowance',
         'overtime_pay',
         'gross_pay',

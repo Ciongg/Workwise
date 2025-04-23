@@ -32,3 +32,4 @@ Route::get('/employee/profile', [EmployeeController::class, 'profile'])->name('e
 Route::get('/employee/payslips', [EmployeeController::class, 'payslips'])->name('employee.payslips');
 Route::get('/employee/requests', [EmployeeController::class, 'requests'])->name('employee.requests');
 Route::get('/employee/request', [EmployeeController::class, 'showRequestLogs'])->name('employee.show-request-logs');
+Route::get('/employee/attendance', [EmployeeController::class, 'showAttendance'])->name('employee.attendance');

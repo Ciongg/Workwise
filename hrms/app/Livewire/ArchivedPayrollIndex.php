@@ -6,6 +6,7 @@ use App\Models\ArchivedPayroll;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Employee;
+use App\Services\PayrollService;
 
 class ArchivedPayrollIndex extends Component
 {
@@ -21,8 +22,10 @@ class ArchivedPayrollIndex extends Component
     public $selectedArchivedPayroll = null;
     public $modalKey;
 
-
-    protected $listeners =['archivedPayrollUpdated' => '$refresh' ];
+    protected $listeners = [
+        'archivedPayrollUpdated' => '$refresh',
+        'archivedPayrollSalaryChanged' => 'recalculateArchivedPayroll'
+    ];
 
     protected $paginationTheme = 'tailwind'; // Optional: Use Tailwind pagination styles
 
@@ -66,7 +69,6 @@ class ArchivedPayrollIndex extends Component
         $this->resetPage(); // Reset pagination when the search term changes
     }
     
-    
     private function getMonths()
     {
         return [
@@ -92,6 +94,43 @@ class ArchivedPayrollIndex extends Component
         return range($startYear, $endYear);
     }
     
+    public function recalculateArchivedPayroll($id, $employee_id)
+    {
+        $archivedPayroll = ArchivedPayroll::find($id);
+        $employee = Employee::withTrashed()->find($employee_id);
+
+        if ($archivedPayroll && $employee && $employee->workInfo) {
+            // Use the current salary from the employee's workInfo
+            $salary = $archivedPayroll->salary;
+
+            // Recalculate using PayrollService logic (copy/adapt as needed)
+            $deductionSettings = \App\Models\PayrollDeductionSetting::first();
+            $basic_salary = $salary;
+            $allowance = $archivedPayroll->allowance;
+            $overtime_pay = $archivedPayroll->overtime_pay;
+
+            $gross = $basic_salary + $allowance + $overtime_pay;
+
+            $sss = $basic_salary * ($deductionSettings->sss_rate ?? 0.045);
+            $philhealth = $basic_salary * ($deductionSettings->philhealth_rate ?? 0.03);
+            $pagibig = $deductionSettings->pagibig_fixed ?? 100;
+            $withholding_tax = $basic_salary * ($deductionSettings->withholding_tax_rate ?? 0.1);
+            $additional_deductions = $archivedPayroll->additional_deductions ?? 0;
+
+            $total_deductions = $sss + $philhealth + $pagibig + $withholding_tax + $additional_deductions;
+            $net = $gross - $total_deductions;
+
+            $archivedPayroll->update([
+                'gross_pay' => $gross,
+                'deductions' => $sss + $philhealth + $pagibig + $withholding_tax,
+                'net_pay' => $net,
+            ]);
+        }
+
+        // Refresh the table
+        $this->resetPage();
+    }
+
     public function render()
     {
         $query = ArchivedPayroll::withTrashed()->with(['employee' => function ($query) {

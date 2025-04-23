@@ -42,7 +42,7 @@ class RequestLogIndex extends Component
         $request = EmployeeRequest::find($id);
         if ($request && in_array($request->status, ['rejected', 'cancelled', 'pending'])) {
             $request->delete();
-            session()->flash('success', 'Request deleted successfully.');
+            
         }
     }
 

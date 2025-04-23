@@ -27,6 +27,12 @@
                 <a href="{{ auth()->user()->role === 'hr' ? route('hr.dashboard') : route('employee.dashboard') }}" class="hover:underline font-semibold">
                     Dashboard
                 </a>
+
+
+                <a href="{{route("employee.attendance")}}"class="hover:underline font-semibold"> 
+                    Attendance
+                </a>
+                
             @endauth
         </div>
 

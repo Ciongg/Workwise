@@ -1,6 +1,35 @@
 <div class="p-4">
     <h1 class="text-xl mb-4">Employee Requests</h1>
 
+    <div class="flex flex-wrap gap-4 mb-4">
+        <!-- Created At Filter -->
+        <div>
+            <label class="block text-xs font-semibold text-gray-600">Created At</label>
+            <input type="date" wire:model.live="filter_created_at" class="border rounded px-2 py-1">
+        </div>
+        <!-- Request Type Filter -->
+        <div>
+            <label class="block text-xs font-semibold text-gray-600">Request Type</label>
+            <select wire:model.live="filter_request_type" class="border rounded px-2 py-1">
+                <option value="">All</option>
+                <option value="overtime">Overtime</option>
+                <option value="profile_change">Profile Change</option>
+                <!-- Add more types as needed -->
+            </select>
+        </div>
+        <!-- Status Filter -->
+        <div>
+            <label class="block text-xs font-semibold text-gray-600">Status</label>
+            <select wire:model.live="filter_status" class="border rounded px-2 py-1">
+                <option value="">All</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="completed">Completed</option>
+                <option value="auto_timed_out">Auto Timed Out</option>
+            </select>
+        </div>
+    </div>
+
     @if ($requests->isEmpty())
         <p>No requests yet.</p>
     @else
@@ -15,6 +44,7 @@
                     <th class="border p-2">Start Time</th>
                     <th class="border p-2">End Time</th>
                     <th class="border p-2">Status</th>
+                    <th class="border p-2">Created At</th>
                     <th class="border p-2">Actions</th>
                 </tr>
             </thead>
@@ -57,6 +87,11 @@
                             </span>
                         </td>   
 
+                        <!-- Created At -->
+                        <td class="border p-2">
+                            {{ \Carbon\Carbon::parse($request->created_at)->format('Y, F j, g:i A') }}
+                        </td>
+
                         <!-- Actions -->
                         <td class="border p-2">
                             <a 
@@ -76,7 +111,7 @@
         <x-modal name="view-employee-request" :request="$selectedRequest" title="Employee Request View" :modalKey="$modalKey" />
     @endif
 
-
+    {{ $requests->links() }}
 
 
 </div>
