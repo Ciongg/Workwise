@@ -43,9 +43,9 @@
                 <!-- Desktop Menu -->
                 <div class="hidden sm:flex items-center gap-6">
                     @guest
-                        <a href="/" class="hover:underline">Home</a>
-                        <a href="{{ route('about') }}" class="hover:underline">About</a>
-                        <a href="/" class="hover:underline font-semibold">Login</a>
+                    <a href="/" class="cursor-pointer hover:underline">Home</a>
+                    <a href="{{ route('about') }}" class="cursor-pointer hover:underline">About</a>
+                    <a href="{{route('show.login')}}" class="cursor-pointer hover:bg-white hover:text-black border px-6 py-2 transition">Login</a>
                     @endguest
 
                     @auth
