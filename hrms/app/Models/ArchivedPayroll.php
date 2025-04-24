@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ArchivedPayroll extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'employee_id',
         'pay_period_start',
         'pay_period_end',
+        'salary',
         'allowance',
         'overtime_pay',
         'gross_pay',
@@ -24,7 +26,7 @@ class ArchivedPayroll extends Model
 
     public function employee()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class)->withTrashed(); // Include soft-deleted employees
     }
 
     public function getDeductionsBreakdownAttribute()
@@ -33,7 +35,7 @@ class ArchivedPayroll extends Model
 
         $sss = $this->gross_pay * ($deductionSettings->sss_rate ?? 0.045);
         $philhealth = $this->gross_pay * ($deductionSettings->philhealth_rate ?? 0.03);
-        $pagibig = $deductionSettings->pagibig_fixed ?? 100;
+        $pagibig = $this->gross_pay * ($deductionSettings->pagibig_rate ?? 0.01);
         $withholding_tax = $this->gross_pay * ($deductionSettings->withholding_tax_rate ?? 0.1);
 
         return [

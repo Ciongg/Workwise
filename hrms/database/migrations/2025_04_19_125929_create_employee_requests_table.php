@@ -16,9 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('employee_id');
             $table->string('request_type');
             $table->text('reason')->nullable();
+            $table->text('leave_reason')->nullable();
             $table->datetime('start_time')->nullable();
             $table->datetime('end_time')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'rejected', 'cancelled', 'auto_timed_out', 'completed'])->default('pending');
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

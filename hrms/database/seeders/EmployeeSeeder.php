@@ -26,9 +26,33 @@ class EmployeeSeeder extends Seeder
         ]);
 
         Employee::factory()->create([
-            'first_name' => 'hr',
-            'last_name' => 'User',
+            'first_name' => 'Test',
+            'last_name' => 'User1',
+            'email' => 'test1@test.com',
+            'role' => 'employee',
+            'password' => Hash::make('password123'), // Default password
+        ]);
+
+        Employee::factory()->create([
+            'first_name' => 'Test',
+            'last_name' => 'User2',
+            'email' => 'test2@test.com',
+            'role' => 'employee',
+            'password' => Hash::make('password123'), // Default password
+        ]);
+
+        Employee::factory()->create([
+            'first_name' => 'Hr',
+            'last_name' => 'User1',
             'email' => 'hr@hr.com',
+            'role' => 'hr',
+            'password' => Hash::make('password123'), // Default password
+        ]);
+
+        Employee::factory()->create([
+            'first_name' => 'Hr',
+            'last_name' => 'User2',
+            'email' => 'hr1@hr.com',
             'role' => 'hr',
             'password' => Hash::make('password123'), // Default password
         ]);

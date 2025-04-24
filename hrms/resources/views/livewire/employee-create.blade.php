@@ -9,7 +9,7 @@
     <div class="grid grid-cols-2 gap-4 mb-4">
         <div>
             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input id="email" wire:model="email" type="email" class="border rounded px-3 py-2 w-full" placeholder="Email">
+            <input id="email" wire:model="email" type="email" class="border rounded px-3 py-2 w-full bg-gray-100" placeholder="Email" readonly>
             @error('email') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
         <div>
@@ -24,12 +24,12 @@
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input id="first_name" wire:model="first_name" type="text" class="border rounded px-3 py-2 w-full" placeholder="First Name">
+            <input id="first_name" wire:model.live="first_name" type="text" class="border rounded px-3 py-2 w-full" placeholder="First Name">
             @error('first_name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
         <div>
             <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input id="last_name" wire:model="last_name" type="text" class="border rounded px-3 py-2 w-full" placeholder="Last Name">
+            <input id="last_name" wire:model.live="last_name" type="text" class="border rounded px-3 py-2 w-full" placeholder="Last Name">
             @error('last_name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
         <div>
@@ -39,7 +39,7 @@
         </div>
         <div>
             <label for="suffix" class="block text-sm font-medium text-gray-700">Suffix</label>
-            <input id="suffix" wire:model="suffix" type="text" class="border rounded px-3 py-2 w-full" placeholder="Suffix">
+            <input id="suffix" wire:model.live="suffix" type="text" class="border rounded px-3 py-2 w-full" placeholder="Suffix">
             @error('suffix') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
         <div>
@@ -88,7 +88,7 @@
                 <option value="">Select Role</option>
                 <option value="employee">Employee</option>
                 <option value="hr">HR</option>
-                <option value="manager">Manager</option>
+                
             </select>
             @error('role') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
@@ -150,6 +150,32 @@
     </div>
 </div>
 
+<div>
+    <h3 class="text-lg font-semibold text-gray-700 mb-2">Work Schedule</h3>
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label for="work_start_time" class="block text-sm font-medium text-gray-700">Work Start Time</label>
+            <input type="time" id="work_start_time" wire:model="work_start_time" class="border rounded px-3 py-2 w-full">
+            @error('work_start_time') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+        <div>
+            <label for="work_end_time" class="block text-sm font-medium text-gray-700">Work End Time</label>
+            <input type="time" id="work_end_time" wire:model="work_end_time" class="border rounded px-3 py-2 w-full">
+            @error('work_end_time') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+        <div>
+            <label for="break_start_time" class="block text-sm font-medium text-gray-700">Break Start Time</label>
+            <input type="time" id="break_start_time" wire:model="break_start_time" class="border rounded px-3 py-2 w-full">
+            @error('break_start_time') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+        <div>
+            <label for="break_end_time" class="block text-sm font-medium text-gray-700">Break End Time</label>
+            <input type="time" id="break_end_time" wire:model="break_end_time" class="border rounded px-3 py-2 w-full">
+            @error('break_end_time') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+    </div>
+</div>
+
 <!-- Bank Information -->
 <div>
     <h3 class="text-lg font-semibold text-gray-700 mb-2">Bank Information</h3>
@@ -176,7 +202,7 @@
         </div>
         <div>
             <label for="account_number" class="block text-sm font-medium text-gray-700">Account Number</label>
-            <input id="account_number" wire:model="account_number" maxlength="12" type="text" class="border rounded px-3 py-2 w-full" placeholder="Account Number 10-12 digits">
+            <input id="account_number" wire:model="account_number" maxlength="13" type="text" class="border rounded px-3 py-2 w-full" placeholder="Account Number 10-13 digits">
             @error('account_number') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
         <div>
@@ -191,32 +217,37 @@
     </div>
 </div>
 
-{{-- Identification Information --}}
-        <div>
-            <label for="sss_number" class="block text-sm font-medium text-gray-700">SSS Number</label>
-            <input id="sss_number" wire:model="sss_number" type="text" class="border rounded px-3 py-2 w-full" placeholder="SSS Number">
-            @error('sss_number') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+{{-- SSS Number --}}
+<div x-data="{ sss_number: @entangle('sss_number') }">
+    <label for="sss_number" class="block text-sm font-medium text-gray-700">SSS Number</label>
+    <input id="sss_number" x-model="sss_number" type="text" class="border rounded px-3 py-2 w-full" placeholder="34-1234567-8" maxlength="12"
+        @input="sss_number = sss_number.replace(/\D/g, '').replace(/^(\d{2})(\d{0,7})(\d{0,1}).*/, '$1-$2-$3')">
+    @error('sss_number') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+</div>
 
-        <div>
-            <label for="pag_ibig_number" class="block text-sm font-medium text-gray-700">Pag-IBIG Number</label>
-            <input id="pag_ibig_number" wire:model="pag_ibig_number" type="text" class="border rounded px-3 py-2 w-full" placeholder="Pag-IBIG Number">
-            @error('pag_ibig_number') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+{{-- Pag-IBIG Number --}}
+<div x-data="{ pag_ibig_number: @entangle('pag_ibig_number') }">
+    <label for="pag_ibig_number" class="block text-sm font-medium text-gray-700">Pag-IBIG Number</label>
+    <input id="pag_ibig_number" x-model="pag_ibig_number" type="text" class="border rounded px-3 py-2 w-full" placeholder="1234-5678-9123" maxlength="14"
+        @input="pag_ibig_number = pag_ibig_number.replace(/\D/g, '').replace(/^(\d{4})(\d{0,4})(\d{0,4}).*/, '$1-$2-$3')">
+    @error('pag_ibig_number') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+</div>
 
-        <div>
-            <label for="philhealth_number" class="block text-sm font-medium text-gray-700">PhilHealth Number</label>
-            <input id="philhealth_number" wire:model="philhealth_number" type="text" class="border rounded px-3 py-2 w-full" placeholder="PhilHealth Number">
-            @error('philhealth_number') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+{{-- PhilHealth Number --}}
+<div x-data="{ philhealth_number: @entangle('philhealth_number') }">
+    <label for="philhealth_number" class="block text-sm font-medium text-gray-700">PhilHealth Number</label>
+    <input id="philhealth_number" x-model="philhealth_number" type="text" class="border rounded px-3 py-2 w-full" placeholder="1234-56789-00" maxlength="13"
+        @input="philhealth_number = philhealth_number.replace(/\D/g, '').replace(/^(\d{4})(\d{0,5})(\d{0,2}).*/, '$1-$2-$3')">
+    @error('philhealth_number') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+</div>
 
-        <div>
-            <label for="tin_number" class="block text-sm font-medium text-gray-700">TIN Number</label>
-            <input id="tin_number" wire:model="tin_number" type="text" class="border rounded px-3 py-2 w-full" placeholder="TIN Number">
-            @error('tin_number') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-
-
+{{-- TIN Number --}}
+<div x-data="{ tin_number: @entangle('tin_number') }">
+    <label for="tin_number" class="block text-sm font-medium text-gray-700">TIN Number</label>
+    <input id="tin_number" x-model="tin_number" type="text" class="border rounded px-3 py-2 w-full" placeholder="123-456-789-000" maxlength="15"
+        @input="tin_number = tin_number.replace(/\D/g, '').replace(/^(\d{3})(\d{0,3})(\d{0,3})(\d{0,3}).*/, '$1-$2-$3-$4')">
+    @error('tin_number') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+</div>
 
         <!-- Submit Button -->
         <div>
@@ -229,4 +260,35 @@
         {{ session('success') }}
     </div>
     @endif
+
+    @if (session()->has('error'))
+    <div class="p-3 bg-red-100 text-red-800 border border-red-300 rounded">
+        {{ session('error') }}
+    </div>
+    @endif
 </div>
+<script>
+    function formatSSSNumber(input) {
+        let value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+        value = value.replace(/^(\d{2})(\d{0,7})(\d{0,1}).*/, '$1-$2-$3'); // Format as 34-1234567-8
+        input.value = value;
+    }
+
+    function formatPagIbigNumber(input) {
+        let value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+        value = value.replace(/^(\d{4})(\d{0,4})(\d{0,4}).*/, '$1-$2-$3'); // Format as 1234-5678-9123
+        input.value = value;
+    }
+
+    function formatPhilHealthNumber(input) {
+        let value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+        value = value.replace(/^(\d{4})(\d{0,5})(\d{0,2}).*/, '$1-$2-$3'); // Format as 1234-56789-00
+        input.value = value;
+    }
+
+    function formatTINNumber(input) {
+        let value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+        value = value.replace(/^(\d{3})(\d{0,3})(\d{0,3})(\d{0,3}).*/, '$1-$2-$3-$4'); // Format as 123-456-789-000
+        input.value = value;
+    }
+</script>

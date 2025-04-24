@@ -16,7 +16,6 @@ class EmployeeWorkInfoFactory extends Factory
      */
     public function definition(): array
     {
-
         $positionSalaries = [
             ['Engineering', 'Electrical Engineer', 25000, 40000],
             ['Engineering', 'Project Engineer', 30000, 45000],
@@ -42,18 +41,20 @@ class EmployeeWorkInfoFactory extends Factory
             ['Executive', 'Operations Manager', 50000, 80000],
         ];
 
-        
-
         $entry = collect($positionSalaries)->random();
         [$department, $position, $minSalary, $maxSalary] = $entry;
 
         return [
-           'employee_id' => null, // Automatically link employee_id
+            'employee_id' => null, // Automatically link employee_id
             'work_status' => $this->faker->randomElement(['full_time', 'part_time', 'contract']),
             'department' => $department,
             'position' => $position,
             'salary' => round($this->faker->numberBetween($minSalary, $maxSalary), -3),
             'hire_date' => $this->faker->date(),
+            'work_start_time' => '08:00', // Default work start time
+            'work_end_time' => '17:00',   // Default work end time
+            'break_start_time' => '12:00', // Default break start time
+            'break_end_time' => '13:00',   // Default break endd time
         ];
     }
 }

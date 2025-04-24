@@ -21,6 +21,7 @@ class ArchivedPayrollSeeder extends Seeder
                 'employee_id' => $employee->id,
                 'pay_period_start' => '2025-02-01',
                 'pay_period_end' => '2025-02-28',
+                'salary' => $employee->workInfo->salary,
                 'allowance' => 1000,
                 'overtime_pay' => rand(0, 300),
                 'gross_pay' => $employee->workInfo->salary + 1000 + rand(0, 300),
@@ -35,6 +36,7 @@ class ArchivedPayrollSeeder extends Seeder
                 'employee_id' => $employee->id,
                 'pay_period_start' => '2025-03-01',
                 'pay_period_end' => '2025-03-31',
+                'salary' => $employee->workInfo->salary,
                 'allowance' => 1000,
                 'overtime_pay' => rand(0, 300),
                 'gross_pay' => $employee->workInfo->salary + 1000 + rand(0, 300),
@@ -50,7 +52,7 @@ class ArchivedPayrollSeeder extends Seeder
     {
         $sss = $salary * 0.045; // 4.5%
         $philhealth = $salary * 0.03; // 3%
-        $pagibig = 100; // Fixed amount
+        $pagibig = $salary * 0.01; // 1%
         $withholding_tax = $salary * 0.1; // 10%
 
         return $sss + $philhealth + $pagibig + $withholding_tax;
