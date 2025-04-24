@@ -13,7 +13,8 @@
             <select wire:model.live="filter_request_type" class="border rounded px-2 py-1">
                 <option value="">All</option>
                 <option value="overtime">Overtime</option>
-                <option value="profile_change">Profile Change</option>
+                <option value="employee_concern">Employee Concern</option>
+                <option value="leave">Leave</option>
                 <!-- Add more types as needed -->
             </select>
         </div>
@@ -33,21 +34,57 @@
     @if ($requests->isEmpty())
         <p>No requests yet.</p>
     @else
-        <table class="w-full table-auto">
-            <thead>
-                <tr>
-                    <th class="border p-2">Request ID</th>
-                    <th class="border p-2">Employee ID</th>
-                    <th class="border p-2">Employee Name</th>
-                    <th class="border p-2">Type</th>
-                    <th class="border p-2">Reason</th>
-                    <th class="border p-2">Start Time</th>
-                    <th class="border p-2">End Time</th>
-                    <th class="border p-2">Status</th>
-                    <th class="border p-2">Created At</th>
-                    <th class="border p-2">Actions</th>
-                </tr>
-            </thead>
+    <table class="w-full table-auto text-center">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="whitespace-nowrap py-3 px-6 text-center border cursor-pointer" wire:click="sortBy('id')">
+                    Request ID
+                    <span class="{{ $sortField === 'id' ? 'text-black' : 'text-gray-400' }}">
+                        {{ $sortField === 'id' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                    </span>
+                </th>
+                <th class="whitespace-nowrap py-3 px-6 text-center border cursor-pointer" wire:click="sortBy('employee_id')">
+                    Employee ID
+                    <span class="{{ $sortField === 'employee_id' ? 'text-black' : 'text-gray-400' }}">
+                        {{ $sortField === 'employee_id' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                    </span>
+                </th>
+                <th class="whitespace-nowrap py-3 px-6 text-center border cursor-pointer" wire:click="sortBy('employee_name')">
+                    Employee Name
+                    <span class="{{ $sortField === 'employee_name' ? 'text-black' : 'text-gray-400' }}">
+                        {{ $sortField === 'employee_name' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                    </span>
+                </th>
+                <th class="whitespace-nowrap py-3 px-6 text-center border">Request Type</th>
+                <th class="whitespace-nowrap py-3 px-6 text-center border">Reason</th>
+                <th class="whitespace-nowrap py-3 px-6 text-center border cursor-pointer" wire:click="sortBy('start_time')">
+                    Start Time
+                    <span class="{{ $sortField === 'start_time' ? 'text-black' : 'text-gray-400' }}">
+                        {{ $sortField === 'start_time' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                    </span>
+                </th>
+                <th class="whitespace-nowrap py-3 px-6 text-center border cursor-pointer" wire:click="sortBy('end_time')">
+                    End Time
+                    <span class="{{ $sortField === 'end_time' ? 'text-black' : 'text-gray-400' }}">
+                        {{ $sortField === 'end_time' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                    </span>
+                </th>
+                <th class="whitespace-nowrap py-3 px-6 text-center border cursor-pointer" wire:click="sortBy('status')">
+                    Status
+                    <span class="{{ $sortField === 'status' ? 'text-black' : 'text-gray-400' }}">
+                        {{ $sortField === 'status' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                    </span>
+                </th>
+                <th class="whitespace-nowrap py-3 px-6 text-center border cursor-pointer" wire:click="sortBy('created_at')">
+                    Created At
+                    <span class="{{ $sortField === 'created_at' ? 'text-black' : 'text-gray-400' }}">
+                        {{ $sortField === 'created_at' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                    </span>
+                </th>
+                <th class="whitespace-nowrap py-3 px-6 text-center border">Actions</th>
+            </tr>
+        </thead>
+    
             <tbody>
                 @foreach ($requests as $request)
                     <tr>
@@ -59,10 +96,49 @@
                         <td class="border p-2">{{ $request->employee->first_name }} {{ $request->employee->last_name }}</td>
 
                         <!-- Request Type -->
-                        <td class="border p-2">{{ ucfirst($request->request_type) }}</td>
+                        <td class="border p-2">
+                            @if($request->request_type === 'leave')
+                            {{ \Illuminate\Support\Str::title($request->request_type) }} - {{ \Illuminate\Support\Str::title($request->reason) }}
+                        @else
+                            {{ \Illuminate\Support\Str::title($request->request_type) }}
+                        @endif
+                        </td>
 
                         <!-- Reason -->
-                        <td class="border p-2">{{ $request->reason }}</td>
+                        <td class="border p-2">
+                            <div x-data="{ expanded: false }" class="inline">
+                                @php
+                                    $displayReason = $request->request_type === 'leave' ? $request->leave_reason : $request->reason;
+                                @endphp
+                            
+                                @if(strlen($displayReason) > 50)
+                                    <span>
+                                        <span x-show="!expanded" x-cloak>
+                                            {{ Str::limit($displayReason, 50) }}...
+                                            <button 
+                                                @click="expanded = true" 
+                                                class="text-teal-600 text-xs font-medium ml-1 hover:underline focus:outline-none"
+                                            >
+                                                Show More
+                                            </button>
+                                        </span>
+                                        <span x-show="expanded" x-cloak>
+                                            {{ $displayReason }}
+                                            <button 
+                                                @click="expanded = false" 
+                                                class="text-teal-600 text-xs font-medium ml-1 hover:underline focus:outline-none"
+                                            >
+                                                Show Less
+                                            </button>
+                                        </span>
+                                    </span>
+                                @else
+                                    {{ $displayReason }}
+                                @endif
+                            </div>
+                            
+                        </td>
+
 
                         <!-- Start Time -->
                         <td class="border p-2">

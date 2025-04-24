@@ -1,4 +1,4 @@
-<div class="p-8 bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto" wire:poll.5000ms="pollTime">
+<div class="p-8 bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto" wire:poll.2000ms="pollTime">
     <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Overtime Logging</h2>
 
     @if($request->status === 'cancelled')

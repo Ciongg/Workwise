@@ -35,7 +35,7 @@ class ArchivedPayroll extends Model
 
         $sss = $this->gross_pay * ($deductionSettings->sss_rate ?? 0.045);
         $philhealth = $this->gross_pay * ($deductionSettings->philhealth_rate ?? 0.03);
-        $pagibig = $deductionSettings->pagibig_fixed ?? 100;
+        $pagibig = $this->gross_pay * ($deductionSettings->pagibig_rate ?? 0.01);
         $withholding_tax = $this->gross_pay * ($deductionSettings->withholding_tax_rate ?? 0.1);
 
         return [

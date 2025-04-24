@@ -24,8 +24,8 @@
             </div>
 
             <div class="mb-4">
-                <label class="block font-medium">Pag-IBIG (₱)</label>
-                <input type="number" step="0.01" name="pagibig_fixed" class="w-full border p-2 rounded" value="{{ $settings->pagibig_fixed }}">
+                <label class="block font-medium">Pag-IBIG Rate (%)</label>
+                <input type="number" step="0.01" name="pagibig_rate" class="w-full border p-2 rounded" value="{{ $settings->pagibig_rate * 100 }}">
             </div>
 
             <div class="mb-4">

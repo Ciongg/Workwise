@@ -13,46 +13,119 @@
         </p>
     </div>
 
-
-        <div class="flex flex-wrap gap-4 mb-6">
-            <a href="{{ route('hr.show-payroll-deductions') }}"
-                class="bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
-                View Deductions
-            </a>
-        
-            <button wire:click="recalculateAllPayrolls"
-                class="cursor-pointer bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
-                Recalculate Payrolls
-            </button>
-
-            <a href="{{ route('hr.show-archived-payroll') }}"
-                class="bg-gray-500 text-white font-bold px-4 py-2 rounded hover:bg-gray-600 transition">
-                View Archived Payroll
-            </a>
-        
+    <div class="flex flex-wrap gap-4 mb-4">
+        <div>
+            <label class="block text-xs font-semibold text-gray-600">Status</label>
+            <select wire:model.live="searchStatus" class="border rounded px-2 py-1">
+                <option value="">All</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="paid">Paid</option>
+            </select>
         </div>
-        
+        <div>
+            <label class="block text-xs font-semibold text-gray-600">Department</label>
+            <input type="text" wire:model.live="searchDepartment" class="border rounded px-2 py-1" placeholder="Department">
+        </div>
+        <div>
+            <label class="block text-xs font-semibold text-gray-600">Name</label>
+            <input type="text" wire:model.live="searchName" class="border rounded px-2 py-1" placeholder="Name">
+        </div>
+        <div>
+            <label class="block text-xs font-semibold text-gray-600">Position</label>
+            <input type="text" wire:model.live="searchPosition" class="border rounded px-2 py-1" placeholder="Position">
+        </div>
+    </div>
 
-        
+    <div class="flex flex-wrap gap-4 mb-6">
+        <a href="{{ route('hr.show-payroll-deductions') }}"
+            class="bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
+            View Deductions
+        </a>
     
+        <button wire:click="recalculateAllPayrolls"
+            class="cursor-pointer bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition">
+            Recalculate Payrolls
+        </button>
 
+        <a href="{{ route('hr.show-archived-payroll') }}"
+            class="bg-gray-500 text-white font-bold px-4 py-2 rounded hover:bg-gray-600 transition">
+            View Archived Payroll
+        </a>
+    
+    </div>
 
     <!-- Make table container scrollable on small screens -->
     <div class="overflow-x-auto">
         <table class="min-w-[1000px] text-sm text-center text-gray-900 border border-gray-300 border-collapse">
             <thead class="bg-gray-200 text-gray-900 text-xs uppercase">
                 <tr>
-                    <th class="px-4 py-3 border border-gray-800">ID</th>
-                    <th class="px-4 py-3 border border-gray-800">Name</th>
-                    <th class="px-4 py-3 border border-gray-800">Department</th>
-                    <th class="px-4 py-3 border border-gray-800">Position</th>
-                    <th class="px-4 py-3 border border-gray-800">Salary</th>
-                    <th class="px-4 py-3 border border-gray-800">Allowance</th>
-                    <th class="px-4 py-3 border border-gray-800">Overtime Pay</th>
-                    <th class="px-4 py-3 border border-gray-800">Gross Pay</th>
-                    <th class="px-4 py-3 border border-gray-800">Deductions</th>
-                    <th class="px-4 py-3 border border-gray-800">Extra Deductions</th>
-                    <th class="px-4 py-3 border border-gray-800">Net Pay</th>
+                    <th class="px-4 py-3 border cursor-pointer" wire:click="sortBy('id')">
+                        ID
+                        <span class="{{ $sortField === 'id' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'id' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('name')">
+                        Name
+                        <span class="{{ $sortField === 'name' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'name' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('department')">
+                        Department
+                        <span class="{{ $sortField === 'department' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'department' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('position')">
+                        Position
+                        <span class="{{ $sortField === 'position' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'position' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('salary')">
+                        Salary
+                        <span class="{{ $sortField === 'salary' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'salary' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('allowance')">
+                        Allowance
+                        <span class="{{ $sortField === 'allowance' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'allowance' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('overtime_pay')">
+                        Overtime Pay
+                        <span class="{{ $sortField === 'overtime_pay' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'overtime_pay' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('gross_pay')">
+                        Gross Pay
+                        <span class="{{ $sortField === 'gross_pay' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'gross_pay' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('deductions')">
+                        Deductions
+                        <span class="{{ $sortField === 'deductions' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'deductions' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('additional_deductions')">
+                        Extra Deductions
+                        <span class="{{ $sortField === 'additional_deductions' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'additional_deductions' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
+                    <th class="px-4 py-3 border border-gray-800 cursor-pointer" wire:click="sortBy('net_pay')">
+                        Net Pay
+                        <span class="{{ $sortField === 'net_pay' ? 'text-black' : 'text-gray-400' }}">
+                            {{ $sortField === 'net_pay' ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+                        </span>
+                    </th>
                     <th class="px-4 py-3 border border-gray-800">Status</th>
                     <th class="px-4 py-3 border border-gray-800">Date</th>
                     <th class="px-4 py-3 border border-gray-800">Actions</th>

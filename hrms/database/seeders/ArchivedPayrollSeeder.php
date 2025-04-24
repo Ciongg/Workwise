@@ -52,7 +52,7 @@ class ArchivedPayrollSeeder extends Seeder
     {
         $sss = $salary * 0.045; // 4.5%
         $philhealth = $salary * 0.03; // 3%
-        $pagibig = 100; // Fixed amount
+        $pagibig = $salary * 0.01; // 1%
         $withholding_tax = $salary * 0.1; // 10%
 
         return $sss + $philhealth + $pagibig + $withholding_tax;

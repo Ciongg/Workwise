@@ -4,11 +4,14 @@
         <header class="mb-10 text-center">
             <h1 class="text-4xl font-bold text-teal-600">Workwise</h1>
             <p class="text-gray-500 mt-2">Welcome Back! Please login to continue.</p>
+            
         </header>
 
         <!-- Form Card -->
         <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
             <form action="{{ route('login') }}" method="POST">
+                <p class="text-gray-500 mt-2 mb-6 text-center">Employee Login</p>
+
                 @csrf
 
                 <!-- Email -->
@@ -39,7 +42,7 @@
                 <div class="flex justify-center">
                     <button 
                         type="submit" 
-                        class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition"
+                        class="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition"
                     >
                         Login
                     </button>

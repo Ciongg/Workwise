@@ -44,12 +44,16 @@
                 <option value="pending">Pending</option>
                 <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
-                <option value="completed">Completed</option>
-                <option value="auto_timed_out">Auto Timed Out</option>
-                <option value="cancelled">Cancelled</option>
+        
+                @if ($request->request_type === 'overtime')
+                    <option value="completed">Completed</option>
+                    <option value="auto_timed_out">Auto Timed Out</option>
+                    <option value="cancelled">Cancelled</option>
+                @endif
             </select>
             @error('status') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
+        
 
         <!-- Save Button -->
         <div class="mt-6">

@@ -25,11 +25,15 @@ Route::get('/hr/dashboard/attendance', [HRController::class, 'showAttendance'])-
 // Authentication Routes
 Route::post('/login', [SessionController::class, 'store'])->name('login');
 Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
+Route::view('/about', 'about')->name('about');
 
 // Employee Routes
 Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
-Route::get('/employee/profile', [EmployeeController::class, 'profile'])->name('employee.profile');
-Route::get('/employee/payslips', [EmployeeController::class, 'payslips'])->name('employee.payslips');
 Route::get('/employee/requests', [EmployeeController::class, 'requests'])->name('employee.requests');
 Route::get('/employee/request', [EmployeeController::class, 'showRequestLogs'])->name('employee.show-request-logs');
+
+
+//for both hr and employee
 Route::get('/employee/attendance', [EmployeeController::class, 'showAttendance'])->name('employee.attendance');
+Route::get('/employee/profile', [EmployeeController::class, 'profile'])->name('employee.profile');
+Route::get('/employee/payslips', [EmployeeController::class, 'payslips'])->name('employee.payslips');

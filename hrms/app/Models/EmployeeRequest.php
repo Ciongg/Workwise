@@ -13,6 +13,7 @@ class EmployeeRequest extends Model
         'employee_id',
         'request_type',
         'reason',
+        'leave_reason',
         'start_time',
         'end_time',
         'status',

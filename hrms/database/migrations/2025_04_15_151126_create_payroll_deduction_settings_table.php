@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->decimal('sss_rate', 5, 4)->default(0.045); // 4.5%
             $table->decimal('philhealth_rate', 5, 4)->default(0.03); // 3%
-            $table->decimal('pagibig_fixed', 8, 2)->default(100.00); // fixed amount
+            $table->decimal('pagibig_rate', 5, 4)->default(0.01); // fixed amount
             $table->decimal('withholding_tax_rate', 5, 4)->default(0.1); // 10%
             $table->timestamps();
         });

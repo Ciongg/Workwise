@@ -16,7 +16,7 @@
         <!-- Buttons Section -->
         <div class="flex flex-wrap justify-center gap-6 mb-10">
             <a href="{{ route('employee.profile') }}" class="bg-teal-500 hover:bg-teal-600 transition text-white font-semibold py-3 px-6 rounded-lg shadow-md">
-                Manage Profile
+                Profile Information
             </a>
             <a href="{{ route('employee.payslips') }}" class="bg-teal-500 hover:bg-teal-600 transition text-white font-semibold py-3 px-6 rounded-lg shadow-md">
                 View Payslips

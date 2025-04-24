@@ -34,7 +34,7 @@ class PayrollFactory extends Factory
 
         $sss = $basic_salary * ($deductionSettings->sss_rate ?? 0.045);
         $philhealth = $basic_salary * ($deductionSettings->philhealth_rate ?? 0.03);
-        $pagibig = $deductionSettings->pagibig_fixed ?? 100;
+        $pagibig = $basic_salary * ($deductionSettings->pagibig_rate ?? 0.01);
         $withholding_tax = $basic_salary * ($deductionSettings->withholding_tax_rate ?? 0.1);
         $additional_deductions = 0;
         $deductions = $sss + $philhealth + $pagibig + $withholding_tax;

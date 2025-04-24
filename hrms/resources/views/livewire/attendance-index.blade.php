@@ -120,6 +120,8 @@
                                     text-white bg-blue-500
                                 @elseif($otLog && $otLog->status === 'pending')
                                     text-white bg-gray-400
+                                @elseif($otLog && $otLog->status === 'auto_timed_out')
+                                    text-white bg-red-500
                                 @elseif(!$otLog || !$otLog->status)
                                     text-black bg-transparent
                                 @endif

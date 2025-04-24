@@ -15,7 +15,7 @@ class PayrollDeductionSettingSeeder extends Seeder
         PayrollDeductionSetting::firstOrCreate([], [
             'sss_rate' => 0.045,
             'philhealth_rate' => 0.03,
-            'pagibig_fixed' => 100.00,
+            'pagibig_rate' => 0.01,
             'withholding_tax_rate' => 0.1,
         ]);
 
