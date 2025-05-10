@@ -1,6 +1,18 @@
 <div class="p-6 bg-white shadow-md rounded-lg">
     <h2 class="text-2xl font-semibold mb-6 text-gray-800">Employee List</h2>
 
+    @if (session()->has('success'))
+        <div class="bg-green-100 text-green-800 p-2 mb-4 rounded">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="bg-red-100 text-red-800 p-2 mb-4 rounded">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="flex justify-between items-center mb-4 mt-4 mx-6">
         <!-- Filter by Role -->
         <div class="mb-4 flex items-center gap-4">
@@ -8,11 +20,11 @@
             <select wire:model.live="searchRole" class="border rounded p-2">
                 <option value="">All</option>
                 <option value="hr">HR</option>
-                <option value="manager">Manager</option>
+                
                 <option value="employee">Employee</option>
             </select>
         </div>
-        <!-- Filter by Name -->
+        <!-- Filter by Names -->
         <div class="mb-4 flex items-center gap-4">
             <label class="text-gray-600">Filter by Name:</label>
             <input type="text" wire:model.live="searchName" placeholder="Search by name" class="border rounded p-2">
@@ -73,7 +85,6 @@
                                 class="text-teal-500 hover:underline font-bold cursor-pointer transition duration-200 ease-in-out">
                                 View/Edit
                             </a>
-
                             
                         </td>
                     </tr>

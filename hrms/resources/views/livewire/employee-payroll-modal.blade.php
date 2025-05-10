@@ -5,21 +5,27 @@
 
     <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
         
-        <button 
-            wire:click="$set('activeTab', 'payroll')" 
-            class="px-4 py-2 rounded-lg font-medium text-white {{ $activeTab === 'payroll' ? 'bg-teal-600' : 'bg-gray-400' }}">
-            Payroll
-        </button>
-        <button 
-            wire:click="$set('activeTab', 'info')" 
-            class="px-4 py-2 rounded-lg font-medium text-white {{ $activeTab === 'info' ? 'bg-teal-600' : 'bg-gray-400' }}">
-            Information
-        </button>
-
+        <div class="flex justify-center mb-6 space-x-4">
+            <button 
+                wire:click="$set('activeTab', 'payroll')" 
+                class="w-40 px-4 py-2 rounded-lg font-medium text-white {{ $activeTab === 'payroll' ? 'bg-teal-600' : 'bg-gray-400' }}">
+                Payroll
+            </button>
+            <button 
+                wire:click="$set('activeTab', 'overtime')" 
+                class="w-40 px-4 py-2 rounded-lg font-medium text-white {{ $activeTab === 'overtime' ? 'bg-teal-600' : 'bg-gray-400' }}">
+                Overtime
+            </button>
+            <button 
+                wire:click="$set('activeTab', 'info')" 
+                class="w-40 px-4 py-2 rounded-lg font-medium text-white {{ $activeTab === 'info' ? 'bg-teal-600' : 'bg-gray-400' }}">
+                Information
+            </button>
+        </div>
 
     @if ($activeTab === 'payroll')
     <h3 class="text-lg font-semibold text-teal-500 mb-4">Payroll Information</h3>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
         <div>
             <label for="pay_period_start" class="block text-sm font-medium text-gray-700">Pay Period Start:</label>
             <input disabled type="date" id="pay_period_start" wire:model.defer="pay_period_start" class=" cursor-not-allowed mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
@@ -64,7 +70,6 @@
             <select id="status" wire:model.defer="status" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
                 <option value="pending">Pending</option>
                 <option value="approved">Approved</option>
-                <option value="paid">Paid</option>
             </select>
         </div>
     </div>
@@ -83,6 +88,7 @@
 
 <!-- Contact Info -->
     <h2 class="text-2xl font-semibold mb-4">Contact Information</h2>
+    
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
         <div>
             <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
@@ -112,9 +118,9 @@
         <div>
             <label for="work_status" class="block text-sm font-medium text-gray-700">Work Status:</label>
             <select id="work_status" wire:model.defer="work_status" disabled class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="on_leave">On Leave</option>
+                <option value="full_time">Full-Time</option>
+                <option value="part_time">Part-Time</option>
+                <option value="contract">Contract</option>
             </select>
         </div>
         <div>
@@ -125,6 +131,7 @@
 
     <!-- Bank Info -->
     <h3 class="text-lg font-semibold text-teal-500 mt-8 mb-2">Bank Information</h3>
+    
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
         <div>
             <label for="bank_name" class="block text-sm font-medium text-gray-700">Bank Name:</label>
@@ -163,9 +170,43 @@
             <input type="text" id="tin_number" wire:model.defer="tin_number" disabled class="mt-1 block w-full px-4 py-2 bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
         </div>
     </div>
-    @endif
+@endif
 
-
-
+@if ($activeTab === 'overtime')
+    <h3 class="text-lg font-semibold text-teal-500 mb-4">Overtime Logs</h3>
+    <div class="mb-4">
+        <strong>Total Overtime Hours:</strong> {{ number_format($totalOvertimeHours, 2) }} hrs<br>
+        <strong>Total Overtime Pay:</strong> ₱{{ number_format($totalOvertimePay, 2) }}<br>
+        <strong>Total Normal Hours:</strong> {{ number_format($totalNormalHours, 2) }} hrs
+    </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200">
+            <thead class="bg-gray-100 text-xs uppercase text-gray-600 text-center">
+                <tr>
+                    <th class="px-4 py-3 border">Date</th>
+                    <th class="px-4 py-3 border">Time In</th>
+                    <th class="px-4 py-3 border">Time Out</th>
+                    <th class="px-4 py-3 border">Hours</th>
+                    <th class="px-4 py-3 border">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($overtimeLogs as $log)
+                    <tr>
+                        <td class="px-4 py-2 border">{{ $log->ot_time_in ? \Carbon\Carbon::parse($log->ot_time_in)->format('F j, Y') : '-' }}</td>
+                        <td class="px-4 py-2 border">{{ $log->ot_time_in ? \Carbon\Carbon::parse($log->ot_time_in)->format('g:i A') : '-' }}</td>
+                        <td class="px-4 py-2 border">{{ $log->ot_time_out ? \Carbon\Carbon::parse($log->ot_time_out)->format('g:i A') : '-' }}</td>
+                        <td class="px-4 py-2 border">{{ number_format($log->total_hours, 2) }}</td>
+                        <td class="px-4 py-2 border">{{ ucfirst($log->status) }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center text-gray-500">No overtime logs found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+@endif
 
 </div>

@@ -24,12 +24,19 @@ class HRController extends Controller
     public function showArchivedPayroll(){
         return view('hr.show-archived-payroll');
     }
-
+    
     public function index(){
-       
+        
         return view('hr.index');
     }
+    
+    public function showRequests(){
+        return view('hr.show-request');
+    }
 
+    public function showAttendance(){
+        return view('hr.show-attendance');
+    }
 
 
     public function showPayrollDeductions()
@@ -43,7 +50,7 @@ class HRController extends Controller
         $validated = $request->validate([
             'sss_rate' => 'required|numeric|min:0',
             'philhealth_rate' => 'required|numeric|min:0',
-            'pagibig_fixed' => 'required|numeric|min:0',
+            'pagibig_rate' => 'required|numeric|min:0',
             'withholding_tax_rate' => 'required|numeric|min:0',
         ]);
     
@@ -52,7 +59,7 @@ class HRController extends Controller
         $settings->update([
             'sss_rate' => $validated['sss_rate'] / 100,
             'philhealth_rate' => $validated['philhealth_rate'] / 100,
-            'pagibig_fixed' => $validated['pagibig_fixed'],
+            'pagibig_rate' => $validated['pagibig_rate'] / 100,
             'withholding_tax_rate' => $validated['withholding_tax_rate'] / 100,
         ]);
 

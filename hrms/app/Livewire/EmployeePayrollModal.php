@@ -8,6 +8,7 @@ use App\Models\Employee;
 class EmployeePayrollModal extends Component
 {
     public $employee;
+
     public $payroll;
     public $activeTab = 'payroll';
 
@@ -25,10 +26,14 @@ class EmployeePayrollModal extends Component
     
     public $pay_period_start, $pay_period_end, $allowance, $overtime_pay, $gross_pay, $deductions, $net_pay, $status, $additional_deductions;
 
+    // Overtime Info
+    public $overtimeLogs = [];
+    public $totalOvertimeHours = 0;
+    public $totalNormalHours = 0;
+    public $totalOvertimePay = 0;
 
- 
-    public function mount($employee){
-
+    public function mount($employee)
+    {
         $this->employee = $employee;
 
         $this->email = $employee->email;
@@ -53,9 +58,7 @@ class EmployeePayrollModal extends Component
             $this->tin_number = $employee->identificationInfo->tin_number;
         }
 
-
         if ($employee->payrollInfo) {
-
             $this->payroll = $employee->payrollInfo;
 
             $this->pay_period_start = \Carbon\Carbon::parse($this->payroll->pay_period_start)->format('Y-m-d');
@@ -68,72 +71,116 @@ class EmployeePayrollModal extends Component
             $this->deductions = $this->payroll->deductions;
             $this->net_pay = $this->payroll->net_pay;
             $this->status = $this->payroll->status;
-         
         }
+            // Overtime logs for this employee
+            
+          
+                // $this->totalOvertimeHours = $employee->overtimeLogs()
+                //     ->whereIn('status', ['completed', 'auto_timed_out'])
+                //     ->whereBetween('ot_time_in', [
+                //         \Carbon\Carbon::parse($this->pay_period_start)->startOfDay(),
+                //         \Carbon\Carbon::parse($this->pay_period_end)->endOfDay()
+                //     ])
+                //     ->sum('total_hours');
 
+            // Calculate hourly rate based on monthly salary
+            $monthlySalary = $employee->workInfo->salary ?? 0;
+            $dailyRate = $monthlySalary / 22;
+            $hourlyRate = $dailyRate / 8;
 
+            // Calculate total overtime pay (1.25x hourly rate)
+            $this->totalOvertimePay = $this->totalOvertimeHours * $hourlyRate * 1.25;
+
+            // Calculate total normal hours from attendance
+            $this->totalNormalHours = $employee->attendances()
+                ->whereNotNull('total_hours')
+                ->sum('total_hours');
     }
 
     public function save()
     {
-    // Calculate gross and net pay
-    $gross = $this->salary + $this->allowance + $this->overtime_pay;
-    $net = $gross - $this->deductions;
+        // Calculate gross and net pay
+        $gross = $this->salary + $this->allowance + $this->overtime_pay;
+        $net = $gross - $this->deductions;
 
-    // Update Payroll Info if available
+        // Update Payroll Info if available
+        if ($this->employee->workInfo) {
+            $this->employee->workInfo->update([
+                'salary' => $this->salary,
+            ]);
+        } else {
+            // Create new Work Info if none exists
+            $this->employee->workInfo()->create([
+                'salary' => $this->salary,
+            ]);
+        }
+        if ($this->employee->payrollInfo) {
+            $this->employee->payrollInfo->update([
+                'pay_period_start' => $this->pay_period_start,
+                'pay_period_end' => $this->pay_period_end,
+                'allowance' => $this->allowance,
+                'overtime_pay' => $this->overtime_pay,
+                'additional_deductions' => $this->additional_deductions,
+                'status' => $this->status,
+            ]);
+        } else {
+            // Create new Payroll Info if none exists
+            $this->employee->payrollInfo()->create([
+                'pay_period_start' => $this->pay_period_start,
+                'pay_period_end' => $this->pay_period_end,
+                'allowance' => $this->allowance,
+                'overtime_pay' => $this->overtime_pay,
+                'additional_deductions' => $this->additional_deductions,
+                'status' => $this->status,
+            ]);
+        }
 
-    if ($this->employee->workInfo){
-        $this->employee->workInfo->update([
-          
-            'salary' => $this->salary,
-           
-        ]);
-    } else {
-        // Create new Work Info if none exists
-        $this->employee->workInfo()->create([
-            
-            'salary' => $this->salary,
-           
-        ]);
-    }
-    if ($this->employee->payrollInfo) {
-        $this->employee->payrollInfo->update([
-            'pay_period_start' => $this->pay_period_start,
-            'pay_period_end' => $this->pay_period_end,
-            'allowance' => $this->allowance,
-            'overtime_pay' => $this->overtime_pay,
-            'additional_deductions' => $this->additional_deductions,
-          
-            'status' => $this->status,
-        ]);
-    } else {
-        // Create new Payroll Info if none exists
-        $this->employee->payrollInfo()->create([
-            'pay_period_start' => $this->pay_period_start,
-            'pay_period_end' => $this->pay_period_end,
-            'allowance' => $this->allowance,
-            'overtime_pay' => $this->overtime_pay,
-            'additional_deductions' => $this->additional_deductions,
-            
-            'status' => $this->status,
-        ]);
-    }
+        $this->employee->refresh();
 
-    $this->employee->refresh();
-
-    session()->flash('message', 'Payroll information updated successfully!');
-    $this->dispatch('employeeSalaryUpdated', employeeId: $this->employee->id);
-    $this->dispatch('close-modal');
-
+        session()->flash('message', 'Payroll information updated successfully!');
+        $this->dispatch('employeeSalaryUpdated', employeeId: $this->employee->id);
+        $this->dispatch('close-modal');
     }
 
 
-  
-    
-    
+    public function loadOvertimeLogs()
+{
+    if ($this->pay_period_start && $this->pay_period_end) {
+        $this->overtimeLogs = $this->employee->overtimeLogs()
+            ->whereBetween('ot_time_in', [
+                \Carbon\Carbon::parse($this->pay_period_start)->startOfDay(),
+                \Carbon\Carbon::parse($this->pay_period_end)->endOfDay()
+            ])
+            ->orderByDesc('ot_time_in')
+            ->get();
+
+        $this->totalOvertimeHours = $this->employee->overtimeLogs()
+            ->whereBetween('ot_time_in', [
+                \Carbon\Carbon::parse($this->pay_period_start)->startOfDay(),
+                \Carbon\Carbon::parse($this->pay_period_end)->endOfDay()
+            ])
+            ->sum('total_hours');
+
+        // Recalculate overtime pay
+        $monthlySalary = $this->employee->workInfo->salary ?? 0;
+        $dailyRate = $monthlySalary / 22;
+        $hourlyRate = $dailyRate / 8;
+
+        $this->totalOvertimePay = $this->totalOvertimeHours * $hourlyRate * 1.25;
+    }
+}
+
+    public function updatedActiveTab($value)
+    {
+        if ($value === 'overtime') {
+            $this->loadOvertimeLogs();
+        }
+    }
+
+
+
     public function render()
     {
-        
         return view('livewire.employee-payroll-modal');
     }
 }

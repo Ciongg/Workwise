@@ -1,31 +1,13 @@
 <x-layout>
-    <div class="flex flex-col justify-center items-center p-12 gap-4">
-        <div>
-            <p>Welcome Back!</p>
-            <p>Login</p>
+    <div class="bg-white min-h-screen flex items-center justify-center px-4">
+        <div class="text-center bg-teal-50 rounded-2xl shadow-xl p-10 max-w-md w-full">
+            <h1 class="text-4xl font-bold text-teal-600 mb-4">Welcome to WorkWise</h1>
+            <p class="text-gray-700 mb-8 text-lg">Your all-in-one HR and employee management system.</p>
+            <a href="{{ route('login') }}">
+                <button class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-2 rounded-xl transition duration-200">
+                    Login
+                </button>
+            </a>
         </div>
-
-        <form action="{{ route('login') }}" method="POST">
-            @csrf
-            <div class="mb-4">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" class="border border-gray-300 rounded p-2">
-                <x-form-error name="email"/>
-            </div>
-
-            <div>
-                <label for="password">Password</label>
-                <input type="text" name="password" id="password" class="border border-gray-300 rounded p-2">
-                <x-form-error name="password"/>
-            </div>
-
-            <button class="cursor-pointer bg-gray-400 rounded-md py-2 px-8" type="submit">Login</button>
-        </form>
     </div>
 </x-layout>
-
-<script>
-    
-
-
-</script>

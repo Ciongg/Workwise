@@ -17,6 +17,10 @@ class EmployeeWorkInfo extends Model
         'salary',
         'work_status',
         'hire_date',
+        'work_start_time',
+        'work_end_time',
+        'break_start_time',
+        'break_end_time',
       
     ];
 

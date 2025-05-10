@@ -9,7 +9,7 @@ class PayrollDeductionSetting extends Model
     protected $fillable = [
         'sss_rate',
         'philhealth_rate',
-        'pagibig_fixed',
+        'pagibig_rate',
         'withholding_tax_rate',
     ];
 

@@ -29,7 +29,7 @@ class EmployeeIndex extends Component
         $this->dispatch('open-modal', ['name' => 'view-employee']); // Ensure the name matches the modal's name
     }
 
- 
+    //
 
 
     public function updatedSearchRole()
@@ -53,6 +53,7 @@ class EmployeeIndex extends Component
             $this->sortDirection = 'asc';
         }
     }
+    
     
     
       public function render()

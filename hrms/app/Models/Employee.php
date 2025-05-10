@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Employee extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\EmployeeFactory> */
     use HasFactory;
     use Notifiable;
+    use SoftDeletes;
 
     protected $fillable = [
         'first_name',
@@ -33,6 +34,23 @@ class Employee extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($employee) {
+            if ($employee->isForceDeleting()) {
+                // Permanently delete related payrolls
+                $employee->payrollInfo()->forceDelete();
+            } else {
+                // Soft delete related payrolls
+                $employee->payrollInfo()->delete();
+            }
+        });
+    }
+
+    
 
     // Relationship with Work Info
     public function workInfo()
@@ -63,4 +81,18 @@ class Employee extends Authenticatable
     {
         return $this->hasMany(ArchivedPayroll::class, 'employee_id');
     }
+
+    public function requests()
+    {
+        return $this->hasMany(EmployeeRequest::class);
+    }
+
+    public function overtimeLogs() {
+        return $this->hasMany(OvertimeLog::class);
+    }
+
+    public function attendances() {
+        return $this->hasMany(Attendance::class);
+    }
+    
 }

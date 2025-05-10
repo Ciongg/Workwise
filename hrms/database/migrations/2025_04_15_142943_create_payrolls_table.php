@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employee_id');
+            $table->softDeletes();
             $table->date('pay_period_start');
             $table->date('pay_period_end');
             $table->decimal('allowance', 10, 2)->default(0);
